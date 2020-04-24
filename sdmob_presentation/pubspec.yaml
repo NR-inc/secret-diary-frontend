@@ -1,0 +1,32 @@
+name: ssecretdiary
+description: The presentation layer for secret diary front end project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  sddomain:
+    path:
+      ../sd_domain
+
+  sddata:
+    path:
+      ../sd_data
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+
+  module:
+    androidX: true
+    androidPackage: com.nr.ssecretdiary
+    iosBundleIdentifier: com.nr.ssecretdiary
