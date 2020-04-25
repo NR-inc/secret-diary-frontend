@@ -4,15 +4,23 @@ import 'package:ssecretdiary/feature/feed/feed_screen.dart';
 import 'package:ssecretdiary/feature/profile/profile_screen.dart';
 
 class RootScreen extends StatefulWidget {
+  final int startPageIndex;
+
+  RootScreen({this.startPageIndex = 0});
+
   @override
   State<StatefulWidget> createState() {
-    return _RootState();
+    return _RootState(startPageIndex);
   }
 }
 
 class _RootState extends State<RootScreen> {
   int _currentPageIndex = 0;
   final List<Widget> bottomTabsPages = [FeedScreen(), ProfileScreen()];
+
+  _RootState(int startPageIndex) {
+    _currentPageIndex = startPageIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
