@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'feature/splash/splash_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -6,32 +7,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange
       ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Seecret diary'),
-      ),
-      body: Center(
-        child: Text('Page content')
-      ) // This trailing comma makes auto-formatting nicer for build methods.
+      home: SplashScreen(),
     );
   }
 }
