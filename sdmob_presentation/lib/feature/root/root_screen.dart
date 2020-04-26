@@ -25,7 +25,6 @@ class _RootState extends State<RootScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: bottomTabsPages[_currentPageIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: _tabsNavigationManager,

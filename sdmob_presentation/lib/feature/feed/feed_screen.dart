@@ -10,6 +10,7 @@ class _FeedState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Feed')),
       body: Center(
           child: ListView.builder(
               itemCount: 10,
