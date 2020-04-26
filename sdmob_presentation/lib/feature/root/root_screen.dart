@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ssecretdiary/feature/feed/feed_screen.dart';
-import 'package:ssecretdiary/feature/profile/profile_screen.dart';
+import 'package:ssecretdiary/feature/diary/diary_screen.dart';
+import 'package:ssecretdiary/feature/settings/seetings_screen.dart';
 
 class RootScreen extends StatefulWidget {
   final int startPageIndex;
@@ -16,7 +17,11 @@ class RootScreen extends StatefulWidget {
 
 class _RootState extends State<RootScreen> {
   int _currentPageIndex = 0;
-  final List<Widget> bottomTabsPages = [FeedScreen(), ProfileScreen()];
+  final List<Widget> bottomTabsPages = [
+    DiaryScreen(),
+    FeedScreen(),
+    SettingsScreen()
+  ];
 
   _RootState(int startPageIndex) {
     _currentPageIndex = startPageIndex;
@@ -30,9 +35,12 @@ class _RootState extends State<RootScreen> {
         onTap: _tabsNavigationManager,
         currentIndex: _currentPageIndex,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('Feed')),
           BottomNavigationBarItem(
-              icon: Icon(Icons.accessibility), title: Text('Profile')),
+              icon: Icon(Icons.book), title: Text('My diary')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.view_list), title: Text('Feed')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), title: Text('Settings')),
         ],
       ),
     );

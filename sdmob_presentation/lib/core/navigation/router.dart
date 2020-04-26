@@ -22,13 +22,17 @@ class ApplicationRouter {
       case AppRoutes.root:
         route = MaterialPageRoute(builder: (context) => RootScreen());
         break;
-      case AppRoutes.feed:
+      case AppRoutes.diary:
         route = MaterialPageRoute(
             builder: (context) => RootScreen(startPageIndex: 0));
         break;
-      case AppRoutes.profile:
+      case AppRoutes.feed:
         route = MaterialPageRoute(
             builder: (context) => RootScreen(startPageIndex: 1));
+        break;
+      case AppRoutes.settings:
+        route = MaterialPageRoute(
+            builder: (context) => RootScreen(startPageIndex: 2));
         break;
       case AppRoutes.post:
         route = MaterialPageRoute(builder: (context) => PostScreen());
@@ -42,7 +46,8 @@ class AppRoutes {
   static const splash = '/';
   static const root = '/root';
   static const feed = '/root/feed';
-  static const profile = '/root/profile';
+  static const diary = '/root/diary';
+  static const settings = '/root/settings';
   static const login = '/login';
   static const registration = '/registration';
   static const post = '/post';

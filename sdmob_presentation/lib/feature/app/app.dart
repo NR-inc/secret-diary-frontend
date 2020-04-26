@@ -6,6 +6,7 @@ class SecretDiaryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         initialRoute: AppRoutes.splash,
         onGenerateRoute: ApplicationRouter(),
         theme: ThemeData(primarySwatch: Colors.orange));

@@ -10,10 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
 
+  rxdart: ^0.24.0
   sddomain:
     path:
       ../sd_domain
-
   sddata:
     path:
       ../sd_data
