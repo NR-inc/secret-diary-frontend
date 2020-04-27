@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sdbase/di/abstract_module.dart';
-import 'package:ssecretdiary/core/di/auth_module.dart';
+import 'package:sddomain/di/bloc_module.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
-import 'package:ssecretdiary/feature/auth/login/login_bloc.dart';
+import 'package:sddomain/bloc/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

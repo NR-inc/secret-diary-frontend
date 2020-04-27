@@ -10,7 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-
+  sdbase:
+    path:
+      ../sd_base
 
 dev_dependencies:
   flutter_test:
