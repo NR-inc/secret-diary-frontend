@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ssecretdiary/core/di/abstract_module.dart';
+import 'package:sdbase/di/abstract_module.dart';
 import 'package:ssecretdiary/core/di/auth_module.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:ssecretdiary/feature/auth/login/login_bloc.dart';

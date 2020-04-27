@@ -19,8 +19,11 @@ dependencies:
     path:
       ../sd_data
 
+  sdbase:
+    path:
+      ../sd_base
+
   rxdart: ^0.24.0
-  flutter_simple_dependency_injection: ^1.0.2+1
 
 dev_dependencies:
   flutter_test:

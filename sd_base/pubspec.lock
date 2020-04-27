@@ -63,7 +63,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_simple_dependency_injection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_simple_dependency_injection
       url: "https://pub.dartlang.org"
@@ -123,34 +123,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
-  rxdart:
-    dependency: "direct main"
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.24.0"
-  sdbase:
-    dependency: "direct main"
-    description:
-      path: "../sd_base"
-      relative: true
-    source: path
-    version: "0.0.1"
-  sddata:
-    dependency: "direct main"
-    description:
-      path: "../sd_data"
-      relative: true
-    source: path
-    version: "0.0.1"
-  sddomain:
-    dependency: "direct main"
-    description:
-      path: "../sd_domain"
-      relative: true
-    source: path
-    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -220,4 +192,4 @@ packages:
     source: hosted
     version: "3.5.0"
 sdks:
-  dart: ">=2.6.0 <3.0.0"
+  dart: ">=2.4.0 <3.0.0"

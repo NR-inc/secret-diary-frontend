@@ -1,5 +1,5 @@
-name: sddomain
-description: A domain layer for secret diary front end project.
+name: sdbase
+description: A new Flutter package.
 version: 0.0.1
 author: bohdan.martynov
 
@@ -10,10 +10,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_simple_dependency_injection: ^1.0.2+1
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 flutter:
