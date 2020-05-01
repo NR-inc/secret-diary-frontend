@@ -1,0 +1,20 @@
+import 'package:sdbase/di/abstract_module.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:sddata/di/network_module.dart';
+import 'package:sddata/di/repository_module.dart';
+
+class DataModule extends AbstractModule {
+  static final DataModule _dataModule = DataModule._internal();
+
+  factory DataModule() {
+    return _dataModule;
+  }
+
+  DataModule._internal();
+
+  @override
+  void configure(Injector injector) {
+    NetworkModule().configure(injector);
+    RepositoryModule().configure(injector);
+  }
+}

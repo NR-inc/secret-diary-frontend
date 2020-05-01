@@ -22,7 +22,7 @@ class SplashState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            color: Colors.orange,
+            color: Colors.blue,
             child: Center(
                 child: Text(
               'Secret Diary',

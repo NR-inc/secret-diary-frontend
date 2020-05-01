@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  dio: ^3.0.9
+  rxdart: ^0.24.0
+
   sdbase:
     path:
       ../sd_base

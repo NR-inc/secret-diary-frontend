@@ -10,6 +10,16 @@ dependencies:
   flutter:
     sdk: flutter
 
+  shared_preferences: ^0.5.7
+
+  sdbase:
+    path:
+      ../sd_base
+
+  sddomain:
+    path:
+      ../sd_domain
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

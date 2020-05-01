@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:sddomain/bloc/registration_bloc.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -8,6 +10,13 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class RegistrationState extends State<RegistrationScreen> {
+  final RegistrationBloc _registrationBloc = Injector.getInjector().get<RegistrationBloc>();
+  final firstNameTextController = TextEditingController();
+  final lastNameTextController = TextEditingController();
+  final emailTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text('Registration')),
