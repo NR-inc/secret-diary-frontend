@@ -12,6 +12,7 @@ class SecretDiaryApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: AppRoutes.splash,
         onGenerateRoute: ApplicationRouter(),
+        navigatorObservers: [routeObserver],
         theme: ThemeData(primarySwatch: Colors.blue));
   }
 }

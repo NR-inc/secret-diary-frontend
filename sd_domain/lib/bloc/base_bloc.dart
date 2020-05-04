@@ -1,1 +1,5 @@
-abstract class BaseBloc {}
+abstract class BaseBloc {
+  void unsubscribe();
+
+  void dispose();
+}

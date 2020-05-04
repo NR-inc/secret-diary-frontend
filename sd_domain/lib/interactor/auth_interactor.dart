@@ -1,12 +1,15 @@
 import 'package:sddomain/model/default_response.dart';
 import 'package:sddomain/repository/auth_repository.dart';
 import 'package:sddomain/repository/config_repository.dart';
+import 'package:sddomain/repository/user_repository.dart';
 
 class AuthInteractor {
   ConfigRepository _configRepository;
   AuthRepository _authRepository;
+  UserRepository _userRepository;
 
-  AuthInteractor(this._configRepository, this._authRepository);
+  AuthInteractor(
+      this._configRepository, this._authRepository, this._userRepository);
 
   Future<DefaultResponse> login(String email, String password) async {
     final authToken = await _authRepository.login(email, password);
@@ -23,7 +26,9 @@ class AuthInteractor {
   }
 
   Future<void> logout() async {
-    await _authRepository.logout();
+    await _userRepository.logout();
     await _configRepository.clearAuthToken();
   }
+
+  Future<bool> hasSession() async => _configRepository.hasSession();
 }

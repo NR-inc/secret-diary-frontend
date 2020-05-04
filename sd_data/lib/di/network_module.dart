@@ -2,16 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:sdbase/di/abstract_module.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddata/network/network_executor.dart';
-import 'package:sddomain/repository/config_repository.dart';
+import 'package:sddomain/core/error_handler.dart';
 import 'package:sddomain/network/network_error_handler.dart';
 
 class NetworkModule extends AbstractModule {
   static final NetworkModule _networkModule = NetworkModule._internal();
   static const _baseUrl = 'https://secret-diary-api.herokuapp.com/';
   static const _connectionTimeout = 1000;
-  static const _authHeaderKey = 'Authorization';
-  static const dioMainClientKey = 'main';
-  static const dioAuthClientKey = 'auth';
 
   factory NetworkModule() {
     return _networkModule;
@@ -20,33 +17,15 @@ class NetworkModule extends AbstractModule {
   NetworkModule._internal();
 
   @override
-  void configure(Injector injector) {
+  void configure(Injector injector) async {
     injector.map((i) => NetworkExecutor(i.get()));
     injector.map((i) => NetworkErrorHandler(), isSingleton: true);
-    injector.map((i) => _getAuthDioClient(),
-        isSingleton: true, key: dioAuthClientKey);
-    injectMainDioClient();
+    injector.map((i) => ErrorHandler(), isSingleton: true);
+    injector.map((i) => _getDioClient(),
+        isSingleton: true);
   }
 
-  void injectMainDioClient() async {
-    Injector injector = Injector.getInjector();
-    final mainDioClient = await _getMainDioClient(injector.get());
-    injector.map((i) => mainDioClient,
-        isSingleton: true, key: dioMainClientKey);
-  }
-
-  Future<Dio> _getMainDioClient(ConfigRepository configRepository) async {
-    final authToken = await configRepository.getAuthToken();
-    final baseOptions = _getBaseDioOptions();
-    if (authToken?.getToken() != null) {
-      baseOptions.headers = {_authHeaderKey: 'Bearer ${authToken.getToken()}'};
-    }
-    var dio = Dio(baseOptions);
-    _setInterceptor(dio);
-    return dio;
-  }
-
-  Dio _getAuthDioClient() {
+  Dio _getDioClient() {
     var dio = Dio(_getBaseDioOptions());
     _setInterceptor(dio);
     return dio;

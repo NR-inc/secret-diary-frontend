@@ -8,8 +8,7 @@ class AuthTokenModel {
   String toJson() => json.encode({'token': _token});
 
   AuthTokenModel.fromJson(dynamic data) {
-    Map valueMap = json.decode(data);
-    _token = valueMap['token'];
+    _token = data['token'];
   }
 
   String getToken() => _token;

@@ -7,4 +7,14 @@ class SettingsBloc extends BaseBloc {
   SettingsBloc(this._authInteractor);
 
   Future<void> logout() async => await _authInteractor.logout();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+  }
+
+  @override
+  void unsubscribe() {
+    // TODO: implement unsubscribe
+  }
 }

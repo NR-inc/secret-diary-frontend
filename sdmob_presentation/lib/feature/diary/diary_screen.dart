@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
+import 'package:sddomain/bloc/user_bloc.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:sddomain/model/user_model.dart';
 
 class DiaryScreen extends StatefulWidget {
   @override
@@ -8,6 +11,20 @@ class DiaryScreen extends StatefulWidget {
 }
 
 class _DiaryState extends State<DiaryScreen> {
+  final _userBloc = Injector.getInjector().get<UserBloc>();
+
+  @override
+  void initState() {
+    _userBloc.profile();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _userBloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,26 +37,40 @@ class _DiaryState extends State<DiaryScreen> {
                 onPressed: () => Navigator.pushNamed(context, AppRoutes.post),
               )
             ]),
-        body: Center(
-            child: Column(children: <Widget>[
-          SizedBox(height: 24),
-          Icon(Icons.account_circle, color: Colors.grey, size: 80),
-          SizedBox(height: 24),
-          Text('First name'),
-          SizedBox(height: 8),
-          Text('Last name'),
-          SizedBox(height: 24),
-          Expanded(
-              child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      child: Container(
-                        height: 64.0,
-                        child: Center(child: Text("Post of the user's diary")),
-                      ),
-                    );
-                  }))
-        ])));
+        body: StreamBuilder<UserModel>(
+          stream: _userBloc.currentUserSubject.stream,
+          builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+            final currentUser = snapshot.data ?? UserModel.empty();
+            return Stack(children: <Widget>[
+              Center(
+                  child: Column(children: <Widget>[
+                SizedBox(height: 24),
+                Icon(Icons.account_circle, color: Colors.grey, size: 80),
+                SizedBox(height: 24),
+                Text(currentUser.firstName),
+                SizedBox(height: 8),
+                Text(currentUser.lastName),
+                SizedBox(height: 8),
+                Text(currentUser.email),
+                SizedBox(height: 24),
+                Expanded(
+                    child: ListView.builder(
+                        itemCount: 10,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            child: Container(
+                              height: 64.0,
+                              child: Center(
+                                  child: Text("Post of the user's diary")),
+                            ),
+                          );
+                        }))
+              ])),
+              Visibility(
+                  visible: !snapshot.hasData,
+                  child: Center(child: CircularProgressIndicator())),
+            ]);
+          },
+        ));
   }
 }

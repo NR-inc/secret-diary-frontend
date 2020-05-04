@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
+import 'package:sddomain/bloc/splash_bloc.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -9,13 +11,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashState extends State<SplashScreen> {
-  static const _splashScreenDurationSec = 3;
+  final _splashBloc = Injector.getInjector().get<SplashBloc>();
 
   @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: _splashScreenDurationSec),
-        () => Navigator.pushReplacementNamed(context, AppRoutes.login));
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _splashBloc.sessionAvailabilitySubject.listen((bool hasSession) {
+      if (hasSession) {
+        Navigator.pushReplacementNamed(context, AppRoutes.root);
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
+      }
+    });
+    _splashBloc.checkSession();
   }
 
   @override

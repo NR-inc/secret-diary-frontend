@@ -5,6 +5,4 @@ abstract class AuthRepository {
 
   Future<AuthTokenModel> registration(
       String firstName, String lastName, String email, String password);
-
-  Future<void> logout();
 }

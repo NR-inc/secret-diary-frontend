@@ -1,4 +1,4 @@
-import 'grapqhql_query.dart';
+import '../grapqhql_query.dart';
 
 GraphQlQuery login({String email, String password}) => GraphQlQuery(
       query: '''
@@ -21,7 +21,7 @@ GraphQlQuery registration(
   mutation {
     register(
         firstName: "$firstName", 
-        lastName: "$lastName,
+        lastName: "$lastName",
         email: "$email",
         password: "$password" 
     ) {

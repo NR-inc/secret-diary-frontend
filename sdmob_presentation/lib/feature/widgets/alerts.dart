@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 void showSimpleErrorDialog(
     {BuildContext context,
-    String title,
-    String description,
-    String buttonName}) {
+    String title = 'Error has occurred',
+    String description = 'Something went wrong.',
+    String buttonName = 'OK'}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {

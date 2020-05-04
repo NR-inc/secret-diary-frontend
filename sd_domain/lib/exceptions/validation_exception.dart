@@ -1,0 +1,9 @@
+import 'package:sddomain/model/input_field_type.dart';
+
+class ValidationException implements Exception {
+  Map<InputFieldType, String> validationErrors;
+  String message;
+
+  ValidationException(
+  {this.validationErrors, this.message = 'Validation error'});
+}
