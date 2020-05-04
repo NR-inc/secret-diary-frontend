@@ -4,17 +4,26 @@ import 'package:sddomain/exceptions/network_exception.dart';
 import 'package:ssecretdiary/feature/widgets/alerts.dart';
 
 abstract class BaseState<W extends StatefulWidget> extends State<W> {
-  handleError(dynamic error,
+  void handleError(dynamic error,
       [Function(ValidationException) validationHandler]) {
     switch (error.runtimeType) {
       case NetworkException:
-        showSimpleErrorDialog(context: context, title: 'Network error');
+        final exception = error as NetworkException;
+        showSimpleErrorDialog(
+            context: context,
+            title: 'Network error',
+            description:
+                exception.responseStatusType == ResponseStatusType.NO_NETWORK
+                    ? 'No network connection'
+                    : exception.message);
         break;
       case ValidationException:
+        final exception = error as ValidationException;
         if (validationHandler == null) {
           showSimpleErrorDialog(
               context: context,
-              description: (error as ValidationException).message);
+              title: 'Validation error',
+              description: exception.message);
         } else {
           validationHandler(error);
         }

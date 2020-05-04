@@ -10,11 +10,6 @@ class SettingsBloc extends BaseBloc {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-  }
-
-  @override
-  void unsubscribe() {
-    // TODO: implement unsubscribe
+    super.dispose();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:sddata/network/grapqhql_query.dart';
 import 'package:sddomain/core/error_handler.dart';
+import 'package:sddomain/exceptions/network_exception.dart';
 
 class NetworkExecutor {
   ErrorHandler _errorHandler;
@@ -11,9 +12,17 @@ class NetworkExecutor {
     Response response;
     try {
       response = await dio.post('', data: query.toJson());
-      final data = response.data['data'];
-      if (data == null) _errorHandler.handleError(response.data);
-      return data;
+      if (response.data != null) {
+        final data = response.data['data'];
+        if (data != null) {
+          return data;
+        } else {
+          _errorHandler.handleError(response.data);
+        }
+      } else {
+        throw NetworkException(
+            statusCode: response.statusCode);
+      }
     } on dynamic catch (ex) {
       _errorHandler.handleNetworkError(ex);
     }

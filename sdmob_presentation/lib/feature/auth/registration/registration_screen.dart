@@ -1,19 +1,17 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sddomain/model/validation_error_model.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/bloc/registration_bloc.dart';
 import 'package:sddomain/model/default_response.dart';
-import 'package:ssecretdiary/feature/widgets/alerts.dart';
+import 'package:ssecretdiary/feature/widgets/base_state.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => RegistrationState();
 }
 
-class RegistrationState extends State<RegistrationScreen> with RouteAware {
+class RegistrationState extends BaseState<RegistrationScreen>{
   final RegistrationBloc _registrationBloc =
       Injector.getInjector().get<RegistrationBloc>();
   final firstNameTextController = TextEditingController();
@@ -22,49 +20,9 @@ class RegistrationState extends State<RegistrationScreen> with RouteAware {
   final passwordTextController = TextEditingController();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    routeObserver.subscribe(this, ModalRoute.of(context));
-  }
-
-  @override
   void dispose() {
-    routeObserver.unsubscribe(this);
     _registrationBloc.dispose();
     super.dispose();
-  }
-
-  @override
-  void didPushNext() {
-    _registrationBloc.unsubscribe();
-  }
-
-  @override
-  void didPush() {
-    _handleErrors();
-  }
-
-  @override
-  void didPopNext() {
-    _handleErrors();
-  }
-
-  void _handleErrors() {
-    _registrationBloc.handleNetworkError((DioError networkError) {
-      showSimpleErrorDialog(
-          context: context,
-          title: 'Network error',
-          description: networkError.error,
-          buttonName: 'Cancel');
-    });
-    _registrationBloc
-        .handleValidationError((List<ValidationErrorModel> validationErrors) {
-      showSimpleErrorDialog(
-          context: context,
-          title: 'Network error',
-          description: validationErrors[0].message ?? 'Something went wrong',
-          buttonName: 'Cancel');
-    });
   }
 
   @override

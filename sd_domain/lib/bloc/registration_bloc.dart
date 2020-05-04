@@ -3,7 +3,7 @@ import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/interactor/auth_interactor.dart';
 import 'package:sddomain/model/default_response.dart';
 
-class RegistrationBloc implements BaseBloc {
+class RegistrationBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
 
   RegistrationBloc(this._authInteractor);
@@ -13,8 +13,7 @@ class RegistrationBloc implements BaseBloc {
       _authInteractor.registration(firstName, lastName, email, password);
 
   @override
-  void dispose() {}
-
-  @override
-  void unsubscribe() {}
+  void dispose() {
+    super.dispose();
+  }
 }

@@ -3,8 +3,14 @@ class NetworkException implements Exception {
   String description;
   ResponseStatusType responseStatusType;
 
-  NetworkException({this.message, int statusCode, this.description}) {
-    responseStatusType = mapStatusCode(statusCode);
+  NetworkException(
+      {this.message,
+      int statusCode,
+      this.description,
+      ResponseStatusType responseStatusType}) {
+    this.responseStatusType = responseStatusType == null
+        ? mapStatusCode(statusCode)
+        : responseStatusType;
   }
 
   ResponseStatusType mapStatusCode(int statusCode) {
@@ -27,5 +33,6 @@ enum ResponseStatusType {
   AUTHORIZATION,
   FORBIDDEN,
   NOT_FOUND,
+  NO_NETWORK,
   NONE
 }

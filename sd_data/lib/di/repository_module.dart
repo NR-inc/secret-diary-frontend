@@ -1,6 +1,5 @@
 import 'package:sdbase/di/abstract_module.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:sddata/di/network_module.dart';
 import 'package:sddata/repository/auth_data_repository.dart';
 import 'package:sddata/repository/config_data_repository.dart';
 import 'package:sddata/repository/user_data_repository.dart';

@@ -14,8 +14,7 @@ class ConfigDataRepository implements ConfigRepository {
   @override
   Future<bool> hasSession() async {
     final sharedPrefs = await SharedPreferences.getInstance();
-    return AuthTokenModel.fromJson(sharedPrefs.getString(_authTokenKey)) !=
-        null;
+    return sharedPrefs.getString(_authTokenKey) != null;
   }
 
   @override

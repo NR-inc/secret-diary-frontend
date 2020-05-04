@@ -2,7 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/interactor/auth_interactor.dart';
 
-class SplashBloc implements BaseBloc {
+class SplashBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
   final sessionAvailabilitySubject = BehaviorSubject<bool>();
 
@@ -15,11 +15,7 @@ class SplashBloc implements BaseBloc {
 
   @override
   void dispose() {
+    super.dispose();
     sessionAvailabilitySubject.close();
-  }
-
-  @override
-  void unsubscribe() {
-    // TODO: implement unsubscribe
   }
 }

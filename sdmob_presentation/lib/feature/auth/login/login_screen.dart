@@ -42,9 +42,7 @@ class LoginState extends BaseState<LoginScreen> {
                     if (value == DefaultResponse.SUCCESS) {
                       Navigator.pushReplacementNamed(context, AppRoutes.root);
                     }
-                  }, onError: (){
-
-                  });
+                  }, onError: (error) => handleError(error));
                 }),
             MaterialButton(
               child: Text('Registration'),

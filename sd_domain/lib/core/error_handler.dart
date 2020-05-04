@@ -17,11 +17,13 @@ class ErrorHandler {
   void handleNetworkError(dynamic error) {
     switch (error.runtimeType) {
       case DioError:
+        final dioError = (error as DioError);
         throw NetworkException(
-            statusCode: (error as DioError).response.statusCode);
+            statusCode: dioError?.response?.statusCode ?? -1,
+            message: dioError.message);
         break;
       default:
-        throw NetworkException();
+        throw error;
         break;
     }
   }

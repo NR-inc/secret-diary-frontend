@@ -3,7 +3,6 @@ import 'package:sdbase/di/abstract_module.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddata/network/network_executor.dart';
 import 'package:sddomain/core/error_handler.dart';
-import 'package:sddomain/network/network_error_handler.dart';
 
 class NetworkModule extends AbstractModule {
   static final NetworkModule _networkModule = NetworkModule._internal();
@@ -19,10 +18,8 @@ class NetworkModule extends AbstractModule {
   @override
   void configure(Injector injector) async {
     injector.map((i) => NetworkExecutor(i.get()));
-    injector.map((i) => NetworkErrorHandler(), isSingleton: true);
     injector.map((i) => ErrorHandler(), isSingleton: true);
-    injector.map((i) => _getDioClient(),
-        isSingleton: true);
+    injector.map((i) => _getDioClient(), isSingleton: true);
   }
 
   Dio _getDioClient() {
@@ -35,16 +32,11 @@ class NetworkModule extends AbstractModule {
       BaseOptions(baseUrl: _baseUrl, connectTimeout: _connectionTimeout);
 
   void _setInterceptor(Dio dio) {
-    final networkErrorHandler =
-        Injector.getInjector().get<NetworkErrorHandler>();
     dio
       ..interceptors.add(InterceptorsWrapper(
           onRequest: (RequestOptions options) => _requestInterceptor(options),
           onResponse: (Response response) => _responseInterceptor(response),
-          onError: (DioError dioError) {
-            _errorInterceptor(dioError);
-            networkErrorHandler.errorWasFetched(dioError);
-          }));
+          onError: (DioError dioError) => _errorInterceptor(dioError)));
   }
 
   void _requestInterceptor(RequestOptions options) {
@@ -57,7 +49,7 @@ class NetworkModule extends AbstractModule {
     print('\nResponse: '
         '\rstatus code: \n${response.statusCode}'
         '\nheaders: \n${response.headers}'
-        '${response.data}');
+        '\n${response.data}');
   }
 
   void _errorInterceptor(DioError dioError) {
