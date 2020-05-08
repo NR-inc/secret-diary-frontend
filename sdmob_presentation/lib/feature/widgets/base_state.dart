@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:sddomain/exceptions/validation_exception.dart';
 import 'package:sddomain/exceptions/network_exception.dart';
+import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:ssecretdiary/feature/widgets/alerts.dart';
 
-abstract class BaseState<W extends StatefulWidget> extends State<W> {
+abstract class BaseState<W extends StatefulWidget> extends State<W> with RouteAware {
+
+  @override
+  void didChangeDependencies() {
+    routeObserver.subscribe(this, ModalRoute.of(context));
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
   void handleError(dynamic error,
       [Function(ValidationException) validationHandler]) {
     switch (error.runtimeType) {

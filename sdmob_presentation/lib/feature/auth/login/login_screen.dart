@@ -17,6 +17,24 @@ class LoginState extends BaseState<LoginScreen> {
   final passwordTextController = TextEditingController();
 
   @override
+  void dispose() {
+    _loginBloc.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didPushNext() {
+    _loginBloc.unsubscribe();
+    super.didPushNext();
+  }
+
+  @override
+  void didPush() {
+    // TODO: implement didPush
+    super.didPush();
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text('Login'),

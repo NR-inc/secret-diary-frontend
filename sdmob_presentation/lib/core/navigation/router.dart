@@ -6,6 +6,8 @@ import 'package:ssecretdiary/feature/post/post_screen.dart';
 import 'package:ssecretdiary/feature/root/root_screen.dart';
 import 'package:ssecretdiary/feature/splash/splash_screen.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class ApplicationRouter {
   Route call(RouteSettings settings) {
     Route route;

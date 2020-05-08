@@ -12,6 +12,7 @@ dependencies:
 
   dio: ^3.0.9
   rxdart: ^0.24.0
+  async: ^2.4.0
 
   sdbase:
     path:

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void showSimpleErrorDialog(
@@ -8,20 +11,33 @@ void showSimpleErrorDialog(
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      // return object of type Dialog
-      return AlertDialog(
-        title: new Text(title),
-        content: new Text(description),
-        actions: <Widget>[
-          // usually buttons at the bottom of the dialog
-          new FlatButton(
-            child: new Text(buttonName),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
+      if (Platform.isAndroid) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(description),
+          actions: <Widget>[
+            new FlatButton(
+              child: Text(buttonName),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      } else {
+        return CupertinoAlertDialog(
+          title: Text(title),
+          content: Text(description),
+          actions: <Widget>[
+            new FlatButton(
+              child: Text(buttonName, style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      }
     },
   );
 }

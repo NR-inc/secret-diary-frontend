@@ -11,7 +11,7 @@ class RegistrationScreen extends StatefulWidget {
   State<StatefulWidget> createState() => RegistrationState();
 }
 
-class RegistrationState extends BaseState<RegistrationScreen>{
+class RegistrationState extends BaseState<RegistrationScreen> {
   final RegistrationBloc _registrationBloc =
       Injector.getInjector().get<RegistrationBloc>();
   final firstNameTextController = TextEditingController();
@@ -23,6 +23,12 @@ class RegistrationState extends BaseState<RegistrationScreen>{
   void dispose() {
     _registrationBloc.dispose();
     super.dispose();
+  }
+
+  @override
+  void didPushNext() {
+    _registrationBloc.unsubscribe();
+    super.didPushNext();
   }
 
   @override
@@ -59,7 +65,7 @@ class RegistrationState extends BaseState<RegistrationScreen>{
                       Navigator.pushNamedAndRemoveUntil(
                           context, AppRoutes.root, (route) => false);
                     }
-                  });
+                  }, onError: handleError);
                 })
           ]),
         )),
