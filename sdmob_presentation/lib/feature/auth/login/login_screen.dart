@@ -5,6 +5,7 @@ import 'package:sddomain/bloc/login_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/model/default_response.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
+import 'package:ssecretdiary/feature/widgets/common_ui.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -29,46 +30,51 @@ class LoginState extends BaseState<LoginScreen> {
   }
 
   @override
-  void didPush() {
-    // TODO: implement didPush
-    super.didPush();
-  }
-
-  @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text('Login'),
         ),
-        body: Container(
-          child: Center(
-              child: Column(children: <Widget>[
-            TextFormField(
-                controller: emailTextController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(hintText: 'Email')),
-            TextFormField(
-                controller: passwordTextController,
-                obscureText: true,
-                decoration: InputDecoration(hintText: 'Password')),
-            MaterialButton(
-                child: Text('Login'),
-                onPressed: () async {
-                  _loginBloc
-                      .login(
-                          emailTextController.text, passwordTextController.text)
-                      .then((value) {
-                    if (value == DefaultResponse.SUCCESS) {
-                      Navigator.pushReplacementNamed(context, AppRoutes.root);
-                    }
-                  }, onError: (error) => handleError(error));
-                }),
-            MaterialButton(
-              child: Text('Registration'),
-              onPressed: () async {
-                Navigator.pushNamed(context, AppRoutes.registration);
-              },
-            )
-          ])),
+        body: StreamBuilder(
+          stream: _loginBloc.loadingProgress.stream,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return Stack(children: <Widget>[
+              loginForm(),
+              showLoader(show: snapshot.hasData && snapshot.data)
+            ]);
+          },
         ),
       );
+
+  Widget loginForm() => Container(
+        child: Center(
+            child: Column(children: <Widget>[
+          TextFormField(
+              controller: emailTextController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(hintText: 'Email')),
+          TextFormField(
+              controller: passwordTextController,
+              obscureText: true,
+              decoration: InputDecoration(hintText: 'Password')),
+          MaterialButton(child: Text('Login'), onPressed: _loginPressed),
+          MaterialButton(
+            child: Text('Registration'),
+            onPressed: _registrationPressed,
+          )
+        ])),
+      );
+
+  void _loginPressed() {
+    _loginBloc
+        .login(emailTextController.text, passwordTextController.text)
+        .then((value) {
+      if (value == DefaultResponse.SUCCESS) {
+        Navigator.pushReplacementNamed(context, AppRoutes.root);
+      }
+    }, onError: handleError);
+  }
+
+  void _registrationPressed() {
+    Navigator.pushNamed(context, AppRoutes.registration);
+  }
 }

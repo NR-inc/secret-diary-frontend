@@ -12,8 +12,12 @@ class LoginBloc extends BaseBloc {
 
   Future<DefaultResponse> login(String email, String password) async {
     _loginOperation?.cancel();
+    loadingProgress.add(true);
     _loginOperation =
         CancelableOperation.fromFuture(_authInteractor.login(email, password));
+    _loginOperation.then((_) => loadingProgress.add(false),
+        onError: (error, stackTrace) => loadingProgress.add(false),
+        onCancel: () => loadingProgress.add(false));
     return await _loginOperation.value;
   }
 

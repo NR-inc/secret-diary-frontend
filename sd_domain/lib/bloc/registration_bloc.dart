@@ -13,9 +13,13 @@ class RegistrationBloc extends BaseBloc {
   Future<DefaultResponse> registration(
       String firstName, String lastName, String email, String password) async {
     _registrationOperation?.cancel();
+    loadingProgress.add(true);
     _registrationOperation = CancelableOperation.fromFuture(
         _authInteractor.registration(firstName, lastName, email, password));
-    return _registrationOperation.value;
+    _registrationOperation.then((_) => loadingProgress.add(false),
+        onError: (error, stackTrace) => loadingProgress.add(false),
+        onCancel: () => loadingProgress.add(false));
+    return await _registrationOperation.value;
   }
 
   @override
