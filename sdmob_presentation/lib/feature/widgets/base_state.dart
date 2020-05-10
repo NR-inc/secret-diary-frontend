@@ -4,8 +4,8 @@ import 'package:sddomain/exceptions/network_exception.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:ssecretdiary/feature/widgets/alerts.dart';
 
-abstract class BaseState<W extends StatefulWidget> extends State<W> with RouteAware {
-
+abstract class BaseState<W extends StatefulWidget> extends State<W>
+    with RouteAware {
   @override
   void didChangeDependencies() {
     routeObserver.subscribe(this, ModalRoute.of(context));
@@ -18,8 +18,7 @@ abstract class BaseState<W extends StatefulWidget> extends State<W> with RouteAw
     super.dispose();
   }
 
-  void handleError(dynamic error,
-      [Function(ValidationException) validationHandler]) {
+  void handleError(dynamic error) {
     switch (error.runtimeType) {
       case NetworkException:
         final exception = error as NetworkException;
@@ -33,13 +32,12 @@ abstract class BaseState<W extends StatefulWidget> extends State<W> with RouteAw
         break;
       case ValidationException:
         final exception = error as ValidationException;
-        if (validationHandler == null) {
+        if (exception.validationErrors == null ||
+            exception.validationErrors.isEmpty) {
           showSimpleErrorDialog(
               context: context,
               title: 'Validation error',
               description: exception.message);
-        } else {
-          validationHandler(error);
         }
         break;
       default:

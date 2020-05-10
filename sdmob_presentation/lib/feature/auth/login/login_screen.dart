@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sddomain/exceptions/validation_exception.dart';
+import 'package:sddomain/model/input_field_type.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:sddomain/bloc/login_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
@@ -16,6 +18,14 @@ class LoginState extends BaseState<LoginScreen> {
   final LoginBloc _loginBloc = Injector.getInjector().get<LoginBloc>();
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
+
+  @override
+  void initState() {
+    _loginBloc.loginSubject.listen((_) {
+      Navigator.pushReplacementNamed(context, AppRoutes.root);
+    }, onError: handleError);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -35,23 +45,35 @@ class LoginState extends BaseState<LoginScreen> {
           title: Text('Login'),
         ),
         body: StreamBuilder(
-          stream: _loginBloc.loadingProgress.stream,
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            return Stack(children: <Widget>[
-              loginForm(),
-              showLoader(show: snapshot.hasData && snapshot.data)
-            ]);
-          },
-        ),
+            stream: _loginBloc.loadingProgress,
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              return Stack(children: <Widget>[
+                StreamBuilder(
+                    stream: _loginBloc.loginSubject,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DefaultResponse> snapshot) {
+                      Map<InputFieldType, String> validationErrors = snapshot
+                                  .hasError &&
+                              snapshot.error?.runtimeType == ValidationException
+                          ? (snapshot.error as ValidationException)
+                              .validationErrors
+                          : {};
+                      return loginForm(validationErrors: validationErrors);
+                    }),
+                showLoader(show: snapshot.hasData && snapshot.data)
+              ]);
+            }),
       );
 
-  Widget loginForm() => Container(
+  Widget loginForm({Map<InputFieldType, String> validationErrors}) => Container(
         child: Center(
             child: Column(children: <Widget>[
           TextFormField(
               controller: emailTextController,
               keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(hintText: 'Email')),
+              decoration: InputDecoration(
+                  hintText: 'Email',
+                  errorText: validationErrors[InputFieldType.email])),
           TextFormField(
               controller: passwordTextController,
               obscureText: true,
@@ -64,17 +86,9 @@ class LoginState extends BaseState<LoginScreen> {
         ])),
       );
 
-  void _loginPressed() {
-    _loginBloc
-        .login(emailTextController.text, passwordTextController.text)
-        .then((value) {
-      if (value == DefaultResponse.SUCCESS) {
-        Navigator.pushReplacementNamed(context, AppRoutes.root);
-      }
-    }, onError: handleError);
-  }
+  void _loginPressed() =>
+      _loginBloc.login(emailTextController.text, passwordTextController.text);
 
-  void _registrationPressed() {
-    Navigator.pushNamed(context, AppRoutes.registration);
-  }
+  void _registrationPressed() =>
+      Navigator.pushNamed(context, AppRoutes.registration);
 }

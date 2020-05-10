@@ -13,7 +13,7 @@ class UserDataRepository implements UserRepository {
   @override
   Future<UserModel> profile() async {
     final response =
-        await _networkExecutor.makeRequest(_dio, userApi.profile());
+        await _networkExecutor.makeRequest(_dio, userApi.profile()).first;
     return UserModel.fromJson(response['profile']);
   }
 

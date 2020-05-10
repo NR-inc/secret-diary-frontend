@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 Widget showLoader({@required bool show}) => Visibility(
     visible: show,
     child: AbsorbPointer(
+      absorbing: false,
       child: Container(
         child: Center(
           child: Platform.isAndroid

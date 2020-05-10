@@ -42,17 +42,17 @@ class NetworkModule extends AbstractModule {
   void _requestInterceptor(RequestOptions options) {
     print('\nRequest: '
         '\nheaders: \n${options.headers}'
-        '\n${options.data}');
+        '\n${options?.data}');
   }
 
   void _responseInterceptor(Response response) {
     print('\nResponse: '
-        '\rstatus code: \n${response.statusCode}'
-        '\nheaders: \n${response.headers}'
-        '\n${response.data}');
+        '\rstatus code: \n${response?.statusCode}'
+        '\nheaders: \n${response?.headers}'
+        '\n${response?.data}');
   }
 
   void _errorInterceptor(DioError dioError) {
-    print('\nNetwork error: \n${dioError.response.data}');
+    print('\nNetwork error: \n${dioError.response?.data}');
   }
 }

@@ -11,10 +11,10 @@ class AuthDataRepository extends AuthRepository {
   AuthDataRepository(this._dio, this._networkExecutor);
 
   @override
-  Future<AuthTokenModel> login(String email, String password) async {
+  Stream<AuthTokenModel> login(String email, String password) {
     final query = authApi.login(email: email, password: password);
-    final response = await _networkExecutor.makeRequest(_dio, query);
-    return AuthTokenModel.fromJson(response['login']);
+    return _networkExecutor.makeRequest(_dio, query)
+        .map((response) => AuthTokenModel.fromJson(response['login']));
   }
 
   @override
@@ -25,7 +25,7 @@ class AuthDataRepository extends AuthRepository {
         lastName: lastName,
         email: email,
         password: password);
-    final response = await _networkExecutor.makeRequest(_dio, query);
+    final response = await _networkExecutor.makeRequest(_dio, query).first;
     return AuthTokenModel.fromJson(response['register']);
   }
 }

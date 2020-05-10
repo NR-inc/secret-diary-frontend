@@ -5,5 +5,5 @@ class ValidationException implements Exception {
   String message;
 
   ValidationException(
-  {this.validationErrors, this.message = 'Validation error'});
+      {this.validationErrors = const {}, this.message = 'Validation error'});
 }
