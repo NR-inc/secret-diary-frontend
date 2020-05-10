@@ -20,7 +20,8 @@ class BlocModule extends AbstractModule {
   @override
   void configure(Injector injector) {
     injector.map((i) => SplashBloc(i.get()));
-    injector.map((i) => RegistrationBloc(i.get()));
+    injector.map(
+        (i) => RegistrationBloc(i.get(), PublishSubject<DefaultResponse>()));
     injector.map((i) => LoginBloc(i.get(), PublishSubject<DefaultResponse>()));
     injector.map((i) => SettingsBloc(i.get()));
     injector.map((i) => UserBloc(i.get()));

@@ -1,30 +1,38 @@
 import 'dart:async';
-import 'package:async/async.dart';
+
+import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/interactor/auth_interactor.dart';
 import 'package:sddomain/model/default_response.dart';
 
 class RegistrationBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
-  CancelableOperation _registrationOperation;
+  final PublishSubject<DefaultResponse> registrationSubject;
+  StreamSubscription registrationSubscription;
 
-  RegistrationBloc(this._authInteractor);
+  RegistrationBloc(this._authInteractor, this.registrationSubject);
 
-  Future<DefaultResponse> registration(
-      String firstName, String lastName, String email, String password) async {
-    _registrationOperation?.cancel();
+  void registration(String firstName, String lastName, String email, String password) async {
     loadingProgress.add(true);
-    _registrationOperation = CancelableOperation.fromFuture(
-        _authInteractor.registration(firstName, lastName, email, password));
-    _registrationOperation.then((_) => loadingProgress.add(false),
-        onError: (error, stackTrace) => loadingProgress.add(false),
-        onCancel: () => loadingProgress.add(false));
-    return await _registrationOperation.value;
+    registrationSubscription?.cancel();
+    registrationSubscription =
+        _authInteractor.registration(firstName, lastName, email, password).listen(registrationSubject.add,
+            onError: (error) {
+              registrationSubject.addError(error);
+              loadingProgress.add(false);
+            },
+            onDone: () => loadingProgress.add(false));
   }
 
   @override
   void unsubscribe() {
-    _registrationOperation?.cancel();
+    registrationSubscription?.cancel();
     super.unsubscribe();
+  }
+
+  @override
+  void dispose() {
+    registrationSubject.close();
+    super.dispose();
   }
 }

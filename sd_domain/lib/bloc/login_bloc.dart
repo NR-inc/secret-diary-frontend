@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/interactor/auth_interactor.dart';
-import 'package:sddomain/model/default_response.dart';
 
 class LoginBloc extends BaseBloc {
   final AuthInteractor _authInteractor;

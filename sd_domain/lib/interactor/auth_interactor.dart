@@ -14,24 +14,22 @@ class AuthInteractor {
   AuthInteractor(
       this._configRepository, this._authRepository, this._userRepository);
 
-  Stream<DefaultResponse> login(String email, String password) {
-    /*return Stream.error(ValidationException(
-        validationErrors: {InputFieldType.email: 'Invalid email'}));*/
-    return _authRepository
-        .login(email, password)
-        .asyncMap((AuthTokenModel authToken) async {
-      await _configRepository.saveAuthToken(authToken);
-      return DefaultResponse.SUCCESS;
-    });
-  }
+  Stream<DefaultResponse> login(String email, String password) =>
+      _authRepository
+          .login(email, password)
+          .asyncMap((AuthTokenModel authToken) async {
+        await _configRepository.saveAuthToken(authToken);
+        return DefaultResponse.SUCCESS;
+      });
 
-  Future<DefaultResponse> registration(
-      String firstName, String lastName, String email, String password) async {
-    final authToken = await _authRepository.registration(
-        firstName, lastName, email, password);
-    await _configRepository.saveAuthToken(authToken);
-    return DefaultResponse.SUCCESS;
-  }
+  Stream<DefaultResponse> registration(
+          String firstName, String lastName, String email, String password) =>
+      _authRepository
+          .registration(firstName, lastName, email, password)
+          .asyncMap((AuthTokenModel authToken) async {
+        await _configRepository.saveAuthToken(authToken);
+        return DefaultResponse.SUCCESS;
+      });
 
   Future<void> logout() async {
     await _userRepository.logout();

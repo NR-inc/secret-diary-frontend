@@ -82,7 +82,8 @@ class LoginState extends BaseState<LoginScreen> {
           MaterialButton(
             child: Text('Registration'),
             onPressed: _registrationPressed,
-          )
+          ),
+          Center(child: Text('=)', style: TextStyle(fontSize: 100)))
         ])),
       );
 

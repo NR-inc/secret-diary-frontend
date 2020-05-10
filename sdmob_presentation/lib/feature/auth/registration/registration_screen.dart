@@ -68,12 +68,6 @@ class RegistrationState extends BaseState<RegistrationScreen> {
   void _registrationPressed() {
     _registrationBloc
         .registration(firstNameTextController.text, lastNameTextController.text,
-            emailTextController.text, passwordTextController.text)
-        .then((value) {
-      if (value == DefaultResponse.SUCCESS) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, AppRoutes.root, (route) => false);
-      }
-    }, onError: handleError);
+            emailTextController.text, passwordTextController.text);
   }
 }
