@@ -355,3 +355,4 @@ build/
 ios/.generated/
 packages
 .flutter-plugins
+/lib/generated_plugin_registrant.dart
