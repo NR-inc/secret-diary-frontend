@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sddomain/exceptions/validation_exception.dart';
 import 'package:sddomain/model/input_field_type.dart';
+import 'package:ssecretdiary/core/common_ui/common_ui.dart';
+import 'package:ssecretdiary/core/constants/dimens.dart';
+import 'package:ssecretdiary/core/constants/locators.dart';
+import 'package:ssecretdiary/core/constants/sd_strings.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:sddomain/bloc/login_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
@@ -16,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 
 class LoginState extends BaseState<LoginScreen> {
   final LoginBloc _loginBloc = Injector.getInjector().get<LoginBloc>();
+  final focusNode = FocusNode();
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
 
@@ -36,6 +41,8 @@ class LoginState extends BaseState<LoginScreen> {
   @override
   void didPushNext() {
     _loginBloc.unsubscribe();
+    emailTextController.clear();
+    passwordTextController.clear();
     super.didPushNext();
   }
 
@@ -65,26 +72,39 @@ class LoginState extends BaseState<LoginScreen> {
             }),
       );
 
-  Widget loginForm({Map<InputFieldType, String> validationErrors}) => Container(
+  Widget loginForm({
+    Map<InputFieldType, String> validationErrors,
+  }) =>
+      Container(
+        padding: EdgeInsets.all(Dimens.unit2),
         child: Center(
-            child: Column(children: <Widget>[
-          TextFormField(
-              controller: emailTextController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                  hintText: 'Email',
-                  errorText: validationErrors[InputFieldType.email])),
-          TextFormField(
-              controller: passwordTextController,
-              obscureText: true,
-              decoration: InputDecoration(hintText: 'Password')),
-          MaterialButton(child: Text('Login'), onPressed: _loginPressed),
-          MaterialButton(
-            child: Text('Registration'),
-            onPressed: _registrationPressed,
+          child: Column(
+            children: <Widget>[
+              inputField(
+                inputFieldKey: Key(Locators.emailFieldLocator),
+                errorFieldKey: Key(Locators.emailErrorLocator),
+                controller: emailTextController,
+                hint: SdStrings.emailHint,
+                keyboardType: TextInputType.emailAddress,
+                error: validationErrors[InputFieldType.email],
+              ),
+              SizedBox(height: Dimens.unit2),
+              inputField(
+                inputFieldKey: Key(Locators.passwordFieldLocator),
+                errorFieldKey: Key(Locators.passwordErrorLocator),
+                controller: passwordTextController,
+                hint: SdStrings.passwordHint,
+                obscureText: true,
+                error: validationErrors[InputFieldType.password],
+              ),
+              MaterialButton(child: Text('Login'), onPressed: _loginPressed),
+              MaterialButton(
+                child: Text('Registration'),
+                onPressed: _registrationPressed,
+              ),
+            ],
           ),
-          Center(child: Text('=)', style: TextStyle(fontSize: 100)))
-        ])),
+        ),
       );
 
   void _loginPressed() =>
