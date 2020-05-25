@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ssecretdiary/core/navigation/router.dart';
+import 'package:sddomain/exceptions/validation_exception.dart';
+import 'package:sddomain/model/input_field_type.dart';
+import 'package:ssecretdiary/core/common_ui/common_ui.dart';
+import 'package:ssecretdiary/core/constants/dimens.dart';
+import 'package:ssecretdiary/core/constants/locators.dart';
+import 'package:ssecretdiary/core/constants/sd_strings.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/bloc/registration_bloc.dart';
-import 'package:sddomain/model/default_response.dart';
+import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
 import 'package:ssecretdiary/feature/widgets/common_ui.dart';
 
@@ -19,6 +24,15 @@ class RegistrationState extends BaseState<RegistrationScreen> {
   final lastNameTextController = TextEditingController();
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
+
+  @override
+  void initState() {
+    _registrationBloc.registrationSubject.listen(
+      (_) => Navigator.pushReplacementNamed(context, AppRoutes.root),
+      onError: handleError,
+    );
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -43,31 +57,60 @@ class RegistrationState extends BaseState<RegistrationScreen> {
                 showLoader(show: snapshot.hasData && snapshot.data)
               ])));
 
-  Widget _registrationForm() => Container(
-          child: Center(
-        child: Column(children: <Widget>[
-          TextFormField(
-              controller: firstNameTextController,
-              decoration: InputDecoration(hintText: 'First name')),
-          TextFormField(
-              controller: lastNameTextController,
-              decoration: InputDecoration(hintText: 'Last name')),
-          TextFormField(
-              controller: emailTextController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(hintText: 'Email')),
-          TextFormField(
-              controller: passwordTextController,
-              obscureText: true,
-              decoration: InputDecoration(hintText: 'Password')),
-          MaterialButton(
-              child: Text('Registration'), onPressed: _registrationPressed)
-        ]),
-      ));
+  Widget _registrationForm() => StreamBuilder(
+        stream: _registrationBloc.registrationSubject,
+        builder: (context, snapshot) {
+          Map<InputFieldType, String> validationErrors = snapshot.hasError &&
+                  snapshot.error?.runtimeType == ValidationException
+              ? (snapshot.error as ValidationException).validationErrors
+              : {};
+          return Container(
+              padding: EdgeInsets.all(Dimens.unit2),
+              child: Center(
+                child: Column(children: <Widget>[
+                  inputField(
+                    inputFieldKey: Key(Locators.firstNameFieldLocator),
+                    errorFieldKey: Key(Locators.firstNameErrorLocator),
+                    controller: firstNameTextController,
+                    hint: SdStrings.firstNameHint,
+                    error: validationErrors[InputFieldType.firstName],
+                  ),
+                  inputField(
+                    inputFieldKey: Key(Locators.lastNameFieldLocator),
+                    errorFieldKey: Key(Locators.lastNameErrorLocator),
+                    controller: lastNameTextController,
+                    hint: SdStrings.lastNameHint,
+                    error: validationErrors[InputFieldType.lastName],
+                  ),
+                  inputField(
+                    inputFieldKey: Key(Locators.emailFieldLocator),
+                    errorFieldKey: Key(Locators.emailErrorLocator),
+                    controller: emailTextController,
+                    hint: SdStrings.emailHint,
+                    keyboardType: TextInputType.emailAddress,
+                    error: validationErrors[InputFieldType.email],
+                  ),
+                  inputField(
+                    inputFieldKey: Key(Locators.passwordFieldLocator),
+                    errorFieldKey: Key(Locators.passwordErrorLocator),
+                    controller: passwordTextController,
+                    hint: SdStrings.passwordHint,
+                    obscureText: true,
+                    error: validationErrors[InputFieldType.password],
+                  ),
+                  MaterialButton(
+                      child: Text('Registration'),
+                      onPressed: _registrationPressed)
+                ]),
+              ));
+        },
+      );
 
   void _registrationPressed() {
-    _registrationBloc
-        .registration(firstNameTextController.text, lastNameTextController.text,
-            emailTextController.text, passwordTextController.text);
+    _registrationBloc.registration(
+        firstNameTextController.text,
+        lastNameTextController.text,
+        emailTextController.text,
+        passwordTextController.text);
   }
 }

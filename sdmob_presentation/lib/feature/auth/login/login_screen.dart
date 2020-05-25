@@ -20,15 +20,15 @@ class LoginScreen extends StatefulWidget {
 
 class LoginState extends BaseState<LoginScreen> {
   final LoginBloc _loginBloc = Injector.getInjector().get<LoginBloc>();
-  final focusNode = FocusNode();
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
 
   @override
   void initState() {
-    _loginBloc.loginSubject.listen((_) {
-      Navigator.pushReplacementNamed(context, AppRoutes.root);
-    }, onError: handleError);
+    _loginBloc.loginSubject.listen(
+      (_) => Navigator.pushReplacementNamed(context, AppRoutes.root),
+      onError: handleError,
+    );
     super.initState();
   }
 
@@ -55,56 +55,53 @@ class LoginState extends BaseState<LoginScreen> {
             stream: _loginBloc.loadingProgress,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               return Stack(children: <Widget>[
-                StreamBuilder(
-                    stream: _loginBloc.loginSubject,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DefaultResponse> snapshot) {
-                      Map<InputFieldType, String> validationErrors = snapshot
-                                  .hasError &&
-                              snapshot.error?.runtimeType == ValidationException
-                          ? (snapshot.error as ValidationException)
-                              .validationErrors
-                          : {};
-                      return loginForm(validationErrors: validationErrors);
-                    }),
+                loginForm(),
                 showLoader(show: snapshot.hasData && snapshot.data)
               ]);
             }),
       );
 
-  Widget loginForm({
-    Map<InputFieldType, String> validationErrors,
-  }) =>
-      Container(
-        padding: EdgeInsets.all(Dimens.unit2),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              inputField(
-                inputFieldKey: Key(Locators.emailFieldLocator),
-                errorFieldKey: Key(Locators.emailErrorLocator),
-                controller: emailTextController,
-                hint: SdStrings.emailHint,
-                keyboardType: TextInputType.emailAddress,
-                error: validationErrors[InputFieldType.email],
+  Widget loginForm() => StreamBuilder(
+        stream: _loginBloc.loginSubject,
+        builder:
+            (BuildContext context, AsyncSnapshot<DefaultResponse> snapshot) {
+          Map<InputFieldType, String> validationErrors = snapshot.hasError &&
+                  snapshot.error?.runtimeType == ValidationException
+              ? (snapshot.error as ValidationException).validationErrors
+              : {};
+          return Container(
+            padding: EdgeInsets.all(Dimens.unit2),
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  inputField(
+                    inputFieldKey: Key(Locators.emailFieldLocator),
+                    errorFieldKey: Key(Locators.emailErrorLocator),
+                    controller: emailTextController,
+                    hint: SdStrings.emailHint,
+                    keyboardType: TextInputType.emailAddress,
+                    error: validationErrors[InputFieldType.email],
+                  ),
+                  SizedBox(height: Dimens.unit2),
+                  inputField(
+                    inputFieldKey: Key(Locators.passwordFieldLocator),
+                    errorFieldKey: Key(Locators.passwordErrorLocator),
+                    controller: passwordTextController,
+                    hint: SdStrings.passwordHint,
+                    obscureText: true,
+                    error: validationErrors[InputFieldType.password],
+                  ),
+                  MaterialButton(
+                      child: Text('Login'), onPressed: _loginPressed),
+                  MaterialButton(
+                    child: Text('Registration'),
+                    onPressed: _registrationPressed,
+                  ),
+                ],
               ),
-              SizedBox(height: Dimens.unit2),
-              inputField(
-                inputFieldKey: Key(Locators.passwordFieldLocator),
-                errorFieldKey: Key(Locators.passwordErrorLocator),
-                controller: passwordTextController,
-                hint: SdStrings.passwordHint,
-                obscureText: true,
-                error: validationErrors[InputFieldType.password],
-              ),
-              MaterialButton(child: Text('Login'), onPressed: _loginPressed),
-              MaterialButton(
-                child: Text('Registration'),
-                onPressed: _registrationPressed,
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
 
   void _loginPressed() =>

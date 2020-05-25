@@ -7,7 +7,7 @@ Widget inputField({
   @required Key errorFieldKey,
   @required TextEditingController controller,
   @required String hint,
-  TextInputType keyboardType,
+  TextInputType keyboardType = TextInputType.text,
   textInputAction: TextInputAction.done,
   bool obscureText = false,
   String error,
