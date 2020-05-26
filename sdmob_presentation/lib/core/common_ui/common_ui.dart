@@ -9,6 +9,7 @@ Widget inputField({
   TextInputType keyboardType = TextInputType.text,
   textInputAction: TextInputAction.done,
   bool obscureText = false,
+  bool showClearButton = false,
   String error,
 }) {
   return Container(
@@ -22,6 +23,16 @@ Widget inputField({
           textInputAction: textInputAction,
           decoration: InputDecoration(
             hintText: hint,
+            suffixIcon: Visibility(
+              visible: showClearButton,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: IconButton(
+                icon: Icon(Icons.clear, size: Dimens.unit2),
+                onPressed: () => controller.clear(),
+              ),
+            ),
           ),
         ),
         SizedBox(height: Dimens.unit),
