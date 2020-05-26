@@ -10,7 +10,7 @@ abstract class ValidationRule<E> {
 
   ValidationRule(this._ruleType, this.error);
 
-  E isValid(String value);
+  E isValid(String value, {dynamic args});
 }
 
 enum RuleType {

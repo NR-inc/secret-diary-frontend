@@ -19,7 +19,6 @@ class InteractorModule extends AbstractModule {
           i.get(),
           i.get(),
           i.get(key: ValidationModule.loginFormValidator),
-          i.get(key: ValidationModule.registrationFormValidator),
         ));
 
     injector.map((i) => UserInteractor(i.get()));

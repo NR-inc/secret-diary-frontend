@@ -7,6 +7,8 @@ class ValidationModule extends AbstractModule {
   static const loginFormValidator = 'loginFormValidator';
   static const registrationFormValidator = 'registrationFormValidator';
 
+  static const firstNameFieldValidator = 'firstNameFieldValidator';
+  static const lastNameFieldValidator = 'lastNameFieldValidator';
   static const emailFieldValidator = 'emailFieldValidator';
   static const passwordFieldValidator = 'passwordFieldValidator';
 
@@ -21,48 +23,77 @@ class ValidationModule extends AbstractModule {
 
   @override
   void configure(Injector injector) {
-
-
+    _injectFirstNameFieldValidator(injector);
+    _injectLastNameFieldValidator(injector);
+    _injectEmailFieldValidator(injector);
+    _injectPasswordFieldValidator(injector);
 
     injector.map(
-        (i) => FormValidator({
-              InputFieldType.email: i.get(key: emailFieldValidator),
-              InputFieldType.password: i.get(key: passwordFieldValidator),
-            }),
-        key: loginFormValidator);
-  }
+      (i) => FormValidator({
+        InputFieldType.email: i.get(key: emailFieldValidator),
+        InputFieldType.password: i.get(key: passwordFieldValidator),
+      }),
+      key: loginFormValidator,
+    );
 
-  void _injectFirstNameFieldValidator(Injector injector){
-
-  }
-
-  void _injectLastNameFieldValidator(Injector injector){
-
-  }
-
-  void _injectEmailFieldValidator(Injector injector){
     injector.map(
-          (i) => FieldValidator(InputFieldType.email, [
+      (i) => FormValidator({
+        InputFieldType.firstName: i.get(key: firstNameFieldValidator),
+        InputFieldType.lastName: i.get(key: lastNameFieldValidator),
+        InputFieldType.email: i.get(key: emailFieldValidator),
+        InputFieldType.password: i.get(key: passwordFieldValidator),
+      }),
+      key: registrationFormValidator,
+    );
+  }
+
+  void _injectFirstNameFieldValidator(Injector injector) {
+    injector.map(
+      (i) => FieldValidator(InputFieldType.firstName, [
+        EmptyValidationRule(
+          error: SdStrings.fieldErrorEmptyFirstName,
+        ),
+        LengthValidationRule(),
+      ]),
+      key: firstNameFieldValidator,
+    );
+  }
+
+  void _injectLastNameFieldValidator(Injector injector) {
+    injector.map(
+      (i) => FieldValidator(InputFieldType.lastName, [
+        EmptyValidationRule(
+          error: SdStrings.fieldErrorEmptyLastName,
+        ),
+        LengthValidationRule(),
+      ]),
+      key: lastNameFieldValidator,
+    );
+  }
+
+  void _injectEmailFieldValidator(Injector injector) {
+    injector.map(
+      (i) => FieldValidator(InputFieldType.email, [
         EmptyValidationRule(
           error: SdStrings.fieldErrorEmptyEmail,
         ),
-        LengthValidationRule(
-          error: SdStrings.fieldErrorPatternEmail,
-        ),
+        LengthValidationRule(),
       ]),
       key: emailFieldValidator,
     );
   }
 
-  void _injectPasswordFieldValidator(Injector injector){
+  void _injectPasswordFieldValidator(Injector injector) {
     injector.map(
-          (i) => FieldValidator(InputFieldType.password, [
+      (i) => FieldValidator(InputFieldType.password, [
         EmptyValidationRule(
           error: SdStrings.fieldErrorEmptyPassword,
         ),
         LengthValidationRule(
-          error: SdStrings.fieldErrorPatternPassword,
-          min: 6,
+          minError: SdStrings.fieldErrorMinLengthPassword,
+          maxError: SdStrings.fieldErrorMaxLengthPassword,
+          min: Constants.passwordMinLength,
+          max: Constants.passwordMaxLength,
         ),
       ]),
       key: passwordFieldValidator,

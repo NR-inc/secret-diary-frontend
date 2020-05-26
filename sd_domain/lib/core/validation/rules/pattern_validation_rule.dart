@@ -13,5 +13,6 @@ class PatternValidationRule extends ValidationRule<String> {
         );
 
   @override
-  String isValid(String value) => _regExp.hasMatch(value) ? null : error;
+  String isValid(String value, {dynamic args}) =>
+      _regExp.hasMatch(value) ? null : error;
 }

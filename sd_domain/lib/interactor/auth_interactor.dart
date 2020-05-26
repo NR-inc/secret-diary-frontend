@@ -6,14 +6,13 @@ class AuthInteractor {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
   final FormValidator _loginFormValidator;
-  final FormValidator _registrationFormValidator;
+   FormValidator _registrationFormValidator;
 
   AuthInteractor(
     this._configRepository,
     this._authRepository,
     this._userRepository,
-    this._loginFormValidator,
-    this._registrationFormValidator,
+    this._loginFormValidator
   );
 
   Stream<DefaultResponse> login(String email, String password) =>

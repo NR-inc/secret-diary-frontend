@@ -1,16 +1,28 @@
-import 'package:flutter/cupertino.dart';
-import 'package:sddomain/export/validation.dart';
+import 'package:sddomain/export/domain.dart';
 
 class LengthValidationRule extends ValidationRule<String> {
   final int max;
   final int min;
+  final String minError;
+  final String maxError;
 
-  LengthValidationRule({@required String error, this.max = 50, this.min = 3})
-      : super(RuleType.isCorrectLength, error);
+  LengthValidationRule({
+    this.minError = SdStrings.fieldErrorMinLength,
+    this.maxError = SdStrings.fieldErrorMaxLength,
+    this.max = Constants.fieldMaxLength,
+    this.min = Constants.fieldMinLength,
+  }) : super(RuleType.isCorrectLength, minError); // todo FIX_ME
 
   @override
-  String isValid(String value) =>
-      value != null && (value.length <= max && value.length >= min)
-          ? null
-          : error;
+  String isValid(String value, {dynamic args}) {
+    if (value == null) {
+      return minError;
+    } else if (value.length < min) {
+      return minError;
+    } else if (value.length > max) {
+      return maxError;
+    } else {
+      return null;
+    }
+  }
 }
