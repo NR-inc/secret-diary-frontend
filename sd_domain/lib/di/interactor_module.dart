@@ -15,12 +15,12 @@ class InteractorModule extends AbstractModule {
   @override
   void configure(Injector injector) {
     injector.map((i) => AuthInteractor(
-        i.get(),
-        i.get(),
-        i.get(),
-        i.get(
-          key: ValidationModule.loginFormValidator,
-        )));
+          i.get(),
+          i.get(),
+          i.get(),
+          i.get(key: ValidationModule.loginFormValidator),
+          i.get(key: ValidationModule.registrationFormValidator),
+        ));
 
     injector.map((i) => UserInteractor(i.get()));
   }

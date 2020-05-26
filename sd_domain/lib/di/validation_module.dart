@@ -21,8 +21,28 @@ class ValidationModule extends AbstractModule {
 
   @override
   void configure(Injector injector) {
+
+
+
     injector.map(
-      (i) => FieldValidator(InputFieldType.email, [
+        (i) => FormValidator({
+              InputFieldType.email: i.get(key: emailFieldValidator),
+              InputFieldType.password: i.get(key: passwordFieldValidator),
+            }),
+        key: loginFormValidator);
+  }
+
+  void _injectFirstNameFieldValidator(Injector injector){
+
+  }
+
+  void _injectLastNameFieldValidator(Injector injector){
+
+  }
+
+  void _injectEmailFieldValidator(Injector injector){
+    injector.map(
+          (i) => FieldValidator(InputFieldType.email, [
         EmptyValidationRule(
           error: SdStrings.fieldErrorEmptyEmail,
         ),
@@ -32,9 +52,11 @@ class ValidationModule extends AbstractModule {
       ]),
       key: emailFieldValidator,
     );
+  }
 
+  void _injectPasswordFieldValidator(Injector injector){
     injector.map(
-      (i) => FieldValidator(InputFieldType.email, [
+          (i) => FieldValidator(InputFieldType.password, [
         EmptyValidationRule(
           error: SdStrings.fieldErrorEmptyPassword,
         ),
@@ -45,12 +67,5 @@ class ValidationModule extends AbstractModule {
       ]),
       key: passwordFieldValidator,
     );
-
-    injector.map(
-        (i) => FormValidator({
-              InputFieldType.email: i.get(key: emailFieldValidator),
-              InputFieldType.password: i.get(key: passwordFieldValidator),
-            }),
-        key: loginFormValidator);
   }
 }

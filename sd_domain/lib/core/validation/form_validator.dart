@@ -10,7 +10,8 @@ class FormValidator {
   Future<void> validateForm(Map<InputFieldType, String> formFields) async {
     Map<InputFieldType, String> validationErrors = {};
 
-    formFields.forEach((InputFieldType key, String value) async {
+    for (InputFieldType key in formFields.keys) {
+      String value = formFields[key];
       final invalidField = await _fieldValidators[key].validate(value);
 
       if (invalidField != null) {
@@ -19,7 +20,7 @@ class FormValidator {
           () => invalidField.error,
         );
       }
-    });
+    }
 
     if (validationErrors.isNotEmpty) {
       throw ValidationException(

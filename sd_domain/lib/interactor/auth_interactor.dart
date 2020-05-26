@@ -1,36 +1,34 @@
-import 'dart:math';
-
-import 'package:async/async.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sddomain/core/validation/form_validator.dart';
-import 'package:sddomain/export/models.dart';
-import 'package:sddomain/export/repositories.dart';
-import 'package:sddomain/export/validation.dart';
+import 'package:sddomain/export/domain.dart';
 
 class AuthInteractor {
   final ConfigRepository _configRepository;
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
   final FormValidator _loginFormValidator;
+  final FormValidator _registrationFormValidator;
 
   AuthInteractor(
     this._configRepository,
     this._authRepository,
     this._userRepository,
     this._loginFormValidator,
+    this._registrationFormValidator,
   );
 
   Stream<DefaultResponse> login(String email, String password) =>
-      ZipStream.zip2(
-          validateForm(email, password),
-          _authRepository
-              .login(email, password)
-              .asyncMap((AuthTokenModel authToken) async {
-            await _configRepository.saveAuthToken(authToken);
-            return DefaultResponse.SUCCESS;
-          }), (_, response) {
-        return response;
-      });
+      _loginFormValidator
+          .validateForm({
+            InputFieldType.email: email,
+            InputFieldType.password: password,
+          })
+          .asStream()
+          .switchMap((_) => _authRepository
+                  .login(email, password)
+                  .asyncMap((AuthTokenModel authToken) async {
+                await _configRepository.saveAuthToken(authToken);
+                return DefaultResponse.SUCCESS;
+              }));
 
   Stream<DefaultResponse> registration(
           String firstName, String lastName, String email, String password) =>
@@ -45,12 +43,6 @@ class AuthInteractor {
     await _userRepository.logout();
     await _configRepository.clearAuthToken();
   }
-
-  Stream<void> validateForm(String email, password) =>
-      _loginFormValidator.validateForm({
-        InputFieldType.email: email,
-        InputFieldType.password: password,
-      }).asStream();
 
   Future<bool> hasSession() async => _configRepository.hasSession();
 }

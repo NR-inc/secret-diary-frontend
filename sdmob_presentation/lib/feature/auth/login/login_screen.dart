@@ -39,8 +39,6 @@ class LoginState extends BaseState<LoginScreen> {
   @override
   void didPushNext() {
     _loginBloc.unsubscribe();
-    emailTextController.clear();
-    passwordTextController.clear();
     super.didPushNext();
   }
 
