@@ -87,10 +87,14 @@ class LoginState extends BaseState<LoginScreen> {
                     obscureText: true,
                     error: validationErrors[InputFieldType.password],
                   ),
-                  MaterialButton(
-                      child: Text('Login'), onPressed: _loginPressed),
-                  MaterialButton(
-                    child: Text('Registration'),
+                  simpleButton(
+                    key: Key('loginButton'),
+                    text: 'Login',
+                    onPressed: _loginPressed,
+                  ),
+                  simpleButton(
+                    key: Key('registrationButton'),
+                    text: 'Registration',
                     onPressed: _registrationPressed,
                   ),
                 ],
