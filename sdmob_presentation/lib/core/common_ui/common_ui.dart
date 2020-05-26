@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ssecretdiary/core/constants/dimens.dart';
-import 'package:ssecretdiary/core/constants/sd_strings.dart';
+import 'package:sddomain/export/domain.dart';
 
 Widget inputField({
   @required Key inputFieldKey,

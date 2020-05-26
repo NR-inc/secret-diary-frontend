@@ -1,4 +1,4 @@
-import 'package:sddomain/model/input_field_type.dart';
+import 'package:sddomain/export/models.dart';
 
 class InvalidField {
   InvalidField(this.inputFieldType, this.error);

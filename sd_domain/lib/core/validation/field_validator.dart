@@ -1,22 +1,21 @@
-import 'package:sddomain/core/validation/invalid_field.dart';
-import 'package:sddomain/core/validation/validation_rule.dart';
-import 'package:sddomain/model/input_field_type.dart';
+import 'package:sddomain/export/validation.dart';
+import 'package:sddomain/export/models.dart';
 
-abstract class FieldValidator {
-  final List<ValidationRule> validationRules;
-  final InputFieldType inputFieldType;
+class FieldValidator {
+  final List<ValidationRule> _validationRules;
+  final InputFieldType _inputFieldType;
 
   FieldValidator(
-    this.validationRules,
-    this.inputFieldType,
+    this._inputFieldType,
+    this._validationRules,
   );
 
   Future<InvalidField> validate(String value) async {
     InvalidField invalidField;
-    for (ValidationRule validationRule in validationRules) {
+    for (ValidationRule validationRule in _validationRules) {
       String result = validationRule.isValid(value);
       if (result != null) {
-        invalidField = InvalidField(inputFieldType, result);
+        invalidField = InvalidField(_inputFieldType, result);
         break;
       }
     }
