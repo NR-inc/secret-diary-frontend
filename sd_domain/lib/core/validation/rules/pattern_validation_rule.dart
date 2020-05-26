@@ -1,11 +1,12 @@
-import 'package:sddomain/core/validation/validation_rule.dart';
+import 'package:flutter/foundation.dart';
+import 'package:sddomain/export/domain.dart';
 
 class PatternValidationRule extends ValidationRule<String> {
   final RegExp _regExp;
 
   PatternValidationRule({
-    String error,
-    String pattern,
+    @required String error,
+    String pattern = ValidationPatterns.simpleFieldPattern,
   })  : _regExp = RegExp(pattern),
         super(
           RuleType.isMatchToPattern,

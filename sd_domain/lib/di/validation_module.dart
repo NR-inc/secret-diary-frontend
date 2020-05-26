@@ -77,6 +77,10 @@ class ValidationModule extends AbstractModule {
         EmptyValidationRule(
           error: SdStrings.fieldErrorEmptyEmail,
         ),
+        PatternValidationRule(
+          pattern: ValidationPatterns.emailPattern,
+          error: SdStrings.fieldErrorPatternEmail,
+        ),
         LengthValidationRule(),
       ]),
       key: emailFieldValidator,
