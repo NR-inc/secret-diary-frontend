@@ -1,8 +1,6 @@
-import 'package:sddata/network/network_executor.dart';
-import 'package:sddomain/model/user_model.dart';
-import 'package:sddomain/repository/user_repository.dart';
 import 'package:dio/dio.dart';
-import 'package:sddata/network/api/user_api.dart' as userApi;
+import 'package:sddata/data.dart';
+import 'package:sddomain/export/domain.dart';
 
 class UserDataRepository implements UserRepository {
   final Dio _dio;
@@ -12,8 +10,9 @@ class UserDataRepository implements UserRepository {
 
   @override
   Future<UserModel> profile() async {
-    final response =
-        await _networkExecutor.makeRequest(_dio, userApi.profile()).first;
+    final response = await _networkExecutor
+        .makeRequest(_dio, UserApi.profile())
+        .first;
     return UserModel.fromJson(response['profile']);
   }
 

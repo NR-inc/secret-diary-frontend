@@ -1,31 +1,49 @@
 import 'package:dio/dio.dart';
-import 'package:sddata/network/network_executor.dart';
-import 'package:sddomain/repository/auth_repository.dart';
-import 'package:sddomain/model/auth_token_model.dart';
-import 'package:sddata/network/api/auth_api.dart' as authApi;
+import 'package:sddata/data.dart';
+import 'package:sddomain/export/domain.dart';
 
 class AuthDataRepository extends AuthRepository {
   final Dio _dio;
   final NetworkExecutor _networkExecutor;
+  final LoginResponseMapper _loginResponseMapper;
+  final RegistrationResponseMapper _registrationResponseMapper;
 
-  AuthDataRepository(this._dio, this._networkExecutor);
+  AuthDataRepository(
+    this._dio,
+    this._networkExecutor,
+    this._loginResponseMapper,
+    this._registrationResponseMapper,
+  );
 
   @override
-  Stream<AuthTokenModel> login(String email, String password) =>
-      _networkExecutor
-          .makeRequest(_dio, authApi.login(email: email, password: password))
-          .map((response) => AuthTokenModel.fromJson(response['login']));
-
-  @override
-  Stream<AuthTokenModel> registration(
-          String firstName, String lastName, String email, String password) =>
+  Stream<AuthTokenModel> login(
+    String email,
+    String password,
+  ) =>
       _networkExecutor
           .makeRequest(
               _dio,
-              authApi.registration(
-                  firstName: firstName,
-                  lastName: lastName,
-                  email: email,
-                  password: password))
-          .map((response) => AuthTokenModel.fromJson(response['register']));
+              AuthApi.login(
+                email: email,
+                password: password,
+              ))
+          .map(_loginResponseMapper.map);
+
+  @override
+  Stream<AuthTokenModel> registration(
+    String firstName,
+    String lastName,
+    String email,
+    String password,
+  ) =>
+      _networkExecutor
+          .makeRequest(
+            _dio,
+            AuthApi.registration(
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password),
+          )
+          .map(_registrationResponseMapper.map);
 }

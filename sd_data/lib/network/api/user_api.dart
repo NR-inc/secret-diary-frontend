@@ -1,6 +1,7 @@
 import 'package:sddata/network/grapqhql_query.dart';
 
-GraphQlQuery profile() => GraphQlQuery(query: '''
+class UserApi {
+  static GraphQlQuery profile() => GraphQlQuery(query: '''
  query {
     profile {
       first_name,
@@ -9,3 +10,4 @@ GraphQlQuery profile() => GraphQlQuery(query: '''
     }
  }
 ''');
+}

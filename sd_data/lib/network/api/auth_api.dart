@@ -1,7 +1,8 @@
 import '../grapqhql_query.dart';
 
-GraphQlQuery login({String email, String password}) => GraphQlQuery(
-      query: '''
+class AuthApi {
+  static GraphQlQuery login({String email, String password}) => GraphQlQuery(
+        query: '''
   mutation {
     login(
         email: "$email", 
@@ -11,13 +12,13 @@ GraphQlQuery login({String email, String password}) => GraphQlQuery(
     }
   }
 ''',
-      variables: {'email': email, 'password': password},
-    );
+        variables: {'email': email, 'password': password},
+      );
 
-GraphQlQuery registration(
-        {String firstName, String lastName, String email, String password}) =>
-    GraphQlQuery(
-      query: '''
+  static GraphQlQuery registration(
+          {String firstName, String lastName, String email, String password}) =>
+      GraphQlQuery(
+        query: '''
   mutation {
     register(
         firstName: "$firstName", 
@@ -29,10 +30,11 @@ GraphQlQuery registration(
     }
   }
 ''',
-      variables: {
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-        'password': password
-      },
-    );
+        variables: {
+          'firstName': firstName,
+          'lastName': lastName,
+          'email': email,
+          'password': password
+        },
+      );
+}

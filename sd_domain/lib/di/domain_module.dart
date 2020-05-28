@@ -1,8 +1,6 @@
 import 'package:sdbase/di/abstract_module.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:sddomain/di/bloc_module.dart';
-import 'package:sddomain/di/interactor_module.dart';
-import 'package:sddomain/di/validation_module.dart';
+import 'package:sddomain/export/domain.dart';
 
 class DomainModule extends AbstractModule {
   static final DomainModule _domainModule = DomainModule._internal();
@@ -18,5 +16,8 @@ class DomainModule extends AbstractModule {
     BlocModule().configure(injector);
     InteractorModule().configure(injector);
     ValidationModule().configure(injector);
+
+    injector.map((i) => LoginResponseMapper(), isSingleton: true);
+    injector.map((i) => RegistrationResponseMapper(), isSingleton: true);
   }
 }
