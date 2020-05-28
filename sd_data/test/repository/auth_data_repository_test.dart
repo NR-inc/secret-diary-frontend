@@ -29,6 +29,7 @@ void main() {
       when(
         networkExecutor.makeRequest(networkClient, any),
       ).thenAnswer((_) => Stream.value(response));
+
       when(
         mockLoginResponseMapper.map(response),
       ).thenAnswer((_) => expected);
