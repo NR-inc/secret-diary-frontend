@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
+import 'package:sddomain/export/domain.dart';
 import 'package:sddomain/interactor/auth_interactor.dart';
 
 class LoginBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
-  final loginSubject;
+  final PublishSubject<DefaultResponse> loginSubject;
   StreamSubscription loginSubscription;
 
   LoginBloc(this._authInteractor, this.loginSubject);
