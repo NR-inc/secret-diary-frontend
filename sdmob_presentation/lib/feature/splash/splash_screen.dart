@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:sddomain/core/constants/dimens.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:sddomain/bloc/splash_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:ssecretdiary/feature/widgets/common_ui.dart';
+import 'package:common_ui/common_ui.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -12,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashState extends State<SplashScreen> {
-  static const _splashScreenDelayInSec = 2;
+  static const _splashScreenDelayInSec = 5;
   final _splashBloc = Injector.getInjector().get<SplashBloc>();
 
   @override
@@ -37,18 +39,27 @@ class SplashState extends State<SplashScreen> {
         body: Container(
             width: double.infinity,
             height: double.infinity,
-            color: Colors.blue,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Secret Diary',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 24.0)),
-                  SizedBox(height: 24),
-                  getLoader()
-                ])));
+            color: SdColors.primaryColor,
+            child: Stack(children: <Widget>[
+              Align(
+                  alignment: Alignment.center.add(
+                    AlignmentDirectional(0, -0.1),
+                  ),
+                  child: Image.asset(
+                    SdAssets.bookSplashImg,
+                    package: commonUiPackage,
+                    width: double.infinity,
+                    fit: BoxFit.fill,
+                  )),
+              Align(
+                  alignment: Alignment.center,
+                  child: SvgPicture.asset(SdAssets.appLogo,
+                      package: commonUiPackage)),
+              Align(
+                  alignment: Alignment.center.add(
+                    AlignmentDirectional(0, 0.5),
+                  ),
+                  child: getLoader())
+            ])));
   }
 }

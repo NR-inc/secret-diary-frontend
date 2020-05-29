@@ -11,13 +11,13 @@ void showSimpleErrorDialog(
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      if (Platform.isAndroid) {
-        return AlertDialog(
+      if (Platform.isIOS) {
+        return CupertinoAlertDialog(
           title: Text(title),
           content: Text(description),
           actions: <Widget>[
             new FlatButton(
-              child: Text(buttonName),
+              child: Text(buttonName, style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -25,12 +25,12 @@ void showSimpleErrorDialog(
           ],
         );
       } else {
-        return CupertinoAlertDialog(
+        return AlertDialog(
           title: Text(title),
           content: Text(description),
           actions: <Widget>[
             new FlatButton(
-              child: Text(buttonName, style: TextStyle(color: Colors.red)),
+              child: Text(buttonName),
               onPressed: () {
                 Navigator.of(context).pop();
               },

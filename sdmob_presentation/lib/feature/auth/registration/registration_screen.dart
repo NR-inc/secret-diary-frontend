@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sddomain/exceptions/validation_exception.dart';
 import 'package:sddomain/model/input_field_type.dart';
-import 'package:ssecretdiary/core/common_ui/common_ui.dart';
+import 'package:common_ui/common_ui.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/bloc/registration_bloc.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
-import 'package:ssecretdiary/feature/widgets/common_ui.dart';
 import 'package:sddomain/export/domain.dart';
 
 class RegistrationScreen extends StatefulWidget {
