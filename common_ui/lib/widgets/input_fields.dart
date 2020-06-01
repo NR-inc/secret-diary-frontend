@@ -18,6 +18,7 @@ Widget inputField({
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         TextFormField(
+          key: inputFieldKey,
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
@@ -40,6 +41,7 @@ Widget inputField({
         Visibility(
           child: Text(
             error ?? SdStrings.empty,
+            key: errorFieldKey,
             style: TextStyle(
               color: Colors.red,
               fontSize: Dimens.fontSize12,
