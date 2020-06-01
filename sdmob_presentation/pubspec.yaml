@@ -37,9 +37,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-
-  module:
-    androidX: true
-    androidPackage: com.nr.ssecretdiary
-    iosBundleIdentifier: com.nr.ssecretdiary

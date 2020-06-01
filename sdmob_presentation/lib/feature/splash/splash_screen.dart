@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:sddomain/core/constants/dimens.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:sddomain/bloc/splash_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
