@@ -1,3 +1,4 @@
+import 'package:common_ui/common_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
@@ -28,6 +29,7 @@ class _DiaryState extends State<DiaryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: Key(Locators.diaryScreenLocator),
         appBar: AppBar(
             title: Text('My Diary'),
             centerTitle: true,

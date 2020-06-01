@@ -35,6 +35,7 @@ class SplashState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: Key(Locators.splashScreenLocator),
         body: Container(
             width: double.infinity,
             height: double.infinity,

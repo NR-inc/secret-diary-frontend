@@ -8,7 +8,6 @@ import 'package:sddomain/bloc/login_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/model/default_response.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
-import 'package:sddomain/export/domain.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -43,9 +42,11 @@ class LoginState extends BaseState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text('Login'),
-        ),
+        appBar: getAppBar(
+            key: Locators.loginScreenLocator,
+            context: context,
+            title: SdStrings.login,
+            showBackButton: false),
         body: StreamBuilder(
             stream: _loginBloc.loadingProgress,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -87,13 +88,13 @@ class LoginState extends BaseState<LoginScreen> {
                     error: validationErrors[InputFieldType.password],
                   ),
                   simpleButton(
-                    key: Key('loginButton'),
-                    text: 'Login',
+                    key: Locators.loginButtonLocator,
+                    text: SdStrings.login,
                     onPressed: _loginPressed,
                   ),
                   simpleButton(
-                    key: Key('registrationButton'),
-                    text: 'Registration',
+                    key: Locators.registrationButtonLocator,
+                    text: SdStrings.registration,
                     onPressed: _registrationPressed,
                   ),
                 ],

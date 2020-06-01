@@ -1,4 +1,4 @@
-import 'package:sddomain/core/constants/constants.dart';
+import 'package:common_ui/common_ui.dart';
 
 class SdStrings {
   static const String empty = '';
@@ -14,9 +14,9 @@ class SdStrings {
 
   /// ERRORS
   static const String fieldErrorMaxLength =
-      "Field should not contain more than ${Constants.fieldMaxLength} characters";
+      "Field should not contain more than ${ValidationConstants.fieldMaxLength} characters";
   static const String fieldErrorMinLength =
-      "Field should contain ${Constants.fieldMinLength} or more characters";
+      "Field should contain ${ValidationConstants.fieldMinLength} or more characters";
 
   static const String fieldErrorEmptyFirstName = "Please enter your first name";
   static const String fieldErrorPatternFirstName = "Invalid first name";
@@ -29,8 +29,8 @@ class SdStrings {
 
   static const String fieldErrorEmptyPassword = "Please enter a password";
   static const String fieldErrorMinLengthPassword =
-      "Password should contain ${Constants.passwordMinLength} or more characters";
+      "Password should contain ${ValidationConstants.passwordMinLength} or more characters";
   static const String fieldErrorMaxLengthPassword =
-      "Password should not contain more than ${Constants.passwordMaxLength} characters";
+      "Password should not contain more than ${ValidationConstants.passwordMaxLength} characters";
   static const String fieldErrorPatternPassword = "Invalid password";
 }

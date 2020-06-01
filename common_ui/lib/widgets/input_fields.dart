@@ -1,7 +1,6 @@
-import 'dart:io';
+import 'package:common_ui/common_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sddomain/export/domain.dart';
 
 Widget inputField({
   @required Key inputFieldKey,

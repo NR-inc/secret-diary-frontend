@@ -2,6 +2,7 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sdbase/di/abstract_module.dart';
 import 'package:sddomain/core/validation/rules/length_validation_rule.dart';
 import 'package:sddomain/export/domain.dart';
+import 'package:common_ui/common_ui.dart';
 
 class ValidationModule extends AbstractModule {
   static const loginFormValidator = 'loginFormValidator';
@@ -96,8 +97,8 @@ class ValidationModule extends AbstractModule {
         LengthValidationRule(
           minError: SdStrings.fieldErrorMinLengthPassword,
           maxError: SdStrings.fieldErrorMaxLengthPassword,
-          min: Constants.passwordMinLength,
-          max: Constants.passwordMaxLength,
+          min: ValidationConstants.passwordMinLength,
+          max: ValidationConstants.passwordMaxLength,
         ),
       ]),
       key: passwordFieldValidator,

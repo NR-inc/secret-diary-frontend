@@ -7,7 +7,7 @@ import 'package:sddomain/core/error_handler.dart';
 class NetworkModule extends AbstractModule {
   static final NetworkModule _networkModule = NetworkModule._internal();
   static const _baseUrl = 'https://secret-diary-api.herokuapp.com/';
-  static const _connectionTimeout = 3000;
+  static const _connectionTimeout = 9999999; // todo change timeout time
 
   factory NetworkModule() {
     return _networkModule;

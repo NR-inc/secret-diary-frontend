@@ -1,3 +1,4 @@
+import 'package:common_ui/common_ui.dart';
 import 'package:sddomain/export/domain.dart';
 
 class LengthValidationRule extends ValidationRule<String> {
@@ -9,8 +10,8 @@ class LengthValidationRule extends ValidationRule<String> {
   LengthValidationRule({
     this.minError = SdStrings.fieldErrorMinLength,
     this.maxError = SdStrings.fieldErrorMaxLength,
-    this.max = Constants.fieldMaxLength,
-    this.min = Constants.fieldMinLength,
+    this.max = ValidationConstants.fieldMaxLength,
+    this.min = ValidationConstants.fieldMinLength,
   }) : super(RuleType.isCorrectLength, minError); // todo FIX_ME
 
   @override

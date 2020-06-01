@@ -7,7 +7,6 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/bloc/registration_bloc.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
-import 'package:sddomain/export/domain.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -45,7 +44,10 @@ class RegistrationState extends BaseState<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: Text('Registration')),
+      appBar: getAppBar(
+        key: Locators.registrationScreenLocator,
+        title: SdStrings.registration,
+      ),
       body: StreamBuilder(
           stream: _registrationBloc.loadingProgress,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) =>
@@ -95,9 +97,11 @@ class RegistrationState extends BaseState<RegistrationScreen> {
                     obscureText: true,
                     error: validationErrors[InputFieldType.password],
                   ),
-                  MaterialButton(
-                      child: Text('Registration'),
-                      onPressed: _registrationPressed)
+                  simpleButton(
+                    key: Locators.registrationButtonLocator,
+                    text: SdStrings.registration,
+                    onPressed: _registrationPressed,
+                  )
                 ]),
               ));
         },
