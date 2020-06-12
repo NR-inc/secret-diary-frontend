@@ -1,6 +1,7 @@
 import 'package:common_ui/common_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 Widget inputField({
   @required Key inputFieldKey,
@@ -12,6 +13,7 @@ Widget inputField({
   bool obscureText = false,
   bool showClearButton = false,
   String error,
+  String prefixIconAsset,
 }) {
   return Container(
     child: Column(
@@ -25,6 +27,18 @@ Widget inputField({
           textInputAction: textInputAction,
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: SdColors.secondaryColor.withOpacity(0.5),
+            ),
+            prefixIcon: _getPrefixIcon(prefixIconAsset),
+            prefixIconConstraints: BoxConstraints.expand(
+              width: Dimens.unit3,
+              height: Dimens.unit3,
+            ),
+            prefix: SizedBox(
+              width: Dimens.unit,
+            ),
             suffixIcon: Visibility(
               visible: showClearButton,
               maintainSize: true,
@@ -53,6 +67,19 @@ Widget inputField({
           maintainState: true,
         ),
       ],
+    ),
+  );
+}
+
+Widget _getPrefixIcon(String prefixIconAsset) {
+  if (prefixIconAsset == null) {
+    return null;
+  }
+
+  return Container(
+    child: SvgPicture.asset(
+      prefixIconAsset,
+      package: commonUiPackage,
     ),
   );
 }

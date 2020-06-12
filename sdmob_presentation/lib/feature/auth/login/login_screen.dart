@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/parser.dart';
 import 'package:sddomain/exceptions/validation_exception.dart';
 import 'package:sddomain/model/input_field_type.dart';
 import 'package:common_ui/common_ui.dart';
@@ -42,16 +44,20 @@ class LoginState extends BaseState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: getAppBar(
-            key: Locators.loginScreenLocator,
-            context: context,
-            title: SdStrings.login,
-            showBackButton: false),
+        backgroundColor: SdColors.primaryColor,
         body: StreamBuilder(
             stream: _loginBloc.loadingProgress,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               return Stack(children: <Widget>[
-                loginForm(),
+                Column(children: <Widget>[
+                  SizedBox(height: Dimens.unit8),
+                  SvgPicture.asset(
+                    SdAssets.appLogo,
+                    color: SdColors.secondaryColor,
+                    package: commonUiPackage,
+                  ),
+                  loginForm(),
+                ]),
                 showLoader(show: snapshot.hasData && snapshot.data)
               ]);
             }),
@@ -71,22 +77,22 @@ class LoginState extends BaseState<LoginScreen> {
               child: Column(
                 children: <Widget>[
                   inputField(
-                    inputFieldKey: Key(Locators.emailFieldLocator),
-                    errorFieldKey: Key(Locators.emailErrorLocator),
-                    controller: emailTextController,
-                    hint: SdStrings.emailHint,
-                    keyboardType: TextInputType.emailAddress,
-                    error: validationErrors[InputFieldType.email],
-                  ),
+                      inputFieldKey: Key(Locators.emailFieldLocator),
+                      errorFieldKey: Key(Locators.emailErrorLocator),
+                      controller: emailTextController,
+                      hint: SdStrings.emailHint,
+                      keyboardType: TextInputType.emailAddress,
+                      error: validationErrors[InputFieldType.email],
+                      prefixIconAsset: SdAssets.emailIcon),
                   SizedBox(height: Dimens.unit2),
                   inputField(
-                    inputFieldKey: Key(Locators.passwordFieldLocator),
-                    errorFieldKey: Key(Locators.passwordErrorLocator),
-                    controller: passwordTextController,
-                    hint: SdStrings.passwordHint,
-                    obscureText: true,
-                    error: validationErrors[InputFieldType.password],
-                  ),
+                      inputFieldKey: Key(Locators.passwordFieldLocator),
+                      errorFieldKey: Key(Locators.passwordErrorLocator),
+                      controller: passwordTextController,
+                      hint: SdStrings.passwordHint,
+                      obscureText: true,
+                      error: validationErrors[InputFieldType.password],
+                      prefixIconAsset: SdAssets.passwordIcon),
                   simpleButton(
                     key: Locators.loginButtonLocator,
                     text: SdStrings.login,
