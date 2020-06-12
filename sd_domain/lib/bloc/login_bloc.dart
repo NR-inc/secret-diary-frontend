@@ -14,13 +14,14 @@ class LoginBloc extends BaseBloc {
   void login(String email, String password) async {
     loadingProgress.add(true);
     loginSubscription?.cancel();
-    loginSubscription =
-        _authInteractor.login(email, password).listen(loginSubject.add,
-            onError: (error) {
-              loginSubject.addError(error);
-              loadingProgress.add(false);
-            },
-            onDone: () => loadingProgress.add(false));
+    loginSubscription = _authInteractor.login(email, password).listen(
+          loginSubject.add,
+          onError: (error) {
+            loginSubject.addError(error);
+            loadingProgress.add(false);
+          },
+          onDone: () => loadingProgress.add(false),
+        );
   }
 
   @override

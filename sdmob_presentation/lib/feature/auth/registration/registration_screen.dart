@@ -45,6 +45,7 @@ class RegistrationState extends BaseState<RegistrationScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: getAppBar(
+        context: context,
         key: Locators.registrationScreenLocator,
         title: SdStrings.registration,
       ),
