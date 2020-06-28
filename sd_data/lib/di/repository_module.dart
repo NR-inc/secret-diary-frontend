@@ -26,13 +26,9 @@ class RepositoryModule extends AbstractModule {
         isSingleton: true);
 
     injector.map<AuthRepository>(
-        (i) => AuthDataRepository(
-              i.get(),
-              i.get(),
-              i.get(),
-              i.get(),
-            ),
-        isSingleton: true);
+      (i) => AuthDataRepository(i.get()),
+      isSingleton: true,
+    );
 
     injector.map<UserRepository>(
         (i) => UserDataRepository(

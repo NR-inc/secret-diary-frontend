@@ -32,10 +32,6 @@ Widget inputField({
               color: SdColors.secondaryColor.withOpacity(0.5),
             ),
             prefixIcon: _getPrefixIcon(prefixIconAsset),
-            prefixIconConstraints: BoxConstraints.expand(
-              width: Dimens.unit3,
-              height: Dimens.unit3,
-            ),
             prefix: SizedBox(
               width: Dimens.unit,
             ),
