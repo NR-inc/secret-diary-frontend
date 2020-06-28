@@ -8,8 +8,8 @@ import 'package:sddomain/core/error_handler.dart';
 
 class NetworkModule extends AbstractModule {
   static final NetworkModule _networkModule = NetworkModule._internal();
-  static const _baseUrl = 'secret-diary-dev';
-  static const _port = 8000;
+  static const _baseUrl = 'localhost';
+  static const _port = 50051;
   static const _connectionTimeout = 3000;
 
   factory NetworkModule() {

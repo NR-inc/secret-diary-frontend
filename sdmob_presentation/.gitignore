@@ -75,3 +75,4 @@
 /.android/
 /.ios/Flutter/
 /lib/generated_plugin_registrant.dart
+pubspec.lock
