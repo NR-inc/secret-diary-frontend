@@ -5,6 +5,7 @@ class Locators {
   static const splashScreenLocator = 'splashScreenLocator';
   static const loginScreenLocator = 'loginScreenLocator';
   static const registrationScreenLocator = 'registrationScreenLocator';
+  static const remindPasswordScreenLocator = 'remindPasswordScreenLocator';
   static const diaryScreenLocator = 'diaryScreenLocator';
   static const feedScreenLocator = 'feedScreenLocator';
   static const settingsScreenLocator = 'settingsScreenLocator';
@@ -28,6 +29,7 @@ class Locators {
   /// BUTTONS
   static const loginButtonLocator = 'loginButtonLocator';
   static const registrationButtonLocator = 'registrationButtonLocator';
+  static const remindPasswordButtonLocator = 'remindPasswordButtonLocator';
 
   /// OTHERS
   static const progressBarLocator = 'progressBarLocator';
