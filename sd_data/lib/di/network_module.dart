@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:grpc/grpc.dart';
 import 'package:proto_module/protos.dart';
@@ -8,7 +10,7 @@ import 'package:sddomain/core/error_handler.dart';
 
 class NetworkModule extends AbstractModule {
   static final NetworkModule _networkModule = NetworkModule._internal();
-  static const _baseUrl = 'localhost';
+  static final _baseUrl = Platform.isAndroid ? '10.0.2.2' : 'localhost';
   static const _port = 50051;
   static const _connectionTimeout = 3000;
 
