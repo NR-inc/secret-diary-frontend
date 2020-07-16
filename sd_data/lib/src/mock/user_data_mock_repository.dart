@@ -2,20 +2,17 @@ import 'package:sddomain/export/domain.dart';
 
 class UserDataMockRepository implements UserRepository {
   @override
-  Future<UserModel> getUserById(int id) {
-    // TODO: implement getUserById
-    throw UnimplementedError();
+  Future<UserModel> getUserById(int id) async {
+    return UserModel.testUser();
   }
 
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<void> logout() async {
+    return;
   }
 
   @override
-  Future<UserModel> profile() {
-    // TODO: implement profile
-    throw UnimplementedError();
+  Future<UserModel> profile() async {
+    return UserModel.testUser();
   }
 }

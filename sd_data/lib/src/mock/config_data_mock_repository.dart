@@ -2,20 +2,17 @@ import 'package:sddomain/export/domain.dart';
 
 class ConfigDataMockRepository implements ConfigRepository {
   @override
-  Future<void> clearAuthToken() {
-    // TODO: implement clearAuthToken
-    throw UnimplementedError();
+  Future<void> clearAuthToken() async {
+    return;
   }
 
   @override
-  Future<bool> hasSession() {
-    // TODO: implement hasSession
-    throw UnimplementedError();
+  Future<bool> hasSession() async {
+    return false;
   }
 
   @override
-  Future<void> saveAuthToken(AuthTokenModel authToken) {
-    // TODO: implement saveAuthToken
-    throw UnimplementedError();
+  Future<void> saveAuthToken(AuthTokenModel authToken) async {
+    return;
   }
 }

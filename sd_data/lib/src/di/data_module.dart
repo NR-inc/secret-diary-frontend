@@ -16,7 +16,7 @@ class DataModule extends AbstractModule {
   @override
   void configure(Injector injector) {
     NetworkModule().configure(injector);
-    if (injector.get<AppConfigs>().buildType == BuildType.mock) {
+    if (injector.get<AppConfigs>()?.buildType == BuildType.mock) {
       MockRepositoryModule().configure(injector);
     } else {
       RepositoryModule().configure(injector);

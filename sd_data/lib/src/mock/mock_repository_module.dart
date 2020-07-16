@@ -17,13 +17,19 @@ class MockRepositoryModule extends AbstractModule {
 
   @override
   void configure(Injector injector) {
-    injector.map<ConfigRepository>((i) => ConfigDataMockRepository(),
-        isSingleton: true);
+    injector.map<ConfigRepository>(
+      (i) => ConfigDataMockRepository(),
+      isSingleton: true,
+    );
 
-    injector.map<AuthRepository>((i) => AuthDataMockRepository(),
-        isSingleton: true);
+    injector.map<AuthRepository>(
+      (i) => AuthDataMockRepository(),
+      isSingleton: true,
+    );
 
-    injector.map<UserRepository>((i) => UserDataMockRepository(),
-        isSingleton: true);
+    injector.map<UserRepository>(
+      (i) => UserDataMockRepository(),
+      isSingleton: true,
+    );
   }
 }
