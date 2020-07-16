@@ -355,7 +355,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.24.1"
-  sdbase:
+  sd_base:
     dependency: "direct main"
     description:
       path: "../sd_base"

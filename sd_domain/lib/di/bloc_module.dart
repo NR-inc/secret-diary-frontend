@@ -1,6 +1,6 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:sdbase/di/abstract_module.dart';
+import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/bloc/login_bloc.dart';
 import 'package:sddomain/bloc/registration_bloc.dart';
 import 'package:sddomain/bloc/settings_bloc.dart';

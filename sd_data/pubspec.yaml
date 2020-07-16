@@ -12,7 +12,7 @@ dependencies:
 
   shared_preferences: ^0.5.7
 
-  sdbase:
+  sd_base:
     path:
       ../sd_base
 

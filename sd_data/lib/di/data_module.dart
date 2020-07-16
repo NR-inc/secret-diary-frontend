@@ -1,4 +1,4 @@
-import 'package:sdbase/di/abstract_module.dart';
+import 'package:sd_base/sd_base.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddata/di/network_module.dart';
 import 'package:sddata/di/repository_module.dart';

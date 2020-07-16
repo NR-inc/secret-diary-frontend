@@ -1,5 +1,5 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:sdbase/di/abstract_module.dart';
+import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/core/validation/rules/length_validation_rule.dart';
 import 'package:sddomain/export/domain.dart';
 import 'package:common_ui/common_ui.dart';

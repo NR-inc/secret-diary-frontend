@@ -1,13 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:sdbase/di/abstract_module.dart';
+import 'package:sd_base/sd_base.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddata/network/network_executor.dart';
 import 'package:sddomain/core/error_handler.dart';
 
 class NetworkModule extends AbstractModule {
   static final NetworkModule _networkModule = NetworkModule._internal();
-  static const _baseUrl = 'https://secret-diary-api.herokuapp.com/';
-  static const _connectionTimeout = 9999999; // todo change timeout time
 
   factory NetworkModule() {
     return _networkModule;
@@ -19,17 +17,23 @@ class NetworkModule extends AbstractModule {
   void configure(Injector injector) async {
     injector.map((i) => NetworkExecutor(i.get()));
     injector.map((i) => ErrorHandler(), isSingleton: true);
-    injector.map((i) => _getDioClient(), isSingleton: true);
+    injector.map(
+        (i) => _getDioClient(
+              injector.get<AppConfigs>().networkConfigs,
+            ),
+        isSingleton: true);
   }
 
-  Dio _getDioClient() {
-    var dio = Dio(_getBaseDioOptions());
+  Dio _getDioClient(NetworkConfigs networkConfigs) {
+    var dio = Dio(_getBaseDioOptions(networkConfigs));
     _setInterceptor(dio);
     return dio;
   }
 
-  BaseOptions _getBaseDioOptions() =>
-      BaseOptions(baseUrl: _baseUrl, connectTimeout: _connectionTimeout);
+  BaseOptions _getBaseDioOptions(NetworkConfigs networkConfigs) => BaseOptions(
+        baseUrl: networkConfigs.baseUrl,
+        connectTimeout: networkConfigs.connectionTimeout,
+      );
 
   void _setInterceptor(Dio dio) {
     dio

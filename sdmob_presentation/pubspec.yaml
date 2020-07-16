@@ -27,7 +27,7 @@ dependencies:
     path:
       ../sd_data
 
-  sdbase:
+  sd_base:
     path:
       ../sd_base
 
