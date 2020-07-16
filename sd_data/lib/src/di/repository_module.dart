@@ -1,8 +1,8 @@
 import 'package:sd_base/sd_base.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:sd_data/src//repository/auth_data_repository.dart';
-import 'package:sd_data/src//repository/config_data_repository.dart';
-import 'package:sd_data/src//repository/user_data_repository.dart';
+import 'package:sd_data/src/repository/auth_data_repository.dart';
+import 'package:sd_data/src/repository/config_data_repository.dart';
+import 'package:sd_data/src/repository/user_data_repository.dart';
 import 'package:sddomain/repository/auth_repository.dart';
 import 'package:sddomain/repository/config_repository.dart';
 import 'package:sddomain/repository/user_repository.dart';

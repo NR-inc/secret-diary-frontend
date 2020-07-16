@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:sd_data/src//network/grapqhql_query.dart';
+import 'package:sd_data/src/network/grapqhql_query.dart';
 import 'package:sddomain/core/error_handler.dart';
 import 'package:sddomain/exceptions/network_exception.dart';
 
