@@ -1,4 +1,4 @@
-import 'package:sddata/network/grapqhql_query.dart';
+import 'package:sd_data/src//network/grapqhql_query.dart';
 
 class UserApi {
   static GraphQlQuery profile() => GraphQlQuery(query: '''

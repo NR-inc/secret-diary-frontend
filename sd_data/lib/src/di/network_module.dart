@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:sddata/network/network_executor.dart';
+import 'package:sd_data/src//network/network_executor.dart';
 import 'package:sddomain/core/error_handler.dart';
 
 class NetworkModule extends AbstractModule {

@@ -23,7 +23,7 @@ dependencies:
     path:
       ../sd_domain
 
-  sddata:
+  sd_data:
     path:
       ../sd_data
 

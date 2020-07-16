@@ -362,7 +362,7 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  sddata:
+  sd_data:
     dependency: "direct main"
     description:
       path: "../sd_data"

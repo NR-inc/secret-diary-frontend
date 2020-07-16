@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:sddata/data.dart';
+import 'package:sd_data/sd_data.dart';
 import 'package:sddomain/exceptions/network_exception.dart';
 import 'package:sddomain/export/domain.dart';
 import '../mocks/mocks.dart';

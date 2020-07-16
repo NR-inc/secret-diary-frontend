@@ -1,6 +1,6 @@
 import 'package:sd_base/sd_base.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:sddata/di/data_module.dart';
+import 'package:sd_data/sd_data.dart';
 import 'package:sddomain/di/domain_module.dart';
 
 class InjectModule extends AbstractModule {
