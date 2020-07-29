@@ -14,7 +14,7 @@ dependencies:
   rxdart: ^0.24.0
   async: ^2.4.0
 
-  sdbase:
+  sd_base:
     path:
       ../sd_base
 

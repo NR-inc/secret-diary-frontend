@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/parser.dart';
 import 'package:sddomain/exceptions/validation_exception.dart';
 import 'package:sddomain/model/input_field_type.dart';
 import 'package:common_ui/common_ui.dart';

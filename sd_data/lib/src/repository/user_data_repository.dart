@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:sddata/data.dart';
+import 'package:sd_data/sd_data.dart';
 import 'package:sddomain/export/domain.dart';
 
 class UserDataRepository implements UserRepository {
