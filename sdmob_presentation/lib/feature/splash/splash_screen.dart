@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sd_base/sd_base.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:sddomain/bloc/splash_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
@@ -15,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 class SplashState extends State<SplashScreen> {
   static const _splashScreenDelayInSec = 5;
   final _splashBloc = Injector.getInjector().get<SplashBloc>();
+  final _appConfigs = Injector.getInjector().get<AppConfigs>();
 
   @override
   void didChangeDependencies() {
@@ -23,7 +25,7 @@ class SplashState extends State<SplashScreen> {
         .throttleTime(Duration(seconds: _splashScreenDelayInSec),
             trailing: true)
         .listen((bool hasSession) {
-      if (hasSession) {
+      if (hasSession || _appConfigs.isSkeepAuth) {
         Navigator.pushReplacementNamed(context, AppRoutes.root);
       } else {
         Navigator.pushReplacementNamed(context, AppRoutes.login);

@@ -47,7 +47,7 @@ class LoginState extends BaseState<LoginScreen> {
         body: StreamBuilder(
             stream: _loginBloc.loadingProgress,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return Stack(children: <Widget>[
+             return SingleChildScrollView(child: Stack(children: <Widget>[
                 Column(children: <Widget>[
                   SizedBox(height: Dimens.unit8),
                   SvgPicture.asset(
@@ -58,7 +58,7 @@ class LoginState extends BaseState<LoginScreen> {
                   loginForm(),
                 ]),
                 showLoader(show: snapshot.hasData && snapshot.data)
-              ]);
+              ]),);
             }),
       );
 
