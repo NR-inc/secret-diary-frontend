@@ -6,3 +6,4 @@ export 'di.dart';
 export 'interactor.dart';
 export 'mappers.dart';
 export 'exceptions.dart';
+export 'bloc.dart';

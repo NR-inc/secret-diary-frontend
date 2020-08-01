@@ -7,18 +7,18 @@ import 'package:sddomain/model/default_response.dart';
 
 class RegistrationBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
-  final PublishSubject<DefaultResponse> registrationSubject;
+  final PublishSubject<DefaultResponse> registrationResult;
   StreamSubscription registrationSubscription;
 
-  RegistrationBloc(this._authInteractor, this.registrationSubject);
+  RegistrationBloc(this._authInteractor, this.registrationResult);
 
   void registration(String firstName, String lastName, String email, String password) async {
     loadingProgress.add(true);
     registrationSubscription?.cancel();
     registrationSubscription =
-        _authInteractor.registration(firstName, lastName, email, password).listen(registrationSubject.add,
+        _authInteractor.registration(firstName, lastName, email, password).listen(registrationResult.add,
             onError: (error) {
-              registrationSubject.addError(error);
+              registrationResult.addError(error);
               loadingProgress.add(false);
             },
             onDone: () => loadingProgress.add(false));
@@ -32,7 +32,7 @@ class RegistrationBloc extends BaseBloc {
 
   @override
   void dispose() {
-    registrationSubject.close();
+    registrationResult.close();
     super.dispose();
   }
 }

@@ -16,6 +16,7 @@ class AuthInteractor {
     this._registrationFormValidator,
   );
 
+  // todo try to return void instead of DefaultResponse
   Stream<DefaultResponse> login(
     String email,
     String password,
@@ -26,12 +27,14 @@ class AuthInteractor {
             InputFieldType.password: password,
           })
           .asStream()
-          .switchMap((_) => _authRepository
-                  .login(email, password)
-                  .asyncMap((AuthTokenModel authToken) async {
-                await _configRepository.saveAuthToken(authToken);
-                return DefaultResponse.SUCCESS;
-              }));
+          .switchMap(
+            (_) => _authRepository
+                .login(email, password)
+                .asyncMap((AuthTokenModel authToken) async {
+              await _configRepository.saveAuthToken(authToken);
+              return DefaultResponse.SUCCESS;
+            }),
+          );
 
   Stream<DefaultResponse> registration(
     String firstName,
@@ -47,12 +50,14 @@ class AuthInteractor {
             InputFieldType.password: password,
           })
           .asStream()
-          .switchMap((_) => _authRepository
-                  .registration(firstName, lastName, email, password)
-                  .asyncMap((AuthTokenModel authToken) async {
-                await _configRepository.saveAuthToken(authToken);
-                return DefaultResponse.SUCCESS;
-              }));
+          .switchMap(
+            (_) => _authRepository
+                .registration(firstName, lastName, email, password)
+                .asyncMap((AuthTokenModel authToken) async {
+              await _configRepository.saveAuthToken(authToken);
+              return DefaultResponse.SUCCESS;
+            }),
+          );
 
   Future<void> logout() async {
     await _userRepository.logout();

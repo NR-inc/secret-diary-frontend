@@ -83,3 +83,19 @@ Widget _getPrefixIcon(String prefixIconAsset) {
     ),
   );
 }
+
+Widget searchField({
+  @required String key,
+  @required TextEditingController controller,
+  String hint,
+  Function(String) onFieldSubmitted,
+}) {
+  return TextFormField(
+    key: Key(key),
+    controller: controller,
+    textInputAction: TextInputAction.search,
+    onFieldSubmitted: onFieldSubmitted,
+    decoration: InputDecoration(hintText: hint),
+    style: TextStyle(),
+  );
+}

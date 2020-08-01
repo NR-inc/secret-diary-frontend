@@ -23,5 +23,8 @@ class InteractorModule extends AbstractModule {
         ));
 
     injector.map((i) => UserInteractor(i.get()));
+
+    injector.map((i) => PostsInteractor(i.get()));
+
   }
 }

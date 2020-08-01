@@ -5,6 +5,7 @@ import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:sddomain/bloc/user_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/model/user_model.dart';
+import 'package:ssecretdiary/feature/posts_list/posts_list_widget.dart';
 
 class DiaryScreen extends StatefulWidget {
   @override
@@ -55,18 +56,7 @@ class _DiaryState extends State<DiaryScreen> {
                 SizedBox(height: 8),
                 Text(currentUser.email),
                 SizedBox(height: 24),
-                Expanded(
-                    child: ListView.builder(
-                        itemCount: 10,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            child: Container(
-                              height: 64.0,
-                              child: Center(
-                                  child: Text("Post of the user's diary")),
-                            ),
-                          );
-                        }))
+                PostsListWidget(userId: currentUser.id),
               ])),
               Visibility(
                   visible: !snapshot.hasData,
@@ -74,5 +64,19 @@ class _DiaryState extends State<DiaryScreen> {
             ]);
           },
         ));
+  }
+
+  Widget _buildPostsList() {
+    return Expanded(
+        child: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                child: Container(
+                  height: 64.0,
+                  child: Center(child: Text("Post of the user's diary")),
+                ),
+              );
+            }));
   }
 }

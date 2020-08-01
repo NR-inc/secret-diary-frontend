@@ -23,7 +23,7 @@ class RegistrationState extends BaseState<RegistrationScreen> {
 
   @override
   void initState() {
-    _registrationBloc.registrationSubject.listen(
+    _registrationBloc.registrationResult.listen(
       (_) => Navigator.pushReplacementNamed(context, AppRoutes.root),
       onError: handleError,
     );
@@ -58,11 +58,11 @@ class RegistrationState extends BaseState<RegistrationScreen> {
               ])));
 
   Widget _registrationForm() => StreamBuilder(
-        stream: _registrationBloc.registrationSubject,
-        builder: (context, snapshot) {
-          Map<InputFieldType, String> validationErrors = snapshot.hasError &&
-                  snapshot.error?.runtimeType == ValidationException
-              ? (snapshot.error as ValidationException).validationErrors
+        stream: _registrationBloc.registrationResult,
+        builder: (context, output) {
+          Map<InputFieldType, String> validationErrors = output.hasError &&
+                  output.error?.runtimeType == ValidationException
+              ? (output.error as ValidationException).validationErrors
               : {};
           return Container(
               padding: EdgeInsets.all(Dimens.unit2),
