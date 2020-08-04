@@ -7,6 +7,7 @@ class AuthInteractor {
   final UserRepository _userRepository;
   final FormValidator _loginFormValidator;
   final FormValidator _registrationFormValidator;
+  final FormValidator _remindPasswordFormValidator;
 
   AuthInteractor(
     this._configRepository,
@@ -14,6 +15,7 @@ class AuthInteractor {
     this._userRepository,
     this._loginFormValidator,
     this._registrationFormValidator,
+    this._remindPasswordFormValidator,
   );
 
   Stream<DefaultResponse> login(
@@ -53,6 +55,16 @@ class AuthInteractor {
                 await _configRepository.saveAuthToken(authToken);
                 return DefaultResponse.SUCCESS;
               }));
+
+  Stream<DefaultResponse> remindPassword(
+    String email,
+  ) =>
+      _remindPasswordFormValidator
+          .validateForm({
+            InputFieldType.email: email,
+          })
+          .asStream()
+          .switchMap((_) => _authRepository.remindPassword(email));
 
   Future<void> logout() async {
     await _userRepository.logout();

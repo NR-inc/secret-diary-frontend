@@ -3,6 +3,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/bloc/login_bloc.dart';
 import 'package:sddomain/bloc/registration_bloc.dart';
+import 'package:sddomain/bloc/remind_password_bloc.dart';
 import 'package:sddomain/bloc/settings_bloc.dart';
 import 'package:sddomain/bloc/splash_bloc.dart';
 import 'package:sddomain/bloc/user_bloc.dart';
@@ -22,6 +23,8 @@ class BlocModule extends AbstractModule {
     injector.map((i) => SplashBloc(i.get()));
     injector.map(
         (i) => RegistrationBloc(i.get(), PublishSubject<DefaultResponse>()));
+    injector.map(
+        (i) => RemindPasswordBloc(i.get(), PublishSubject<DefaultResponse>()));
     injector.map((i) => LoginBloc(i.get(), PublishSubject<DefaultResponse>()));
     injector.map((i) => SettingsBloc(i.get()));
     injector.map((i) => UserBloc(i.get()));

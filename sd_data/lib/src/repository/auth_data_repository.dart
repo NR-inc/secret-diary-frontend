@@ -46,4 +46,10 @@ class AuthDataRepository extends AuthRepository {
                 password: password),
           )
           .map(_registrationResponseMapper.map);
+
+  @override
+  Stream<DefaultResponse> remindPassword(String email) async* {
+    //TODO ask api for response
+    yield DefaultResponse.SUCCESS;
+  }
 }

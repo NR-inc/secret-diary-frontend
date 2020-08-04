@@ -18,4 +18,9 @@ class AuthDataMockRepository implements AuthRepository {
   ) async* {
     yield AuthTokenModel('auth token');
   }
+
+  @override
+  Stream<DefaultResponse> remindPassword(String email) async* {
+    yield DefaultResponse.SUCCESS;
+  }
 }

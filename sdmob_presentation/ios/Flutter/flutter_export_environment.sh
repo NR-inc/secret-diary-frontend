@@ -2,7 +2,7 @@
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/kn/Desktop/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/kn/Desktop/secret-diary-frontend/sdmob_presentation"
-export "FLUTTER_TARGET=/Users/kn/Desktop/secret-diary-frontend/sdmob_presentation/lib/main.dart"
+export "FLUTTER_TARGET=/Users/kn/Desktop/secret-diary-frontend/sdmob_presentation/lib/targets/mock_dev/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "OTHER_LDFLAGS=$(inherited) -framework Flutter"
