@@ -101,9 +101,9 @@ void main() {
         mockAuthInteractor.remindPassword(email),
       ).thenAnswer((_) => Stream.error(expected));
 
-      //scheduleMicrotask(() {
-      remindPasswordBloc.remindPassword(email);
-      //});
+      scheduleMicrotask(() {
+        remindPasswordBloc.remindPassword(email);
+      });
 
       await expectLater(
         remindPasswordBloc.loadingProgress,
