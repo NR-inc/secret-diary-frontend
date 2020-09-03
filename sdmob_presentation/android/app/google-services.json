@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1055567376571",
+    "firebase_url": "https://secret-diary-21.firebaseio.com",
+    "project_id": "secret-diary-21",
+    "storage_bucket": "secret-diary-21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055567376571:android:f5515af12356dcdfc7b99e",
+        "android_client_info": {
+          "package_name": "com.secretdiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055567376571-treuo9q2fhu3fla4pn68vufmr6usjkbm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8l1lOpNHtrm4QtJR_n6giA-gJWpfOwgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055567376571-treuo9q2fhu3fla4pn68vufmr6usjkbm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1055567376571-vrhkaeqmv79r3n46vl48ilbmmh4o2et4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.secretdiary"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -57,3 +57,5 @@ xcuserdata/
 Carthage/Build/
 
 iOSInjectionProject/
+
+*.sh
