@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sddomain/exceptions/common_exception.dart';
 import 'package:sddomain/exceptions/network_exception.dart';
 import 'package:sddomain/exceptions/validation_exception.dart';
@@ -14,13 +15,21 @@ class ErrorHandler {
     throw CommonException();
   }
 
-  void handleNetworkError(dynamic error) {
+  Exception handleNetworkError(dynamic error) {
     switch (error.runtimeType) {
       case DioError:
         final dioError = (error as DioError);
-        throw NetworkException(
-            statusCode: dioError?.response?.statusCode ?? -1,
-            message: dioError.message);
+        return NetworkException(
+          statusCode: dioError?.response?.statusCode ?? -1,
+          message: dioError.message,
+        );
+        break;
+      case FirebaseAuthException:
+        final firebaseError = (error as FirebaseAuthException);
+        return NetworkException(
+          statusCode: int.tryParse(firebaseError?.code),
+          message: firebaseError.message,
+        );
         break;
       default:
         throw error;

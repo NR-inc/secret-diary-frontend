@@ -25,7 +25,7 @@ class SplashState extends State<SplashScreen> {
         .throttleTime(Duration(seconds: _splashScreenDelayInSec),
             trailing: true)
         .listen((bool hasSession) {
-      if (hasSession || _appConfigs.isSkeepAuth) {
+      if (hasSession || _appConfigs.isSkipAuth) {
         Navigator.pushReplacementNamed(context, AppRoutes.root);
       } else {
         Navigator.pushReplacementNamed(context, AppRoutes.login);

@@ -1,9 +1,9 @@
-import 'package:sddomain/model/auth_token_model.dart';
-
 abstract class ConfigRepository {
-  Future<void> saveAuthToken(AuthTokenModel authToken);
+  Future<void> saveUserUid(String authToken);
 
   Future<bool> hasSession();
 
-  Future<void> clearAuthToken();
+  Future<void> clearUserUid();
+
+  Future<String> getUserUid();
 }

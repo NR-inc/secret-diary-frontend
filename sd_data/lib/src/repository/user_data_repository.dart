@@ -1,19 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:sd_data/sd_data.dart';
+import 'package:sddomain/core/error_handler.dart';
 import 'package:sddomain/export/domain.dart';
 
 class UserDataRepository implements UserRepository {
-  final Dio _dio;
-  final NetworkExecutor _networkExecutor;
+  final ErrorHandler _errorHandler;
 
-  UserDataRepository(this._dio, this._networkExecutor);
+  UserDataRepository(this._errorHandler);
 
   @override
-  Future<UserModel> profile() async {
-    final response = await _networkExecutor
-        .makeRequest(_dio, UserApi.profile())
-        .first;
-    return UserModel.fromJson(response['profile']);
+  Future<UserModel> profile(String userUid) async {
+    DatabaseReference usersDbRef =
+    FirebaseDatabase.instance.reference().child("Users");
+    final user = await usersDbRef.child(userUid).once();
+    return UserModel.fromJson(user);
   }
 
   @override
@@ -23,8 +25,8 @@ class UserDataRepository implements UserRepository {
   }
 
   @override
-  Future<void> logout() {
-    // TODO: implement logout
+  Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
     return null;
   }
 }

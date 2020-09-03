@@ -5,19 +5,19 @@ import 'package:sd_base/src/configs/network_configs.dart';
 class AppConfigs {
   final BuildType _buildType;
   final NetworkConfigs _networkConfigs;
-  final bool _skeepAuth;
+  final bool _skipAuth;
 
   AppConfigs({
     @required BuildType buildType,
     NetworkConfigs networkConfigs,
-    bool skeepAuth,
+    bool skipAuth,
   })  : _networkConfigs = networkConfigs ?? NetworkConfigs(buildType),
         _buildType = buildType,
-        _skeepAuth = skeepAuth;
+        _skipAuth = skipAuth ?? false;
 
   BuildType get buildType => _buildType;
 
   NetworkConfigs get networkConfigs => _networkConfigs;
 
-  bool get isSkeepAuth => _skeepAuth;
+  bool get isSkipAuth => _skipAuth;
 }

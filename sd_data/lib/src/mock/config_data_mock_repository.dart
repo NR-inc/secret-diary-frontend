@@ -2,7 +2,7 @@ import 'package:sddomain/export/domain.dart';
 
 class ConfigDataMockRepository implements ConfigRepository {
   @override
-  Future<void> clearAuthToken() async {
+  Future<void> clearUserUid() async {
     return;
   }
 
@@ -12,7 +12,12 @@ class ConfigDataMockRepository implements ConfigRepository {
   }
 
   @override
-  Future<void> saveAuthToken(AuthTokenModel authToken) async {
+  Future<void> saveUserUid(String userUid) async {
     return;
+  }
+
+  @override
+  Future<String> getUserUid() async {
+    return 'uid';
   }
 }

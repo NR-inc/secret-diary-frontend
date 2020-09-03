@@ -30,8 +30,9 @@ class AuthInteractor {
           .switchMap(
             (_) => _authRepository
                 .login(email, password)
-                .asyncMap((AuthTokenModel authToken) async {
-              await _configRepository.saveAuthToken(authToken);
+                .asStream()
+                .asyncMap((String userUid) async {
+              await _configRepository.saveUserUid(userUid);
               return DefaultResponse.SUCCESS;
             }),
           );
@@ -53,15 +54,16 @@ class AuthInteractor {
           .switchMap(
             (_) => _authRepository
                 .registration(firstName, lastName, email, password)
-                .asyncMap((AuthTokenModel authToken) async {
-              await _configRepository.saveAuthToken(authToken);
+                .asStream()
+                .asyncMap((String userUid) async {
+              await _configRepository.saveUserUid(userUid);
               return DefaultResponse.SUCCESS;
             }),
           );
 
   Future<void> logout() async {
     await _userRepository.logout();
-    await _configRepository.clearAuthToken();
+    await _configRepository.clearUserUid();
   }
 
   Future<bool> hasSession() async => _configRepository.hasSession();

@@ -1,49 +1,55 @@
-import 'package:dio/dio.dart';
-import 'package:sd_data/sd_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:sddomain/core/error_handler.dart';
 import 'package:sddomain/export/domain.dart';
 
 class AuthDataRepository extends AuthRepository {
-  final Dio _dio;
-  final NetworkExecutor _networkExecutor;
-  final LoginResponseMapper _loginResponseMapper;
-  final RegistrationResponseMapper _registrationResponseMapper;
+  final ErrorHandler _errorHandler;
 
-  AuthDataRepository(
-    this._dio,
-    this._networkExecutor,
-    this._loginResponseMapper,
-    this._registrationResponseMapper,
-  );
+  AuthDataRepository(this._errorHandler);
 
   @override
-  Stream<AuthTokenModel> login(
+  Future<String> login(
     String email,
     String password,
-  ) =>
-      _networkExecutor
-          .makeRequest(
-              _dio,
-              AuthApi.login(
-                email: email,
-                password: password,
-              ))
-          .map(_loginResponseMapper.map);
+  ) async {
+    try {
+      final userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
 
   @override
-  Stream<AuthTokenModel> registration(
+  Future<String> registration(
     String firstName,
     String lastName,
     String email,
     String password,
-  ) =>
-      _networkExecutor
-          .makeRequest(
-            _dio,
-            AuthApi.registration(
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: password),
-          )
-          .map(_registrationResponseMapper.map);
+  ) async {
+    try {
+      DatabaseReference usersDbRef =
+          FirebaseDatabase.instance.reference().child("Users");
+      final userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+      usersDbRef.child(userCredential.user.uid).set({
+        'email': email,
+        'first_name': firstName,
+        'last_name': lastName,
+      });
+
+      return userCredential.user.uid;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
 }

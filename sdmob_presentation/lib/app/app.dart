@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -17,19 +18,28 @@ class SecretDiaryApp extends StatefulWidget {
 class _SecretDiaryState extends State<SecretDiaryApp> {
   @override
   void initState() {
-    InjectModule(widget.appConfigs);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.splash,
-      onGenerateRoute: ApplicationRouter(),
-      navigatorObservers: [routeObserver],
-      theme: ThemeData(primarySwatch: Colors.blue),
+    return FutureBuilder(
+      future: init(),
+      builder: (context, snapshot) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialRoute: AppRoutes.splash,
+          onGenerateRoute: ApplicationRouter(),
+          navigatorObservers: [routeObserver],
+          theme: ThemeData(primarySwatch: Colors.blue),
+        );
+      },
     );
+  }
+
+  Future<void> init() async {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    InjectModule(widget.appConfigs);
+    await Firebase.initializeApp();
   }
 }

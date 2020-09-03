@@ -22,9 +22,14 @@ class InteractorModule extends AbstractModule {
           i.get(key: ValidationModule.registrationFormValidator),
         ));
 
-    injector.map((i) => UserInteractor(i.get()));
+    injector.map(
+      (i) => UserInteractor(i.get(), i.get()),
+      isSingleton: true,
+    );
 
-    injector.map((i) => PostsInteractor(i.get()));
-
+    injector.map(
+      (i) => PostsInteractor(i.get()),
+      isSingleton: true,
+    );
   }
 }

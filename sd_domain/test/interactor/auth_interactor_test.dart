@@ -43,7 +43,7 @@ void main() {
       );
 
       when(
-        configRepo.saveAuthToken(authTokenModel),
+        configRepo.saveUserUid(authTokenModel),
       ).thenAnswer(
         (_) => Future<void>.value(),
       );
@@ -54,7 +54,7 @@ void main() {
       );
 
       verify(loginFormValidator.validateForm(any));
-      verify(configRepo.saveAuthToken(authTokenModel));
+      verify(configRepo.saveUserUid(authTokenModel));
     });
 
     test('Verify login throws network error', () async {
@@ -91,7 +91,7 @@ void main() {
       );
 
       verify(loginFormValidator.validateForm(any));
-      verifyNever(configRepo.saveAuthToken(any));
+      verifyNever(configRepo.saveUserUid(any));
     });
 
     test('Verify login throws validation error', () async {
@@ -122,7 +122,7 @@ void main() {
       );
 
       verify(loginFormValidator.validateForm(any));
-      verifyNever(configRepo.saveAuthToken(any));
+      verifyNever(configRepo.saveUserUid(any));
     });
 
     test('Verify registration is success', () async {
@@ -155,7 +155,7 @@ void main() {
       );
 
       when(
-        configRepo.saveAuthToken(authTokenModel),
+        configRepo.saveUserUid(authTokenModel),
       ).thenAnswer(
         (_) => Future<void>.value(),
       );
@@ -166,7 +166,7 @@ void main() {
       );
 
       verify(registrationFormValidator.validateForm(any));
-      verify(configRepo.saveAuthToken(authTokenModel));
+      verify(configRepo.saveUserUid(authTokenModel));
     });
 
     test('Verify registration throws network error', () async {
@@ -203,7 +203,7 @@ void main() {
       );
 
       verify(registrationFormValidator.validateForm(any));
-      verifyNever(configRepo.saveAuthToken(any));
+      verifyNever(configRepo.saveUserUid(any));
     });
 
     test('Verify registration throws validation error', () async {
@@ -234,7 +234,7 @@ void main() {
       );
 
       verify(registrationFormValidator.validateForm(any));
-      verifyNever(configRepo.saveAuthToken(any));
+      verifyNever(configRepo.saveUserUid(any));
     });
 
     test('Verify logout is success', () async {
@@ -254,7 +254,7 @@ void main() {
       await authInteractor.logout();
 
       verify(userRepo.logout());
-      verify(configRepo.clearAuthToken());
+      verify(configRepo.clearUserUid());
     });
 
     test('Verify session check', () async {

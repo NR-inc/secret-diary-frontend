@@ -16,8 +16,5 @@ class DomainModule extends AbstractModule {
     BlocModule().configure(injector);
     InteractorModule().configure(injector);
     ValidationModule().configure(injector);
-
-    injector.map((i) => LoginResponseMapper(), isSingleton: true);
-    injector.map((i) => RegistrationResponseMapper(), isSingleton: true);
   }
 }

@@ -2,20 +2,22 @@ import 'package:sddomain/export/domain.dart';
 
 class AuthDataMockRepository implements AuthRepository {
   @override
-  Stream<AuthTokenModel> login(
+  Future<String> login(
     String email,
     String password,
-  ) async* {
-    yield AuthTokenModel('auth token');
+  ) async {
+    print('login success');
+    return 'uid';
   }
 
   @override
-  Stream<AuthTokenModel> registration(
+  Future<String> registration(
     String firstName,
     String lastName,
     String email,
     String password,
-  ) async* {
-    yield AuthTokenModel('auth token');
+  ) async {
+    print('registration success');
+    return 'uid';
   }
 }

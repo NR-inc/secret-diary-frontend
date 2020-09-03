@@ -12,7 +12,7 @@ class UserDataMockRepository implements UserRepository {
   }
 
   @override
-  Future<UserModel> profile() async {
+  Future<UserModel> profile(String userUid) async {
     return UserModel.testUser();
   }
 }
