@@ -1,15 +1,12 @@
-import 'package:sd_data/sd_data.dart';
-import 'package:sddomain/model/feed_sort_type.dart';
-import 'package:sddomain/model/post_category_model.dart';
-import 'package:sddomain/model/post_model.dart';
-import 'package:sddomain/repository/posts_repository.dart';
-import 'package:dio/dio.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sd_base/sd_base.dart';
+import 'package:sddomain/core/error_handler.dart';
+import 'package:sddomain/export/domain.dart';
 
 class PostsDataRepository implements PostsRepository {
-  final Dio _dio;
-  final NetworkExecutor _networkExecutor;
+  final ErrorHandler _errorHandler;
 
-  PostsDataRepository(this._dio, this._networkExecutor);
+  PostsDataRepository(this._errorHandler);
 
   @override
   Stream<List<PostModel>> getFeedPostsBy({
@@ -18,36 +15,119 @@ class PostsDataRepository implements PostsRepository {
     List<PostCategoryModel> postCategories,
     int fromPostId,
     int limit,
-  }) {
-    // TODO: implement getFeedPostsBy
-    throw UnimplementedError();
+  }) async* {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      final result = await databaseReference
+          .collection(FirestoreKeys.postsCollectionKey)
+          .where(FirestoreKeys.visibilityFlagFieldKey, isEqualTo: true)
+          .get();
+      final data = result.docs
+          .map((postData) => PostModel.fromJson(
+                id: postData.id,
+                data: postData.data(),
+              ))
+          .toList();
+      yield data;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
   }
 
   @override
-  Future<PostModel> getPostById(int postId) {
+  Future<PostModel> getPostById(String postId) {
     // TODO: implement getPostById
     throw UnimplementedError();
   }
 
   @override
   Stream<List<PostModel>> getPostsOfUser({
-    int userId,
+    UserModel user,
     int fromPostId,
     int limit,
-  }) {
-    // TODO: implement getPostsOfUser
-    throw UnimplementedError();
+  }) async* {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      final result = await databaseReference
+          .collection(FirestoreKeys.postsCollectionKey)
+          .where(FieldPath.documentId, whereIn: user.postsIds)
+          .get();
+      final data = result.docs
+          .map((postData) => PostModel.fromJson(
+                id: postData.id,
+                data: postData.data(),
+              ))
+          .toList();
+      yield data;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
   }
 
   @override
-  Future<bool> removePostById(int postId) {
-    // TODO: implement removePostById
-    throw UnimplementedError();
+  Future<bool> removePostById({
+    UserModel currentUser,
+    String postId,
+  }) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      await databaseReference
+          .collection(FirestoreKeys.postsCollectionKey)
+          .doc(postId)
+          .delete();
+
+      await databaseReference
+          .collection(FirestoreKeys.usersCollectionKey)
+          .doc(currentUser.uid)
+          .update({
+        FirestoreKeys.postsIdsFieldKey: currentUser.postsIds..remove(postId)
+      });
+
+      return true;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
   }
 
   @override
   Future<PostModel> updatePost(PostModel postModel) {
     // TODO: implement updatePost
     throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> createPost({
+    UserModel currentUser,
+    String title,
+    String description,
+    bool visibilityFlag,
+    List<String> categoriesIds,
+  }) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      final result = await databaseReference
+          .collection(FirestoreKeys.postsCollectionKey)
+          .add({
+        FirestoreKeys.titleFieldKey: title,
+        FirestoreKeys.descriptionFieldKey: description,
+        FirestoreKeys.visibilityFlagFieldKey: visibilityFlag,
+        FirestoreKeys.createdAtFieldKey: FieldValue.serverTimestamp(),
+      });
+
+      await databaseReference
+          .collection(FirestoreKeys.usersCollectionKey)
+          .doc(currentUser.uid)
+          .update({
+        FirestoreKeys.postsIdsFieldKey: currentUser.postsIds..add(result.id)
+      });
+
+      return true;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
   }
 }

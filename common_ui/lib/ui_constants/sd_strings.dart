@@ -6,11 +6,17 @@ class SdStrings {
   static const String login = 'Login';
   static const String registration = 'Registration';
 
+  /// BUTTONS
+  static const String createPostButton = 'Create post';
+
   /// HINTS
   static const String firstNameHint = 'First name';
   static const String lastNameHint = 'Last name';
   static const String emailHint = 'Email';
   static const String passwordHint = 'Password';
+  static const String postTitleHint = 'Title';
+  static const String postDescriptionHint = 'Description';
+  static const String postVisibilityFlagHint = 'Show to everyone my post (anonymously)';
 
   /// ERRORS
   static const String fieldErrorMaxLength =

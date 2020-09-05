@@ -56,11 +56,12 @@ class _DiaryState extends State<DiaryScreen> {
                 SizedBox(height: 8),
                 Text(currentUser.email),
                 SizedBox(height: 24),
-                PostsListWidget(userId: currentUser.id),
+                PostsListWidget(userUid: currentUser.uid),
               ])),
               Visibility(
-                  visible: !snapshot.hasData,
-                  child: Center(child: CircularProgressIndicator())),
+                visible: !snapshot.hasData,
+                child: Center(child: CircularProgressIndicator()),
+              ),
             ]);
           },
         ));

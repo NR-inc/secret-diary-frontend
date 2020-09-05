@@ -3,7 +3,9 @@ import 'package:sddomain/model/user_model.dart';
 abstract class UserRepository {
   Future<void> logout();
 
-  Future<UserModel> profile(String userUid);
+  Future<void> removeAccount();
 
-  Future<UserModel> getUserById(int id);
+  Future<UserModel> profile();
+
+  Future<UserModel> getUserById(String uid);
 }

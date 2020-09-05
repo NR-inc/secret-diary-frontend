@@ -32,17 +32,13 @@ class BlocModule extends AbstractModule {
           i.get(),
           PublishSubject<DefaultResponse>(),
         ));
-    injector.map(
-      (i) => SettingsBloc(i.get()),
-      isSingleton: true,
-    );
-    injector.map(
-      (i) => UserBloc(i.get()),
-      isSingleton: true,
-    );
+    injector.map((i) => SettingsBloc(i.get()));
+    injector.map((i) => UserBloc(i.get()));
+
     injector.map((i) => PostsBloc(
           i.get(),
           PublishSubject<List<PostModel>>(),
+          PublishSubject<bool>(),
         ));
   }
 }

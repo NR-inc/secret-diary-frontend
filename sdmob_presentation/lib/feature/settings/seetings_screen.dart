@@ -1,3 +1,4 @@
+import 'package:common_ui/common_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
@@ -27,6 +28,18 @@ class _SettingsState extends State<SettingsScreen> {
                         context, AppRoutes.login, (route) => false);
                   })
             ]),
-        body: Center(child: Center(child: Text('Settings screen'))));
+        body: Column(children: [
+          simpleButton(
+              key: Key('remove_account_button'),
+              text: 'Remove my account',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+              onPressed: () async {
+                await _settingsBloc.removeAccount();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, AppRoutes.login, (route) => false);
+              })
+        ]));
   }
 }

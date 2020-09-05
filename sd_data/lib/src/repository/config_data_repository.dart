@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sddomain/repository/config_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,7 +10,7 @@ class ConfigDataRepository implements ConfigRepository {
   @override
   Future<bool> hasSession() async {
     final sharedPrefs = await SharedPreferences.getInstance();
-    return sharedPrefs.getString(_userUidKey) != null;
+    return sharedPrefs.getString(_userUidKey) != null && FirebaseAuth.instance.currentUser != null;
   }
 
   @override

@@ -1,16 +1,22 @@
+import 'package:sd_base/sd_base.dart';
+
 class UserModel {
-  int id;
+  String uid;
   String firstName;
   String lastName;
   String email;
   String avatar;
+  List<String> postsIds;
 
-  UserModel.fromJson(dynamic data) {
-    id = data['id'] ?? -1;
-    firstName = data['first_name'] ?? '';
-    lastName = data['last_name'] ?? '';
-    email = data['email'] ?? '';
-    avatar = data['avatar'] ?? '';
+  UserModel.fromJson(dynamic data, [String uid]) {
+    this.uid = uid;
+    firstName = data[FirestoreKeys.firstNameFieldKey] ?? '';
+    lastName = data[FirestoreKeys.lastNameFieldKey] ?? '';
+    email = data[FirestoreKeys.emailFieldKey] ?? '';
+    avatar = data[FirestoreKeys.avatarFieldKey] ?? '';
+    postsIds = data[FirestoreKeys.postsIdsFieldKey] != null
+        ? List.from(data[FirestoreKeys.postsIdsFieldKey])
+        : List();
   }
 
   UserModel.testUser() {
@@ -22,7 +28,7 @@ class UserModel {
   }
 
   UserModel.empty() {
-    id = -1;
+    uid = '';
     firstName = '';
     lastName = '';
     email = '';

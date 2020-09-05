@@ -28,7 +28,10 @@ class InteractorModule extends AbstractModule {
     );
 
     injector.map(
-      (i) => PostsInteractor(i.get()),
+      (i) => PostsInteractor(
+        i.get(),
+        i.get(),
+      ),
       isSingleton: true,
     );
   }

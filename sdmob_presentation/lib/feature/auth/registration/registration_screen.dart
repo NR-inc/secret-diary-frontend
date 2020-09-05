@@ -24,7 +24,11 @@ class RegistrationState extends BaseState<RegistrationScreen> {
   @override
   void initState() {
     _registrationBloc.registrationResult.listen(
-      (_) => Navigator.pushReplacementNamed(context, AppRoutes.root),
+      (_) => Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.root,
+        (route) => false,
+      ),
       onError: handleError,
     );
     super.initState();
@@ -50,7 +54,7 @@ class RegistrationState extends BaseState<RegistrationScreen> {
         title: SdStrings.registration,
       ),
       body: StreamBuilder(
-          stream: _registrationBloc.loadingProgress,
+          stream: _registrationBloc.loadingProgressStream,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) =>
               Stack(children: <Widget>[
                 _registrationForm(),
@@ -99,7 +103,7 @@ class RegistrationState extends BaseState<RegistrationScreen> {
                     error: validationErrors[InputFieldType.password],
                   ),
                   simpleButton(
-                    key: Locators.registrationButtonLocator,
+                    key: Key(Locators.registrationButtonLocator),
                     text: SdStrings.registration,
                     onPressed: _registrationPressed,
                   )

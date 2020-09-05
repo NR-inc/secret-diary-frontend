@@ -66,5 +66,10 @@ class AuthInteractor {
     await _configRepository.clearUserUid();
   }
 
+  Future<void> removeAccount() async {
+    await _userRepository.removeAccount();
+    await _configRepository.clearUserUid();
+  }
+
   Future<bool> hasSession() async => _configRepository.hasSession();
 }

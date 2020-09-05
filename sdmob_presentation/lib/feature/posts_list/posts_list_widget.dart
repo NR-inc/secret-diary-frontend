@@ -6,14 +6,14 @@ class PostsListWidget extends StatefulWidget {
   final String searchQuery;
   final FeedSortType feedSortType;
   final List<PostCategoryModel> searchCategories;
-  final int userId;
+  final String userUid;
 
   PostsListWidget({
-    this.userId,
+    this.userUid,
     this.feedSortType,
     this.searchCategories,
     this.searchQuery,
-  });
+  }) : super(key: UniqueKey());
 
   @override
   State<StatefulWidget> createState() => _PostsListState();
@@ -23,13 +23,13 @@ class _PostsListState extends State<PostsListWidget> {
   final PostsBloc _postsBloc = Injector.getInjector().get<PostsBloc>();
 
   @override
-  void initState() {
-    if (widget.userId != null) {
-      _postsBloc.loadPostsForUser(userId: widget.userId);
+  void didChangeDependencies() {
+    if (widget.userUid != null) {
+      _postsBloc.loadPostsForUser(userUid: widget.userUid);
     } else {
       _postsBloc.loadPostsForFeed(searchQuery: widget.searchQuery);
     }
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
@@ -52,32 +52,45 @@ class _PostsListState extends State<PostsListWidget> {
               itemCount: posts.length,
               itemBuilder: (BuildContext context, int index) {
                 final postItem = posts[index];
-                return Card(
-                  child: Column(children: <Widget>[
-                    Container(
-                      height: 64.0,
-                      child: Center(
+                return Dismissible(
+                    key: Key(postItem.id),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                        color: Colors.red,
                         child: Text(
-                          postItem.title,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                          'Delete',
+                          style: TextStyle(color: Colors.white),
+                        )),
+                    onDismissed: (DismissDirection direction) async {
+                      await _postsBloc.removePostById(postItem.id);
+                      _postsBloc.loadPostsForUser(userUid: widget.userUid);
+                    },
+                    child: Card(
+                      child: Column(children: <Widget>[
+                        Container(
+                          height: 64.0,
+                          child: Center(
+                            child: Text(
+                              postItem.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      height: 64.0,
-                      child: Center(
-                        child: Text(
-                          postItem.description,
-                          style: TextStyle(
-                            fontSize: 12.0,
+                        Container(
+                          height: 64.0,
+                          child: Center(
+                            child: Text(
+                              postItem.description,
+                              style: TextStyle(
+                                fontSize: 12.0,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ]),
-                );
+                      ]),
+                    ));
               }));
     } else {
       return Center(child: Text('No posts'));

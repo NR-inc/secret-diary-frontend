@@ -12,15 +12,15 @@ class LoginBloc extends BaseBloc {
   LoginBloc(this._authInteractor, this.loginSubject);
 
   void login(String email, String password) async {
-    loadingProgress.add(true);
+    loadingProgressResult.add(true);
     loginSubscription?.cancel();
     loginSubscription = _authInteractor.login(email, password).listen(
           loginSubject.add,
           onError: (error) {
             loginSubject.addError(error);
-            loadingProgress.add(false);
+            loadingProgressResult.add(false);
           },
-          onDone: () => loadingProgress.add(false),
+          onDone: () => loadingProgressResult.add(false),
         );
   }
 

@@ -13,15 +13,15 @@ class RegistrationBloc extends BaseBloc {
   RegistrationBloc(this._authInteractor, this.registrationResult);
 
   void registration(String firstName, String lastName, String email, String password) async {
-    loadingProgress.add(true);
+    loadingProgressResult.add(true);
     registrationSubscription?.cancel();
     registrationSubscription =
         _authInteractor.registration(firstName, lastName, email, password).listen(registrationResult.add,
             onError: (error) {
               registrationResult.addError(error);
-              loadingProgress.add(false);
+              loadingProgressResult.add(false);
             },
-            onDone: () => loadingProgress.add(false));
+            onDone: () => loadingProgressResult.add(false));
   }
 
   @override

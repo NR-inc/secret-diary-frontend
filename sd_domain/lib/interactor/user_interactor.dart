@@ -8,10 +8,8 @@ class UserInteractor {
 
   UserInteractor(this._userRepository, this._configRepository);
 
-  Future<UserModel> profile() async => _userRepository.profile(
-        await _configRepository.getUserUid(),
-      );
+  Future<UserModel> profile() async => _userRepository.profile();
 
-  Future<UserModel> getUserById(int id) async =>
-      _userRepository.getUserById(id);
+  Future<UserModel> getUserById(String uid) async =>
+      _userRepository.getUserById(uid);
 }

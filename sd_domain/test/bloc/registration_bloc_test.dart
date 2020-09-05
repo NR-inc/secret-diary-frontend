@@ -86,7 +86,7 @@ void main() {
       });
 
       await expectLater(
-        registrationBloc.loadingProgress,
+        registrationBloc.loadingProgressStream,
         emitsInOrder([true, false]),
       );
     });
@@ -111,7 +111,7 @@ void main() {
       });
 
       await expectLater(
-        registrationBloc.loadingProgress,
+        registrationBloc.loadingProgressStream,
         emitsInOrder([true, false]),
       );
     });

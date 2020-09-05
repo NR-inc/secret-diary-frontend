@@ -1,3 +1,4 @@
+import 'package:sddomain/export/domain.dart';
 import 'package:sddomain/model/feed_sort_type.dart';
 import 'package:sddomain/model/post_category_model.dart';
 import 'package:sddomain/model/post_model.dart';
@@ -36,18 +37,24 @@ class PostsDataMockRepository implements PostsRepository {
   }
 
   @override
-  Future<PostModel> getPostById(int postId) async {
+  Future<PostModel> getPostById(String postId) async {
     return _posts.firstWhere((post) => post.id == postId);
   }
 
   @override
-  Stream<List<PostModel>> getPostsOfUser(
-      {int userId, int fromPostId, int limit}) async* {
+  Stream<List<PostModel>> getPostsOfUser({
+    UserModel user,
+    int fromPostId,
+    int limit,
+  }) async* {
     yield _posts;
   }
 
   @override
-  Future<bool> removePostById(int postId) async {
+  Future<bool> removePostById({
+    UserModel currentUser,
+    String postId,
+  }) async {
     return true;
   }
 
@@ -66,32 +73,44 @@ class PostsDataMockRepository implements PostsRepository {
     }
     return newPostModel;
   }
+
+  @override
+  Future<bool> createPost({
+    UserModel currentUser,
+    String title,
+    String description,
+    bool visibilityFlag,
+    List<String> categoriesIds,
+  }) {
+    // TODO: implement createPost
+    throw UnimplementedError();
+  }
 }
 
 var _posts = [
   PostModel(
-    id: 1,
+    id: '1',
     postCategoryModels: [_categories[0]],
     title: 'My first flight',
     description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   ),
   PostModel(
-    id: 2,
+    id: '2',
     postCategoryModels: [_categories[1]],
     title: 'I cooked scrambled eggs',
     description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   ),
   PostModel(
-    id: 3,
+    id: '3',
     postCategoryModels: [_categories[2]],
     title: 'I met a girl',
     description:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   ),
   PostModel(
-    id: 4,
+    id: '4',
     postCategoryModels: [_categories[3]],
     title: 'I fired from my favorite job',
     description:

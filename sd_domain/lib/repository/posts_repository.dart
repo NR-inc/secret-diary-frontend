@@ -3,14 +3,25 @@ import 'package:sddomain/export/models.dart';
 import 'package:sddomain/model/feed_sort_type.dart';
 
 abstract class PostsRepository {
-  Future<PostModel> getPostById(int postId);
+  Future<PostModel> getPostById(String postId);
 
   Future<PostModel> updatePost(PostModel postModel);
 
-  Future<bool> removePostById(int postId);
+  Future<bool> removePostById({
+    UserModel currentUser,
+    String postId,
+  });
+
+  Future<bool> createPost({
+    UserModel currentUser,
+    String title,
+    String description,
+    bool visibilityFlag,
+    List<String> categoriesIds,
+  });
 
   Stream<List<PostModel>> getPostsOfUser({
-    @required int userId,
+    @required UserModel user,
     int fromPostId,
     int limit,
   });

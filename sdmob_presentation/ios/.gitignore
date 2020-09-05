@@ -59,3 +59,5 @@ Carthage/Build/
 iOSInjectionProject/
 
 *.sh
+/Flutter/flutter_export_environment.sh
+/Flutter/flutter_export_environment.sh

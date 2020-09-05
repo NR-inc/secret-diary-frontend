@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/core/error_handler.dart';
 import 'package:sddomain/export/domain.dart';
 
@@ -19,7 +20,7 @@ class AuthDataRepository extends AuthRepository {
         email: email,
         password: password,
       );
-      await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+      return userCredential.user.uid;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
@@ -33,20 +34,21 @@ class AuthDataRepository extends AuthRepository {
     String password,
   ) async {
     try {
-      DatabaseReference usersDbRef =
-          FirebaseDatabase.instance.reference().child("Users");
+      final databaseReference = FirebaseFirestore.instance;
+
       final userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
-      usersDbRef.child(userCredential.user.uid).set({
-        'email': email,
-        'first_name': firstName,
-        'last_name': lastName,
+      databaseReference
+          .collection(FirestoreKeys.usersCollectionKey)
+          .doc(userCredential.user.uid)
+          .set({
+        FirestoreKeys.emailFieldKey: email,
+        FirestoreKeys.firstNameFieldKey: firstName,
+        FirestoreKeys.lastNameFieldKey: lastName,
       });
-
       return userCredential.user.uid;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);

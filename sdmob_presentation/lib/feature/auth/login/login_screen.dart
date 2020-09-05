@@ -23,7 +23,11 @@ class LoginState extends BaseState<LoginScreen> {
   @override
   void initState() {
     _loginBloc.loginSubject.listen(
-      (_) => Navigator.pushReplacementNamed(context, AppRoutes.root),
+      (_) => Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.root,
+        (route) => false,
+      ),
       onError: handleError,
     );
     super.initState();
@@ -45,20 +49,22 @@ class LoginState extends BaseState<LoginScreen> {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: SdColors.primaryColor,
         body: StreamBuilder(
-            stream: _loginBloc.loadingProgress,
+            stream: _loginBloc.loadingProgressStream,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-             return SingleChildScrollView(child: Stack(children: <Widget>[
-                Column(children: <Widget>[
-                  SizedBox(height: Dimens.unit8),
-                  SvgPicture.asset(
-                    SdAssets.appLogo,
-                    color: SdColors.secondaryColor,
-                    package: commonUiPackage,
-                  ),
-                  loginForm(),
+              return SingleChildScrollView(
+                child: Stack(children: <Widget>[
+                  Column(children: <Widget>[
+                    SizedBox(height: Dimens.unit8),
+                    SvgPicture.asset(
+                      SdAssets.appLogo,
+                      color: SdColors.secondaryColor,
+                      package: commonUiPackage,
+                    ),
+                    loginForm(),
+                  ]),
+                  showLoader(show: snapshot.hasData && snapshot.data)
                 ]),
-                showLoader(show: snapshot.hasData && snapshot.data)
-              ]),);
+              );
             }),
       );
 
@@ -93,12 +99,12 @@ class LoginState extends BaseState<LoginScreen> {
                       error: validationErrors[InputFieldType.password],
                       prefixIconAsset: SdAssets.passwordIcon),
                   simpleButton(
-                    key: Locators.loginButtonLocator,
+                    key: Key(Locators.loginButtonLocator),
                     text: SdStrings.login,
                     onPressed: _loginPressed,
                   ),
                   simpleButton(
-                    key: Locators.registrationButtonLocator,
+                    key: Key(Locators.registrationButtonLocator),
                     text: SdStrings.registration,
                     onPressed: _registrationPressed,
                   ),

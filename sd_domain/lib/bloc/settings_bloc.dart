@@ -8,6 +8,8 @@ class SettingsBloc extends BaseBloc {
 
   Future<void> logout() async => await _authInteractor.logout();
 
+  Future<void> removeAccount() async => await _authInteractor.removeAccount();
+
   @override
   void dispose() {
     super.dispose();

@@ -4,20 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 Widget simpleButton({
-  @required String key,
+  @required Key key,
   @required String text,
+  TextStyle style,
   Function onPressed,
 }) {
   if (Platform.isAndroid) {
     return MaterialButton(
-      key: Key(key),
-      child: Text(text),
+      key: key,
+      child: Text(
+        text,
+        style: style,
+      ),
       onPressed: onPressed,
     );
   } else {
     return CupertinoButton(
-      key: Key(key),
-      child: Text(text),
+      key: key,
+      child: Text(
+        text,
+        style: style,
+      ),
       onPressed: onPressed,
     );
   }

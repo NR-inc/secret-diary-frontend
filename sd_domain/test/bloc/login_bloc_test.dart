@@ -70,7 +70,7 @@ void main() {
         loginBloc.login(email, password);
       });
 
-      await expectLater(loginBloc.loadingProgress, emitsInOrder([true, false]));
+      await expectLater(loginBloc.loadingProgressStream, emitsInOrder([true, false]));
     });
 
     test('Verify loading when login throws ERROR', () async {
@@ -91,7 +91,7 @@ void main() {
         loginBloc.login(email, password);
       });
 
-      await expectLater(loginBloc.loadingProgress, emitsInOrder([true, false]));
+      await expectLater(loginBloc.loadingProgressStream, emitsInOrder([true, false]));
     });
   });
 }
