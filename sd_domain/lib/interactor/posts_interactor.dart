@@ -10,24 +10,22 @@ class PostsInteractor {
     this._userRepository,
   );
 
-  Stream<List<PostModel>> getPostsOfUser({
+  Future<List<PostModel>> getPostsOfUser({
     @required String userUid,
-    int fromPostId,
+    String fromPostId,
     int limit,
-  }) async* {
-    final user = await _userRepository.getUserById(userUid);
-    yield* _postsRepository.getPostsOfUser(
-      user: user,
-      fromPostId: fromPostId,
-      limit: limit,
-    );
-  }
+  }) =>
+      _postsRepository.getPostsOfUser(
+        userUid: userUid,
+        fromPostId: fromPostId,
+        limit: limit,
+      );
 
-  Stream<List<PostModel>> getFeedPostsBy({
+  Future<List<PostModel>> getFeedPostsBy({
     @required FeedSortType feedSortType,
     String searchQuery,
     List<PostCategoryModel> postCategories,
-    int fromPostId,
+    String fromPostId,
     int limit,
   }) =>
       _postsRepository.getFeedPostsBy(
@@ -45,7 +43,7 @@ class PostsInteractor {
   ]) async {
     final currentUser = await _userRepository.profile();
     return await _postsRepository.createPost(
-      currentUser: currentUser,
+      userUid: currentUser.uid,
       title: title,
       description: description,
       visibilityFlag: visibilityFlag,
@@ -53,11 +51,6 @@ class PostsInteractor {
     );
   }
 
-  Future<bool> removePost({@required String id}) async {
-    final currentUser = await _userRepository.profile();
-    return await _postsRepository.removePostById(
-      currentUser: currentUser,
-      postId: id,
-    );
-  }
+  Future<bool> removePost({@required String id}) =>
+      _postsRepository.removePostById(postId: id);
 }

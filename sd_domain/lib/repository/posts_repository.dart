@@ -8,29 +8,28 @@ abstract class PostsRepository {
   Future<PostModel> updatePost(PostModel postModel);
 
   Future<bool> removePostById({
-    UserModel currentUser,
     String postId,
   });
 
   Future<bool> createPost({
-    UserModel currentUser,
+    String userUid,
     String title,
     String description,
     bool visibilityFlag,
     List<String> categoriesIds,
   });
 
-  Stream<List<PostModel>> getPostsOfUser({
-    @required UserModel user,
-    int fromPostId,
+  Future<List<PostModel>> getPostsOfUser({
+    @required String userUid,
+    String fromPostId,
     int limit,
   });
 
-  Stream<List<PostModel>> getFeedPostsBy({
+  Future<List<PostModel>> getFeedPostsBy({
     @required FeedSortType feedSortType,
     String searchQuery,
     List<PostCategoryModel> postCategories,
-    int fromPostId,
+    String fromPostId,
     int limit,
   });
 }

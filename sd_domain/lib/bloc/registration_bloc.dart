@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/interactor/auth_interactor.dart';
@@ -12,16 +11,18 @@ class RegistrationBloc extends BaseBloc {
 
   RegistrationBloc(this._authInteractor, this.registrationResult);
 
-  void registration(String firstName, String lastName, String email, String password) async {
-    loadingProgressResult.add(true);
+  void registration(
+      String firstName, String lastName, String email, String password) async {
+    showLoading(true);
     registrationSubscription?.cancel();
-    registrationSubscription =
-        _authInteractor.registration(firstName, lastName, email, password).listen(registrationResult.add,
+    registrationSubscription = _authInteractor
+        .registration(firstName, lastName, email, password)
+        .listen(registrationResult.add,
             onError: (error) {
               registrationResult.addError(error);
-              loadingProgressResult.add(false);
+              showLoading(false);
             },
-            onDone: () => loadingProgressResult.add(false));
+            onDone: () => showLoading(false));
   }
 
   @override

@@ -3,26 +3,37 @@ import 'package:rxdart/rxdart.dart';
 
 abstract class BaseBloc {
   @protected
-  final loadingProgressResult = PublishSubject<bool>();
+  var isLoading = false;
+  @protected
+  final _loadingProgressResult = BehaviorSubject<bool>.seeded(false);
+
   @protected
   final errorResult = PublishSubject<void>();
-  
-  Stream<bool> get loadingProgressStream => loadingProgressResult.stream;
-  Stream<bool> get errorStream => loadingProgressResult.stream;
-  
+
+  Stream<bool> get loadingProgressStream => _loadingProgressResult.stream;
+
+  Stream<bool> get errorStream => _loadingProgressResult.stream;
+
   @protected
-  void handleError(error){
+  void showLoading(bool show) {
+    isLoading = show;
+    _loadingProgressResult.add(show);
+  }
+
+  @protected
+  void handleError(error) {
     errorResult.addError(error);
-    loadingProgressResult.add(false);
+    _loadingProgressResult.add(false);
+    showLoading(false);
   }
 
   void unsubscribe() {
-    loadingProgressResult.add(false);
+    _loadingProgressResult.add(false);
   }
 
   @mustCallSuper
   void dispose() {
-    loadingProgressResult.close();
+    _loadingProgressResult.close();
     errorResult.close();
   }
 }

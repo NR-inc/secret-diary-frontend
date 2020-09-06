@@ -6,13 +6,13 @@ import 'package:sddomain/repository/posts_repository.dart';
 
 class PostsDataMockRepository implements PostsRepository {
   @override
-  Stream<List<PostModel>> getFeedPostsBy({
+  Future<List<PostModel>> getFeedPostsBy({
     FeedSortType feedSortType,
     String searchQuery,
     List<PostCategoryModel> postCategories,
-    int fromPostId,
+    String fromPostId,
     int limit,
-  }) async* {
+  }) async {
     var posts = List<PostModel>.from(_posts);
     if (searchQuery != null) {
       posts = posts.where(
@@ -32,7 +32,7 @@ class PostsDataMockRepository implements PostsRepository {
         return categoryFound.id != -1;
       });
     } else {
-      yield posts ?? List();
+      return posts ?? List();
     }
   }
 
@@ -42,12 +42,12 @@ class PostsDataMockRepository implements PostsRepository {
   }
 
   @override
-  Stream<List<PostModel>> getPostsOfUser({
-    UserModel user,
-    int fromPostId,
+  Future<List<PostModel>> getPostsOfUser({
+    String userUid,
+    String fromPostId,
     int limit,
-  }) async* {
-    yield _posts;
+  }) async {
+    return _posts;
   }
 
   @override
@@ -76,7 +76,7 @@ class PostsDataMockRepository implements PostsRepository {
 
   @override
   Future<bool> createPost({
-    UserModel currentUser,
+    String userUid,
     String title,
     String description,
     bool visibilityFlag,

@@ -37,7 +37,7 @@ class BlocModule extends AbstractModule {
 
     injector.map((i) => PostsBloc(
           i.get(),
-          PublishSubject<List<PostModel>>(),
+          BehaviorSubject<List<PostModel>>.seeded(List()),
           PublishSubject<bool>(),
         ));
   }

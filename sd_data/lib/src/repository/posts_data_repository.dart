@@ -9,58 +9,116 @@ class PostsDataRepository implements PostsRepository {
   PostsDataRepository(this._errorHandler);
 
   @override
-  Stream<List<PostModel>> getFeedPostsBy({
-    String searchQuery,
-    FeedSortType feedSortType,
-    List<PostCategoryModel> postCategories,
-    int fromPostId,
-    int limit,
-  }) async* {
+  Future<List<PostModel>> getFeedPostsBy(
+      {String searchQuery,
+      FeedSortType feedSortType,
+      List<PostCategoryModel> postCategories,
+      String fromPostId,
+      int limit}) async {
     try {
       final databaseReference = FirebaseFirestore.instance;
+      DocumentSnapshot lastDownloadedPostDoc;
 
-      final result = await databaseReference
+      var orderByField;
+      switch (feedSortType) {
+        case FeedSortType.byDate:
+          orderByField = FirestoreKeys.createdAtFieldKey;
+          break;
+        case FeedSortType.byCategories:
+          orderByField = FirestoreKeys.createdAtFieldKey; // todo
+          break;
+        case FeedSortType.byComments:
+          orderByField = FirestoreKeys.commentsFieldKey;
+          break;
+        case FeedSortType.byLikes:
+          orderByField = FirestoreKeys.likesFieldKey;
+          break;
+      }
+
+      if (fromPostId != null && fromPostId.isNotEmpty) {
+        lastDownloadedPostDoc = await databaseReference
+            .collection(FirestoreKeys.postsCollectionKey)
+            .doc(fromPostId)
+            .get();
+      }
+
+      var query = databaseReference
           .collection(FirestoreKeys.postsCollectionKey)
           .where(FirestoreKeys.visibilityFlagFieldKey, isEqualTo: true)
-          .get();
+          .orderBy(orderByField, descending: true);
+
+      if (lastDownloadedPostDoc != null) {
+        query = query.startAfterDocument(lastDownloadedPostDoc);
+      }
+      final result = await query.limit(limit).get();
+
       final data = result.docs
           .map((postData) => PostModel.fromJson(
                 id: postData.id,
                 data: postData.data(),
               ))
           .toList();
-      yield data;
+
+      return data;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
-  Future<PostModel> getPostById(String postId) {
-    // TODO: implement getPostById
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<List<PostModel>> getPostsOfUser({
-    UserModel user,
-    int fromPostId,
-    int limit,
-  }) async* {
+  Future<PostModel> getPostById(String postId) async {
     try {
       final databaseReference = FirebaseFirestore.instance;
 
-      final result = await databaseReference
+      final doc = await databaseReference
           .collection(FirestoreKeys.postsCollectionKey)
-          .where(FieldPath.documentId, whereIn: user.postsIds)
+          .doc(postId)
           .get();
+
+      return PostModel.fromJson(
+        id: doc.id,
+        data: doc.data(),
+      );
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<List<PostModel>> getPostsOfUser({
+    String userUid,
+    String fromPostId,
+    int limit,
+  }) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+      DocumentSnapshot lastDownloadedPostDoc;
+
+      if (fromPostId != null && fromPostId.isNotEmpty) {
+        lastDownloadedPostDoc = await databaseReference
+            .collection(FirestoreKeys.postsCollectionKey)
+            .doc(fromPostId)
+            .get();
+      }
+
+      var query = databaseReference
+          .collection(FirestoreKeys.postsCollectionKey)
+          .where(FirestoreKeys.authorIdFieldKey, isEqualTo: userUid)
+          .orderBy(FirestoreKeys.createdAtFieldKey, descending: true);
+
+      if (lastDownloadedPostDoc != null) {
+        query = query.startAfterDocument(lastDownloadedPostDoc);
+      }
+
+      final result = await query.limit(limit).get();
+
       final data = result.docs
           .map((postData) => PostModel.fromJson(
                 id: postData.id,
                 data: postData.data(),
               ))
           .toList();
-      yield data;
+      return data;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
@@ -68,7 +126,6 @@ class PostsDataRepository implements PostsRepository {
 
   @override
   Future<bool> removePostById({
-    UserModel currentUser,
     String postId,
   }) async {
     try {
@@ -78,13 +135,6 @@ class PostsDataRepository implements PostsRepository {
           .collection(FirestoreKeys.postsCollectionKey)
           .doc(postId)
           .delete();
-
-      await databaseReference
-          .collection(FirestoreKeys.usersCollectionKey)
-          .doc(currentUser.uid)
-          .update({
-        FirestoreKeys.postsIdsFieldKey: currentUser.postsIds..remove(postId)
-      });
 
       return true;
     } on dynamic catch (ex) {
@@ -100,7 +150,7 @@ class PostsDataRepository implements PostsRepository {
 
   @override
   Future<bool> createPost({
-    UserModel currentUser,
+    String userUid,
     String title,
     String description,
     bool visibilityFlag,
@@ -109,20 +159,12 @@ class PostsDataRepository implements PostsRepository {
     try {
       final databaseReference = FirebaseFirestore.instance;
 
-      final result = await databaseReference
-          .collection(FirestoreKeys.postsCollectionKey)
-          .add({
+      await databaseReference.collection(FirestoreKeys.postsCollectionKey).add({
         FirestoreKeys.titleFieldKey: title,
         FirestoreKeys.descriptionFieldKey: description,
         FirestoreKeys.visibilityFlagFieldKey: visibilityFlag,
+        FirestoreKeys.authorIdFieldKey: userUid,
         FirestoreKeys.createdAtFieldKey: FieldValue.serverTimestamp(),
-      });
-
-      await databaseReference
-          .collection(FirestoreKeys.usersCollectionKey)
-          .doc(currentUser.uid)
-          .update({
-        FirestoreKeys.postsIdsFieldKey: currentUser.postsIds..add(result.id)
       });
 
       return true;

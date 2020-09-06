@@ -16,5 +16,6 @@ class FirestoreKeys{
   static const likesFieldKey = 'likes';
   static const commentsFieldKey = 'comments';
   static const createdAtFieldKey = 'created_at';
+  static const authorIdFieldKey = 'author_id';
 
 }
