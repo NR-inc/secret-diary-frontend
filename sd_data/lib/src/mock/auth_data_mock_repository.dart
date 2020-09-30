@@ -20,4 +20,9 @@ class AuthDataMockRepository implements AuthRepository {
     print('registration success');
     return 'uid';
   }
+
+  @override
+  Stream<DefaultResponse> remindPassword(String email) async* {
+    yield DefaultResponse.SUCCESS;
+  }
 }

@@ -5,6 +5,7 @@ class SdStrings {
 
   static const String login = 'Login';
   static const String registration = 'Registration';
+    static const String remindPassword = 'RemindPasword';
 
   /// BUTTONS
   static const String createPostButton = 'Create post';

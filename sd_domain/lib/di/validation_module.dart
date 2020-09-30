@@ -7,6 +7,7 @@ import 'package:common_ui/common_ui.dart';
 class ValidationModule extends AbstractModule {
   static const loginFormValidator = 'loginFormValidator';
   static const registrationFormValidator = 'registrationFormValidator';
+  static const remindPasswordFormValidator = 'remindPasswordFormValidator';
 
   static const firstNameFieldValidator = 'firstNameFieldValidator';
   static const lastNameFieldValidator = 'lastNameFieldValidator';
@@ -45,6 +46,13 @@ class ValidationModule extends AbstractModule {
         InputFieldType.password: i.get(key: passwordFieldValidator),
       }),
       key: registrationFormValidator,
+    );
+
+    injector.map(
+      (i) => FormValidator({
+        InputFieldType.email: i.get(key: emailFieldValidator),
+      }),
+      key: remindPasswordFormValidator,
     );
   }
 
