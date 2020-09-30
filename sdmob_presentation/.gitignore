@@ -76,3 +76,4 @@
 /.ios/Flutter/
 /lib/generated_plugin_registrant.dart
 /ios/Flutter/flutter_export_environment.sh
+/pubspec.lock

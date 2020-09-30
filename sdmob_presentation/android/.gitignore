@@ -73,3 +73,5 @@ lint/tmp/
 # lint/reports/
 /Flutter
 /gradle
+/app/gradlew
+/app/gradlew.bat
