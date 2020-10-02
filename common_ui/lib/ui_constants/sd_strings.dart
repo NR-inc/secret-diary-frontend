@@ -5,10 +5,12 @@ class SdStrings {
 
   static const String login = 'Login';
   static const String registration = 'Registration';
-    static const String remindPassword = 'RemindPasword';
+  static const String remindPassword = 'Remind Password';
 
   /// BUTTONS
   static const String createPostButton = 'Create post';
+  static const String forgotPasswordButton = 'Forgot password?';
+  static const String sendPasswordResetLinkButton = 'Send password reset link';
 
   /// HINTS
   static const String firstNameHint = 'First name';
@@ -18,6 +20,9 @@ class SdStrings {
   static const String postTitleHint = 'Title';
   static const String postDescriptionHint = 'Description';
   static const String postVisibilityFlagHint = 'Show to everyone my post (anonymously)';
+
+  /// MESSAGES
+  static const String resetPasswordSuccessMessage = 'We have e-mailed your password reset link!';
 
   /// ERRORS
   static const String fieldErrorMaxLength =
@@ -40,4 +45,5 @@ class SdStrings {
   static const String fieldErrorMaxLengthPassword =
       "Password should not contain more than ${ValidationConstants.passwordMaxLength} characters";
   static const String fieldErrorPatternPassword = "Invalid password";
+
 }

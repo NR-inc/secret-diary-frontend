@@ -98,6 +98,13 @@ class LoginState extends BaseState<LoginScreen> {
                       obscureText: true,
                       error: validationErrors[InputFieldType.password],
                       prefixIconAsset: SdAssets.passwordIcon),
+                  GestureDetector(
+                    child: Text(SdStrings.forgotPasswordButton),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.remindPassword,
+                    ),
+                  ),
                   simpleButton(
                     key: Key(Locators.loginButtonLocator),
                     text: SdStrings.login,

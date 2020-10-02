@@ -54,4 +54,13 @@ class AuthDataRepository extends AuthRepository {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
+
+  @override
+  Future<void> remindPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
 }

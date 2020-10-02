@@ -2,37 +2,37 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
+import 'package:sddomain/exceptions/validation_exception.dart';
 import 'package:sddomain/export/interactor.dart';
 import 'package:sddomain/model/default_response.dart';
 
 class RemindPasswordBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
-  final PublishSubject<DefaultResponse> remindPasswordSubject;
-  StreamSubscription remindPasswordSubscription;
+  final PublishSubject<DefaultResponse> remindPasswordResult;
 
-  RemindPasswordBloc(this._authInteractor, this.remindPasswordSubject);
+  RemindPasswordBloc(
+    this._authInteractor,
+    this.remindPasswordResult,
+  );
 
   void remindPassword(String email) async {
-    loadingProgress.add(true);
-    remindPasswordSubscription?.cancel();
-    remindPasswordSubscription =
-        _authInteractor.remindPassword(email).listen(remindPasswordSubject.add,
-            onError: (error) {
-              remindPasswordSubject.addError(error);
-              loadingProgress.add(false);
-            },
-            onDone: () => loadingProgress.add(false));
-  }
-
-  @override
-  void unsubscribe() {
-    remindPasswordSubscription?.cancel();
-    super.unsubscribe();
+    showLoading(true);
+    _authInteractor.remindPassword(email).then(
+      remindPasswordResult.add,
+      onError: (ex) {
+        if (ex is ValidationException) {
+          remindPasswordResult.addError(ex);
+          showLoading(false);
+        } else {
+          handleError(ex);
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
-    remindPasswordSubject.close();
+    remindPasswordResult.close();
     super.dispose();
   }
 }

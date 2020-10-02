@@ -63,15 +63,13 @@ class AuthInteractor {
             }),
           );
 
-  Stream<DefaultResponse> remindPassword(
-    String email,
-  ) =>
-      _remindPasswordFormValidator
-          .validateForm({
-            InputFieldType.email: email,
-          })
-          .asStream()
-          .switchMap((_) => _authRepository.remindPassword(email));
+  Future<DefaultResponse> remindPassword(String email) async {
+    await _remindPasswordFormValidator.validateForm({
+      InputFieldType.email: email,
+    });
+    await _authRepository.remindPassword(email);
+    return DefaultResponse.SUCCESS;
+  }
 
   Future<void> logout() async {
     await _userRepository.logout();

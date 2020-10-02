@@ -29,6 +29,7 @@ class ErrorHandler {
         return NetworkException(
           statusCode: int.tryParse(firebaseError?.code),
           message: firebaseError.message,
+          description: firebaseError.code,
         );
         break;
       default:

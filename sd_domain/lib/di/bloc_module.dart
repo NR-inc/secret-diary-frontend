@@ -40,5 +40,12 @@ class BlocModule extends AbstractModule {
           BehaviorSubject<List<PostModel>>.seeded(List()),
           PublishSubject<bool>(),
         ));
+
+    injector.map(
+      (i) => RemindPasswordBloc(
+        i.get(),
+        PublishSubject<DefaultResponse>(),
+      ),
+    );
   }
 }

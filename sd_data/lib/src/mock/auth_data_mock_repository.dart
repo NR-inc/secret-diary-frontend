@@ -22,7 +22,7 @@ class AuthDataMockRepository implements AuthRepository {
   }
 
   @override
-  Stream<DefaultResponse> remindPassword(String email) async* {
-    yield DefaultResponse.SUCCESS;
+  Future<void> remindPassword(String email) async {
+    return true;
   }
 }

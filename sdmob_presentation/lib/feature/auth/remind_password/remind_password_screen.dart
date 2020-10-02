@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/bloc/remind_password_bloc.dart';
 import 'package:sddomain/exceptions/validation_exception.dart';
+import 'package:sddomain/export/domain.dart';
 import 'package:sddomain/model/input_field_type.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
 
@@ -23,30 +24,49 @@ class RemindPasswordState extends BaseState<RemindPasswordScreen> {
   final emailTextController = TextEditingController();
 
   @override
+  void initState() {
+    _remindPasswordBloc.errorStream.listen((_) {}, onError: (ex) {
+      if (ex is NetworkException && ex.description == 'user-not-found') {
+        showToast(message: SdStrings.resetPasswordSuccessMessage);
+      } else {
+        handleError(ex);
+      }
+    });
+    _remindPasswordBloc.remindPasswordResult.listen((result) {
+      if (result == DefaultResponse.SUCCESS) {
+        showToast(message: SdStrings.resetPasswordSuccessMessage);
+      }
+    });
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _remindPasswordBloc.dispose();
     super.dispose();
   }
 
   @override
-  void didPushNext() {
-    _remindPasswordBloc.unsubscribe();
-    super.didPushNext();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: getAppBar(
-          context: context,
-          key: Locators.remindPasswordScreenLocator,
-          title: SdStrings.remindPassword,
-        ),
-        body: _remindPasswordForm());
+      appBar: getAppBar(
+        context: context,
+        key: Locators.remindPasswordScreenLocator,
+        title: SdStrings.remindPassword,
+      ),
+      body: StreamBuilder(
+          stream: _remindPasswordBloc.loadingProgressStream,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            return Stack(children: <Widget>[
+              _remindPasswordForm(),
+              showLoader(show: snapshot.hasData && snapshot.data)
+            ]);
+          }),
+    );
   }
 
   Widget _remindPasswordForm() => StreamBuilder(
-        stream: _remindPasswordBloc.remindPasswordSubject,
+        stream: _remindPasswordBloc.remindPasswordResult,
         builder: (context, snapshot) {
           Map<InputFieldType, String> validationErrors = snapshot.hasError &&
                   snapshot.error?.runtimeType == ValidationException
@@ -57,15 +77,15 @@ class RemindPasswordState extends BaseState<RemindPasswordScreen> {
               child: Center(
                 child: Column(children: <Widget>[
                   inputField(
-                      inputFieldKey: Key(Locators.emailFieldLocator),
-                      errorFieldKey: Key(Locators.emailErrorLocator),
+                      inputFieldKey: const Key(Locators.emailFieldLocator),
+                      errorFieldKey: const Key(Locators.emailErrorLocator),
                       controller: emailTextController,
                       hint: SdStrings.emailHint,
                       error: validationErrors[InputFieldType.email],
                       prefixIconAsset: SdAssets.emailIcon),
                   simpleButton(
-                    key: Locators.remindPasswordButtonLocator,
-                    text: SdStrings.remindPassword,
+                    key: const Key(Locators.remindPasswordButtonLocator),
+                    text: SdStrings.sendPasswordResetLinkButton,
                     onPressed: _remindPasswordPressed,
                   )
                 ]),

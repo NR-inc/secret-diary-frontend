@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sddomain/export/domain.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:common_ui/common_ui.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class BaseState<W extends StatefulWidget> extends State<W>
     with RouteAware {
@@ -43,5 +44,19 @@ abstract class BaseState<W extends StatefulWidget> extends State<W>
         showSimpleErrorDialog(context: context);
         break;
     }
+  }
+
+  void showToast({
+    String message,
+    bool isError = false,
+  }) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 3,
+      backgroundColor: isError ? SdColors.errorColor : SdColors.secondaryColor,
+      textColor: SdColors.whiteColor,
+    );
   }
 }

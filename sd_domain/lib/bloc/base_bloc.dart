@@ -8,11 +8,11 @@ abstract class BaseBloc {
   final _loadingProgressResult = BehaviorSubject<bool>.seeded(false);
 
   @protected
-  final errorResult = PublishSubject<void>();
+  final _errorResult = PublishSubject<bool>();
 
   Stream<bool> get loadingProgressStream => _loadingProgressResult.stream;
 
-  Stream<bool> get errorStream => _loadingProgressResult.stream;
+  Stream<bool> get errorStream => _errorResult.stream;
 
   @protected
   void showLoading(bool show) {
@@ -22,8 +22,7 @@ abstract class BaseBloc {
 
   @protected
   void handleError(error) {
-    errorResult.addError(error);
-    _loadingProgressResult.add(false);
+    _errorResult.addError(error);
     showLoading(false);
   }
 
@@ -34,6 +33,6 @@ abstract class BaseBloc {
   @mustCallSuper
   void dispose() {
     _loadingProgressResult.close();
-    errorResult.close();
+    _errorResult.close();
   }
 }

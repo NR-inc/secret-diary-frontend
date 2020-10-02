@@ -26,10 +26,15 @@ Widget inputField({
           obscureText: obscureText,
           textInputAction: textInputAction,
           decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+              color:
+                  error != null ? SdColors.errorColor : SdColors.secondaryColor,
+            )),
             hintText: hint,
             hintStyle: TextStyle(
               fontWeight: FontWeight.bold,
-              color: SdColors.secondaryColor.withOpacity(0.5),
+              color: SdColors.greyColor,
             ),
             prefixIcon: _getPrefixIcon(prefixIconAsset),
             prefixIconConstraints: BoxConstraints.expand(
@@ -57,7 +62,7 @@ Widget inputField({
             error ?? SdStrings.empty,
             key: errorFieldKey,
             style: TextStyle(
-              color: Colors.red,
+              color: SdColors.errorColor,
               fontSize: Dimens.fontSize12,
             ),
           ),

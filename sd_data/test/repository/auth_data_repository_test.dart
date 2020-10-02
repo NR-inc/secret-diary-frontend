@@ -15,42 +15,25 @@ void main() {
     final response = 'some json response';
 
     test('Login success test', () async {
-      final networkClient = MockNetworkClient();
-      final networkExecutor = MockNetworkExecutor();
-      final mockLoginResponseMapper = MockLoginResponseMapper();
-      final mockRegistrationResponseMapper = MockRegistrationResponseMapper();
+      final errorHandler = MockErrorHandler();
       final authRepo = AuthDataRepository(
-        networkClient,
-        networkExecutor,
-        mockLoginResponseMapper,
-        mockRegistrationResponseMapper,
+          errorHandler
       );
       final expected = AuthTokenModel(token);
-      when(
-        networkExecutor.makeRequest(networkClient, any),
-      ).thenAnswer((_) => Stream.value(response));
-
-      when(
-        mockLoginResponseMapper.map(response),
-      ).thenAnswer((_) => expected);
-      final actual = authRepo.login(
+      final actual = null;
+      /*final actual = authRepo.login(
         email,
         password,
-      );
+      );*/
+
 
       await expectLater(actual, emits(expected));
     });
 
     test('Login network error test', () async {
-      final networkClient = MockNetworkClient();
-      final networkExecutor = MockNetworkExecutor();
-      final mockLoginResponseMapper = MockLoginResponseMapper();
-      final mockRegistrationResponseMapper = MockRegistrationResponseMapper();
+      final errorHandler = MockErrorHandler();
       final authRepo = AuthDataRepository(
-        networkClient,
-        networkExecutor,
-        mockLoginResponseMapper,
-        mockRegistrationResponseMapper,
+          errorHandler
       );
       final expected = NetworkException();
       when(
