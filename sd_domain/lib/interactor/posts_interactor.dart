@@ -53,4 +53,7 @@ class PostsInteractor {
 
   Future<bool> removePost({@required String id}) =>
       _postsRepository.removePostById(postId: id);
+
+  Future<PostModel> getPost({@required String id}) =>
+      _postsRepository.getPostById(id);
 }

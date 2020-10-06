@@ -5,6 +5,7 @@ import 'package:sddomain/model/post_category_model.dart';
 
 class PostModel {
   String id;
+  String authorId;
   String title;
   String description;
   DateTime createdAt;
@@ -14,6 +15,7 @@ class PostModel {
 
   PostModel({
     this.id,
+    this.authorId,
     this.title,
     this.description,
     this.createdAt,
@@ -23,6 +25,7 @@ class PostModel {
 
   PostModel.empty() {
     id = '';
+    authorId = '';
     title = '';
     description = '';
     likes = 0;
@@ -36,6 +39,7 @@ class PostModel {
     Map<String, dynamic> data,
   }) {
     this.id = id;
+    authorId = data[FirestoreKeys.authorIdFieldKey] ?? '';
     title = data[FirestoreKeys.titleFieldKey] ?? '';
     description = data[FirestoreKeys.descriptionFieldKey] ?? '';
     createdAt = data[FirestoreKeys.createdAtFieldKey] != null

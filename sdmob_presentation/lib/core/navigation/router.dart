@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:ssecretdiary/feature/auth/login/login_screen.dart';
 import 'package:ssecretdiary/feature/auth/registration/registration_screen.dart';
 import 'package:ssecretdiary/feature/auth/remind_password/remind_password_screen.dart';
+import 'package:ssecretdiary/feature/post/post_details_screen.dart';
 import 'package:ssecretdiary/feature/post/post_screen.dart';
 import 'package:ssecretdiary/feature/root/root_screen.dart';
 import 'package:ssecretdiary/feature/splash/splash_screen.dart';
@@ -43,6 +44,13 @@ class ApplicationRouter {
       case AppRoutes.post:
         route = MaterialPageRoute(builder: (context) => PostScreen());
         break;
+      case AppRoutes.postDetails:
+        route = MaterialPageRoute(
+          builder: (context) => PostDetailsScreen(
+            postId: settings.arguments,
+          ),
+        );
+        break;
     }
     return route;
   }
@@ -58,4 +66,5 @@ class AppRoutes {
   static const registration = '/registration';
   static const remindPassword = '/password';
   static const post = '/post';
+  static const postDetails = '/postDetails';
 }

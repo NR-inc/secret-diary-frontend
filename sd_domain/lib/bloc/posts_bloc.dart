@@ -9,17 +9,21 @@ class PostsBloc extends BaseBloc {
   final PostsInteractor _postsInteractor;
   final BehaviorSubject<List<PostModel>> _postsResult;
   final PublishSubject<bool> _postCreationResult;
+  final PublishSubject<PostModel> _postDetailsResult;
   var _postsIsLoaded = false;
 
   PostsBloc(
     this._postsInteractor,
     this._postsResult,
     this._postCreationResult,
+    this._postDetailsResult,
   );
 
   Stream<List<PostModel>> get postsStream => _postsResult.stream;
 
   Stream<bool> get postCreationStream => _postCreationResult.stream;
+
+  Stream<PostModel> get postDetailsStream => _postDetailsResult.stream;
 
   void createPost(
     String title,
@@ -38,6 +42,17 @@ class PostsBloc extends BaseBloc {
         .then(
       (bool result) {
         _postCreationResult.add(result);
+        showLoading(false);
+      },
+      onError: handleError,
+    );
+  }
+
+  void getPost({String postId}) {
+    showLoading(true);
+    _postsInteractor.getPost(id: postId).then(
+      (PostModel postModel) {
+        _postDetailsResult.add(postModel);
         showLoading(false);
       },
       onError: handleError,

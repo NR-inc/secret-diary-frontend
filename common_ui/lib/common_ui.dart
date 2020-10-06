@@ -3,6 +3,7 @@ export 'widgets/input_fields.dart';
 export 'widgets/loader.dart';
 export 'widgets/alerts.dart';
 export 'widgets/app_bar.dart';
+export 'widgets/common_widgets.dart';
 export 'ui_constants/sd_assets.dart';
 export 'ui_constants/sd_colors.dart';
 export 'ui_constants/sd_strings.dart';
