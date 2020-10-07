@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/core/error_handler.dart';
 import 'package:sddomain/export/domain.dart';
+import 'package:sddomain/model/like_model.dart';
 
 class PostsDataRepository implements PostsRepository {
   final ErrorHandler _errorHandler;
@@ -136,6 +137,9 @@ class PostsDataRepository implements PostsRepository {
           .doc(postId)
           .delete();
 
+      await removeCommentsOfPost(postId: postId);
+      await removeLikesOfPost(postId: postId);
+
       return true;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
@@ -159,13 +163,99 @@ class PostsDataRepository implements PostsRepository {
     try {
       final databaseReference = FirebaseFirestore.instance;
 
-      await databaseReference.collection(FirestoreKeys.postsCollectionKey).add({
+      await databaseReference
+          .collection(
+        FirestoreKeys.postsCollectionKey,
+      )
+          .add({
         FirestoreKeys.titleFieldKey: title,
         FirestoreKeys.descriptionFieldKey: description,
         FirestoreKeys.visibilityFlagFieldKey: visibilityFlag,
         FirestoreKeys.authorIdFieldKey: userUid,
         FirestoreKeys.createdAtFieldKey: FieldValue.serverTimestamp(),
       });
+
+      return true;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<LikeModel> likePost({String userId, String postId}) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      final result = await databaseReference
+          .collection(
+        FirestoreKeys.likesCollectionKey,
+      )
+          .add({
+        FirestoreKeys.authorIdFieldKey: userId,
+        FirestoreKeys.postIdFieldKey: postId,
+      });
+
+      return LikeModel(
+        id: result.id,
+        postId: postId,
+        authorId: userId,
+      );
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<bool> unlikePost({String likeId}) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      await databaseReference
+          .collection(FirestoreKeys.likesCollectionKey)
+          .doc(likeId)
+          .delete();
+
+      return true;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<bool> removeCommentsOfPost({String postId}) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      await databaseReference
+          .collection(FirestoreKeys.likesCollectionKey)
+          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
+          .get()
+          .then(
+            (value) => value.docs.forEach(
+              (element) async => await element.reference.delete(),
+            ),
+          );
+
+      return true;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<bool> removeLikesOfPost({String postId}) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      await databaseReference
+          .collection(FirestoreKeys.commentsCollectionKey)
+          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
+          .get()
+          .then(
+            (value) => value.docs.forEach(
+              (element) async => await element.reference.delete(),
+            ),
+          );
 
       return true;
     } on dynamic catch (ex) {

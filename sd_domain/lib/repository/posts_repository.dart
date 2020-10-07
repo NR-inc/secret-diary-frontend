@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sddomain/export/models.dart';
 import 'package:sddomain/model/feed_sort_type.dart';
+import 'package:sddomain/model/like_model.dart';
 
 abstract class PostsRepository {
   Future<PostModel> getPostById(String postId);
@@ -31,5 +32,22 @@ abstract class PostsRepository {
     List<PostCategoryModel> postCategories,
     String fromPostId,
     int limit,
+  });
+
+  Future<bool> removeLikesOfPost({
+    @required String postId,
+  });
+
+  Future<bool> removeCommentsOfPost({
+    @required String postId,
+  });
+
+  Future<LikeModel> likePost({
+    String userId,
+    String postId,
+  });
+
+  Future<bool> unlikePost({
+    String likeId,
   });
 }

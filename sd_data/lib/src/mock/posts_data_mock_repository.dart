@@ -1,5 +1,6 @@
 import 'package:sddomain/export/domain.dart';
 import 'package:sddomain/model/feed_sort_type.dart';
+import 'package:sddomain/model/like_model.dart';
 import 'package:sddomain/model/post_category_model.dart';
 import 'package:sddomain/model/post_model.dart';
 import 'package:sddomain/repository/posts_repository.dart';
@@ -83,6 +84,18 @@ class PostsDataMockRepository implements PostsRepository {
     List<String> categoriesIds,
   }) {
     // TODO: implement createPost
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<LikeModel> likePost({String userId, String postId}) {
+    // TODO: implement likePost
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> unlikePost({String likeId}) {
+    // TODO: implement unlikePost
     throw UnimplementedError();
   }
 }

@@ -1,0 +1,24 @@
+import 'package:flutter/foundation.dart';
+import 'package:sd_base/sd_base.dart';
+
+@immutable
+class CommentModel {
+  final String id;
+  final String authorId;
+  final String postId;
+  final String message;
+
+  CommentModel.fromJson({
+    @required String id,
+    Map<String, dynamic> data,
+  })  : this.id = id,
+        authorId = data[FirestoreKeys.authorIdFieldKey] ?? '',
+        postId = data[FirestoreKeys.postIdFieldKey] ?? '',
+        message = data[FirestoreKeys.messageFieldKey] ?? '';
+
+  CommentModel.empty()
+      : id = '',
+        authorId = '',
+        postId = '',
+        message = '';
+}

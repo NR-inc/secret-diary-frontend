@@ -6,7 +6,6 @@ class UserModel {
   String lastName;
   String email;
   String avatar;
-  List<String> postsIds;
 
   UserModel.fromJson(dynamic data, [String uid]) {
     this.uid = uid;
@@ -14,9 +13,6 @@ class UserModel {
     lastName = data[FirestoreKeys.lastNameFieldKey] ?? '';
     email = data[FirestoreKeys.emailFieldKey] ?? '';
     avatar = data[FirestoreKeys.avatarFieldKey] ?? '';
-    postsIds = data[FirestoreKeys.postsIdsFieldKey] != null
-        ? List.from(data[FirestoreKeys.postsIdsFieldKey])
-        : List();
   }
 
   UserModel.testUser() {
