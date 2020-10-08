@@ -4,7 +4,10 @@ import 'package:sddomain/model/feed_sort_type.dart';
 import 'package:sddomain/model/like_model.dart';
 
 abstract class PostsRepository {
-  Future<PostModel> getPostById(String postId);
+  Future<PostModel> getPostById({
+    String postId,
+    String userId,
+  });
 
   Future<PostModel> updatePost(PostModel postModel);
 
@@ -34,6 +37,16 @@ abstract class PostsRepository {
     int limit,
   });
 
+  Future<List<LikeModel>> getLikesOfPost({
+    @required String postId,
+  });
+
+  Future<List<CommentModel>> getCommentsOfPost({
+    @required String postId,
+    String fromCommentId,
+    int limit,
+  });
+
   Future<bool> removeLikesOfPost({
     @required String postId,
   });
@@ -48,6 +61,7 @@ abstract class PostsRepository {
   });
 
   Future<bool> unlikePost({
-    String likeId,
+    String userId,
+    String postId,
   });
 }

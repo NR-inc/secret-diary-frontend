@@ -123,13 +123,21 @@ class PostsBloc extends BaseBloc {
     )
         .then(
       (List<PostModel> posts) async {
-        _postsIsLoaded = posts.length < limit;
+        _postsIsLoaded = (posts?.length ?? 0) < limit;
         List<PostModel> loadedPosts = await _postsResult.first;
         _postsResult.add(loadedPosts..addAll(posts));
         showLoading(false);
       },
       onError: handleError,
     );
+  }
+
+  void likePost(String postId) {
+    _postsInteractor.likePost(postId: postId);
+  }
+
+  void unlikePost(String postId) {
+    _postsInteractor.unlikePost(postId: postId);
   }
 
   Future<bool> removePostById(String id) async {

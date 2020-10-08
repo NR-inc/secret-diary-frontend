@@ -19,6 +19,7 @@ class PostDetailsScreen extends StatefulWidget {
 
 class _PostDetailsState extends BaseState<PostDetailsScreen> {
   final PostsBloc _postsBloc = Injector.getInjector().get<PostsBloc>();
+  final _likeValueNotifier = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -56,6 +57,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
             stream: _postsBloc.postDetailsStream,
             builder: (BuildContext context, AsyncSnapshot<PostModel> result) {
               final postModel = result.data;
+              _likeValueNotifier.value = postModel?.isLiked ?? false;
               if (postModel != null) {
                 return Column(
                   children: [
@@ -64,9 +66,37 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
                     SizedBox(height: Dimens.unit),
                     divider(),
                     SizedBox(height: Dimens.unit),
+                    ValueListenableBuilder(
+                      valueListenable: _likeValueNotifier,
+                      builder: (context, value, child) => GestureDetector(
+                        onTap: () {
+                          final isLike = !value;
+                          if (isLike) {
+                            _postsBloc.likePost(postModel.id);
+                          } else if (!isLike && postModel.isLiked) {
+                            _postsBloc.unlikePost(postModel.id);
+                          }
+                          _likeValueNotifier.value = isLike;
+                        },
+                        child: Row(children: [
+                          SvgPicture.asset(
+                            SdAssets.likeIcon,
+                            color: value
+                                ? SdColors.primaryColor
+                                : SdColors.greyColor,
+                            package: commonUiPackage,
+                            height: Dimens.unit2,
+                            width: Dimens.unit2,
+                          ),
+                          SizedBox(width: Dimens.unit),
+                          Text('${postModel.likes}')
+                        ]),
+                      ),
+                    ),
+                    SizedBox(height: Dimens.unit2),
                     Row(children: [
                       SvgPicture.asset(
-                        SdAssets.likeIcon,
+                        SdAssets.commentIcon,
                         package: commonUiPackage,
                         height: Dimens.unit2,
                         width: Dimens.unit2,
@@ -74,7 +104,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
                       SizedBox(
                         width: Dimens.unit,
                       ),
-                      Text('${postModel.likes ?? 0}')
+                      Text('${postModel.comments}')
                     ]),
                     SizedBox(height: Dimens.unit),
                     divider(),

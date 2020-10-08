@@ -54,6 +54,31 @@ class PostsInteractor {
   Future<bool> removePost({@required String id}) =>
       _postsRepository.removePostById(postId: id);
 
-  Future<PostModel> getPost({@required String id}) =>
-      _postsRepository.getPostById(id);
+  Future<PostModel> getPost({@required String id}) async {
+    final currentUser = await _userRepository.profile();
+    return _postsRepository.getPostById(
+      postId: id,
+      userId: currentUser.uid,
+    );
+  }
+
+  Future<LikeModel> likePost({
+    String postId,
+  }) async {
+    final currentUser = await _userRepository.profile();
+    return await _postsRepository.likePost(
+      postId: postId,
+      userId: currentUser.uid,
+    );
+  }
+
+  Future<bool> unlikePost({
+    String postId,
+  }) async {
+    final currentUser = await _userRepository.profile();
+    return await _postsRepository.unlikePost(
+      postId: postId,
+      userId: currentUser.uid,
+    );
+  }
 }

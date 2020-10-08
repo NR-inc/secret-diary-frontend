@@ -39,6 +39,7 @@ class RepositoryModule extends AbstractModule {
     injector.map<PostsRepository>(
         (i) => PostsDataRepository(
               i.get(),
+              i.get(),
             ),
         isSingleton: true);
   }

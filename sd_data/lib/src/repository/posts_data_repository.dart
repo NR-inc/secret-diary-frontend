@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:sd_base/sd_base.dart';
-import 'package:sddomain/core/error_handler.dart';
+import 'package:sd_data/sd_data.dart';
 import 'package:sddomain/export/domain.dart';
-import 'package:sddomain/model/like_model.dart';
 
 class PostsDataRepository implements PostsRepository {
+  final NetworkExecutor _networkExecutor;
   final ErrorHandler _errorHandler;
 
-  PostsDataRepository(this._errorHandler);
+  PostsDataRepository(this._networkExecutor, this._errorHandler);
 
   @override
   Future<List<PostModel>> getFeedPostsBy(
@@ -67,7 +68,10 @@ class PostsDataRepository implements PostsRepository {
   }
 
   @override
-  Future<PostModel> getPostById(String postId) async {
+  Future<PostModel> getPostById({
+    String postId,
+    String userId,
+  }) async {
     try {
       final databaseReference = FirebaseFirestore.instance;
 
@@ -76,9 +80,19 @@ class PostsDataRepository implements PostsRepository {
           .doc(postId)
           .get();
 
+      final comments = await getCommentsOfPost(postId: postId) ?? [];
+      final likes = await getLikesOfPost(postId: postId) ?? [];
+      final isLiked = likes.firstWhere(
+            (like) => like.authorId == userId,
+            orElse: () => null,
+          ) != null;
+
       return PostModel.fromJson(
         id: doc.id,
-        data: doc.data(),
+        data: doc.data()
+          ..putIfAbsent(FirestoreKeys.commentsFieldKey, () => comments.length)
+          ..putIfAbsent(FirestoreKeys.likesFieldKey, () => likes.length)
+          ..putIfAbsent(FirestoreKeys.isLikedFieldKey, () => isLiked),
       );
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
@@ -206,14 +220,17 @@ class PostsDataRepository implements PostsRepository {
   }
 
   @override
-  Future<bool> unlikePost({String likeId}) async {
+  Future<bool> unlikePost({String userId, String postId}) async {
     try {
       final databaseReference = FirebaseFirestore.instance;
 
-      await databaseReference
+      final result = await databaseReference
           .collection(FirestoreKeys.likesCollectionKey)
-          .doc(likeId)
-          .delete();
+          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
+          .where(FirestoreKeys.authorIdFieldKey, isEqualTo: userId)
+          .get();
+
+      await result.docs.first.reference.delete();
 
       return true;
     } on dynamic catch (ex) {
@@ -260,6 +277,69 @@ class PostsDataRepository implements PostsRepository {
       return true;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<List<CommentModel>> getCommentsOfPost({
+    @required String postId,
+    String fromCommentId,
+    int limit,
+  }) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+      DocumentSnapshot lastDownloadedCommentDoc;
+
+      if (fromCommentId != null && fromCommentId.isNotEmpty) {
+        lastDownloadedCommentDoc = await databaseReference
+            .collection(FirestoreKeys.commentsCollectionKey)
+            .doc(fromCommentId)
+            .get();
+      }
+
+      var query = databaseReference
+          .collection(FirestoreKeys.commentsCollectionKey)
+          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
+          .orderBy(FirestoreKeys.createdAtFieldKey, descending: true);
+
+      if (lastDownloadedCommentDoc != null) {
+        query = query.startAfterDocument(lastDownloadedCommentDoc);
+      }
+
+      final result = await query.limit(limit).get();
+
+      final data = result.docs
+          .map((comment) => CommentModel.fromJson(
+                id: comment.id,
+                data: comment.data(),
+              ))
+          .toList();
+      return data;
+    } on dynamic catch (ex) {
+      return null;
+    }
+  }
+
+  @override
+  Future<List<LikeModel>> getLikesOfPost({
+    @required String postId,
+  }) async {
+    try {
+      final databaseReference = FirebaseFirestore.instance;
+
+      final result = await databaseReference
+          .collection(FirestoreKeys.likesCollectionKey)
+          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
+          .get();
+
+      return result.docs
+          .map((likeData) => LikeModel.fromJson(
+                id: likeData.id,
+                data: likeData.data(),
+              ))
+          .toList();
+    } on dynamic catch (ex) {
+      return null;
     }
   }
 }

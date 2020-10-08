@@ -16,14 +16,8 @@ class ErrorHandler {
   }
 
   Exception handleNetworkError(dynamic error) {
+    print(error); // todo remove
     switch (error.runtimeType) {
-      case DioError:
-        final dioError = (error as DioError);
-        return NetworkException(
-          statusCode: dioError?.response?.statusCode ?? -1,
-          message: dioError.message,
-        );
-        break;
       case FirebaseAuthException:
         final firebaseError = (error as FirebaseAuthException);
         return NetworkException(

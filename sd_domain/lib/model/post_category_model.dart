@@ -1,14 +1,13 @@
 class PostCategoryModel {
-  int id;
-  String name;
+  final int id;
+  final String name;
 
   PostCategoryModel({
     this.id,
     this.name,
   });
 
-  PostCategoryModel.empty() {
-    id = -1;
-    name = '';
-  }
+  PostCategoryModel.empty()
+      : id = -1,
+        name = '';
 }

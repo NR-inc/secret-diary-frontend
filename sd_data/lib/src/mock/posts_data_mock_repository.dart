@@ -38,7 +38,10 @@ class PostsDataMockRepository implements PostsRepository {
   }
 
   @override
-  Future<PostModel> getPostById(String postId) async {
+  Future<PostModel> getPostById({
+    String postId,
+    String userId,
+  }) async {
     return _posts.firstWhere((post) => post.id == postId);
   }
 
@@ -88,14 +91,54 @@ class PostsDataMockRepository implements PostsRepository {
   }
 
   @override
-  Future<LikeModel> likePost({String userId, String postId}) {
+  Future<LikeModel> likePost({
+    String userId,
+    String postId,
+  }) {
     // TODO: implement likePost
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> unlikePost({String likeId}) {
+  Future<bool> unlikePost({
+    String postId,
+    String userId,
+  }) {
     // TODO: implement unlikePost
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<CommentModel>> getCommentsOfPost({
+    String postId,
+    String fromCommentId,
+    int limit,
+  }) {
+    // TODO: implement getCommentsOfPost
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<LikeModel>> getLikesOfPost({
+    String postId,
+  }) {
+    // TODO: implement getLikesOfPost
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> removeCommentsOfPost({
+    String postId,
+  }) {
+    // TODO: implement removeCommentsOfPost
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> removeLikesOfPost({
+    String postId,
+  }) {
+    // TODO: implement removeLikesOfPost
     throw UnimplementedError();
   }
 }

@@ -37,7 +37,7 @@ void main() {
       );
       final expected = NetworkException();
       when(
-        networkExecutor.makeRequest(networkClient, any),
+        _networkExecutor.makeRequest(networkClient, any),
       ).thenAnswer((_) => Stream.error(expected));
       final actual = authRepo.login(
         email,

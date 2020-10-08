@@ -5,4 +5,5 @@ class SdAssets {
   static const emailIcon = 'assets/email_icon.svg';
   static const passwordIcon = 'assets/password_icon.svg';
   static const likeIcon = 'assets/like_icon.svg';
+  static const commentIcon = 'assets/comment_icon.svg';
 }

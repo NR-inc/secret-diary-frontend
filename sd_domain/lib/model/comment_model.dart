@@ -7,6 +7,7 @@ class CommentModel {
   final String authorId;
   final String postId;
   final String message;
+  final DateTime createdAt;
 
   CommentModel.fromJson({
     @required String id,
@@ -14,11 +15,13 @@ class CommentModel {
   })  : this.id = id,
         authorId = data[FirestoreKeys.authorIdFieldKey] ?? '',
         postId = data[FirestoreKeys.postIdFieldKey] ?? '',
-        message = data[FirestoreKeys.messageFieldKey] ?? '';
+        message = data[FirestoreKeys.messageFieldKey] ?? '',
+        createdAt = data[FirestoreKeys.createdAtFieldKey];
 
   CommentModel.empty()
       : id = '',
         authorId = '',
         postId = '',
-        message = '';
+        message = '',
+        createdAt = null;
 }
