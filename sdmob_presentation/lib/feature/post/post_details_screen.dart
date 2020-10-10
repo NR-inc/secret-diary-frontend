@@ -20,6 +20,7 @@ class PostDetailsScreen extends StatefulWidget {
 class _PostDetailsState extends BaseState<PostDetailsScreen> {
   final PostsBloc _postsBloc = Injector.getInjector().get<PostsBloc>();
   final _likeValueNotifier = ValueNotifier<bool>(false);
+  final _addCommentTextController = TextEditingController();
 
   @override
   void initState() {
@@ -108,7 +109,10 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
                     ]),
                     SizedBox(height: Dimens.unit),
                     divider(),
-                    SizedBox(height: Dimens.unit),
+                    SizedBox(height: Dimens.unit5),
+                    _addCommentWidget(),
+                    FutureBuilder(),
+                    _comments(),
                   ],
                 );
               } else {
@@ -118,4 +122,49 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
           ),
         ),
       );
+
+  Widget _addCommentWidget() {
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: Dimens.unit,
+          bottom: Dimens.unit,
+        ),
+        child: Row(children: [
+          Expanded(
+              child: inputField(
+            inputFieldKey: Key('add_comment_field'),
+            controller: _addCommentTextController,
+            hint: 'Add your comment',
+          )),
+          GestureDetector(
+            onTap: () => _addCommentAction(_addCommentTextController.text),
+            child: Container(
+              height: Dimens.unit3,
+              width: Dimens.unit3,
+              child: Center(
+                child: SvgPicture.asset(
+                  SdAssets.sendIcon,
+                  color: SdColors.secondaryColor,
+                  package: commonUiPackage,
+                ),
+              ),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _comments(List<CommentModel> comments) => Container(
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return Container();
+          },
+        ),
+      );
+
+  void _addCommentAction(String message) {
+    _addCommentTextController.clear();
+  }
 }

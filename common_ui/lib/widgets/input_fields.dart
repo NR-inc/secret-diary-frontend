@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 Widget inputField({
   @required Key inputFieldKey,
-  @required Key errorFieldKey,
+  Key errorFieldKey,
   @required TextEditingController controller,
   @required String hint,
   TextInputType keyboardType = TextInputType.text,
@@ -56,21 +56,22 @@ Widget inputField({
             ),
           ),
         ),
-        SizedBox(height: Dimens.unit),
-        Visibility(
-          child: Text(
-            error ?? SdStrings.empty,
-            key: errorFieldKey,
-            style: TextStyle(
-              color: SdColors.errorColor,
-              fontSize: Dimens.fontSize12,
+        if (errorFieldKey != null) SizedBox(height: Dimens.unit),
+        if (errorFieldKey != null)
+          Visibility(
+            child: Text(
+              error ?? SdStrings.empty,
+              key: errorFieldKey,
+              style: TextStyle(
+                color: SdColors.errorColor,
+                fontSize: Dimens.fontSize12,
+              ),
             ),
+            visible: error != null,
+            maintainSize: true,
+            maintainAnimation: true,
+            maintainState: true,
           ),
-          visible: error != null,
-          maintainSize: true,
-          maintainAnimation: true,
-          maintainState: true,
-        ),
       ],
     ),
   );
