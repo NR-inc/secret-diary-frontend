@@ -132,14 +132,6 @@ class PostsBloc extends BaseBloc {
     );
   }
 
-  void likePost(String postId) {
-    _postsInteractor.likePost(postId: postId);
-  }
-
-  void unlikePost(String postId) {
-    _postsInteractor.unlikePost(postId: postId);
-  }
-
   Future<bool> removePostById(String id) async {
     return await _postsInteractor.removePost(id: id);
   }

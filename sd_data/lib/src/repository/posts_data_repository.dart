@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sd_base/sd_base.dart';
-import 'package:sd_data/sd_data.dart';
 import 'package:sddomain/export/domain.dart';
 
 class PostsDataRepository implements PostsRepository {
-  final NetworkExecutor _networkExecutor;
   final ErrorHandler _errorHandler;
+  final FirebaseFirestore _firestore;
 
-  PostsDataRepository(this._networkExecutor, this._errorHandler);
+  PostsDataRepository({
+    ErrorHandler errorHandler,
+    FirebaseFirestore firestore,
+  })  : _errorHandler = errorHandler,
+        _firestore = firestore;
 
   @override
   Future<List<PostModel>> getFeedPostsBy(
@@ -18,9 +21,7 @@ class PostsDataRepository implements PostsRepository {
       String fromPostId,
       int limit}) async {
     try {
-      final databaseReference = FirebaseFirestore.instance;
       DocumentSnapshot lastDownloadedPostDoc;
-
       var orderByField;
       switch (feedSortType) {
         case FeedSortType.byDate:
@@ -38,13 +39,13 @@ class PostsDataRepository implements PostsRepository {
       }
 
       if (fromPostId != null && fromPostId.isNotEmpty) {
-        lastDownloadedPostDoc = await databaseReference
+        lastDownloadedPostDoc = await _firestore
             .collection(FirestoreKeys.postsCollectionKey)
             .doc(fromPostId)
             .get();
       }
 
-      var query = databaseReference
+      var query = _firestore
           .collection(FirestoreKeys.postsCollectionKey)
           .where(FirestoreKeys.visibilityFlagFieldKey, isEqualTo: true)
           .orderBy(orderByField, descending: true);
@@ -73,26 +74,14 @@ class PostsDataRepository implements PostsRepository {
     String userId,
   }) async {
     try {
-      final databaseReference = FirebaseFirestore.instance;
-
-      final doc = await databaseReference
+      final doc = await _firestore
           .collection(FirestoreKeys.postsCollectionKey)
           .doc(postId)
           .get();
 
-      final comments = await getCommentsOfPost(postId: postId) ?? [];
-      final likes = await getLikesOfPost(postId: postId) ?? [];
-      final isLiked = likes.firstWhere(
-            (like) => like.authorId == userId,
-            orElse: () => null,
-          ) != null;
-
       return PostModel.fromJson(
         id: doc.id,
-        data: doc.data()
-          ..putIfAbsent(FirestoreKeys.commentsFieldKey, () => comments.length)
-          ..putIfAbsent(FirestoreKeys.likesFieldKey, () => likes.length)
-          ..putIfAbsent(FirestoreKeys.isLikedFieldKey, () => isLiked),
+        data: doc.data(),
       );
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
@@ -106,17 +95,16 @@ class PostsDataRepository implements PostsRepository {
     int limit,
   }) async {
     try {
-      final databaseReference = FirebaseFirestore.instance;
       DocumentSnapshot lastDownloadedPostDoc;
 
       if (fromPostId != null && fromPostId.isNotEmpty) {
-        lastDownloadedPostDoc = await databaseReference
+        lastDownloadedPostDoc = await _firestore
             .collection(FirestoreKeys.postsCollectionKey)
             .doc(fromPostId)
             .get();
       }
 
-      var query = databaseReference
+      var query = _firestore
           .collection(FirestoreKeys.postsCollectionKey)
           .where(FirestoreKeys.authorIdFieldKey, isEqualTo: userUid)
           .orderBy(FirestoreKeys.createdAtFieldKey, descending: true);
@@ -144,15 +132,10 @@ class PostsDataRepository implements PostsRepository {
     String postId,
   }) async {
     try {
-      final databaseReference = FirebaseFirestore.instance;
-
-      await databaseReference
+      await _firestore
           .collection(FirestoreKeys.postsCollectionKey)
           .doc(postId)
           .delete();
-
-      await removeCommentsOfPost(postId: postId);
-      await removeLikesOfPost(postId: postId);
 
       return true;
     } on dynamic catch (ex) {
@@ -175,9 +158,7 @@ class PostsDataRepository implements PostsRepository {
     List<String> categoriesIds,
   }) async {
     try {
-      final databaseReference = FirebaseFirestore.instance;
-
-      await databaseReference
+      await _firestore
           .collection(
         FirestoreKeys.postsCollectionKey,
       )
@@ -192,154 +173,6 @@ class PostsDataRepository implements PostsRepository {
       return true;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
-    }
-  }
-
-  @override
-  Future<LikeModel> likePost({String userId, String postId}) async {
-    try {
-      final databaseReference = FirebaseFirestore.instance;
-
-      final result = await databaseReference
-          .collection(
-        FirestoreKeys.likesCollectionKey,
-      )
-          .add({
-        FirestoreKeys.authorIdFieldKey: userId,
-        FirestoreKeys.postIdFieldKey: postId,
-      });
-
-      return LikeModel(
-        id: result.id,
-        postId: postId,
-        authorId: userId,
-      );
-    } on dynamic catch (ex) {
-      throw _errorHandler.handleNetworkError(ex);
-    }
-  }
-
-  @override
-  Future<bool> unlikePost({String userId, String postId}) async {
-    try {
-      final databaseReference = FirebaseFirestore.instance;
-
-      final result = await databaseReference
-          .collection(FirestoreKeys.likesCollectionKey)
-          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
-          .where(FirestoreKeys.authorIdFieldKey, isEqualTo: userId)
-          .get();
-
-      await result.docs.first.reference.delete();
-
-      return true;
-    } on dynamic catch (ex) {
-      throw _errorHandler.handleNetworkError(ex);
-    }
-  }
-
-  @override
-  Future<bool> removeCommentsOfPost({String postId}) async {
-    try {
-      final databaseReference = FirebaseFirestore.instance;
-
-      await databaseReference
-          .collection(FirestoreKeys.likesCollectionKey)
-          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
-          .get()
-          .then(
-            (value) => value.docs.forEach(
-              (element) async => await element.reference.delete(),
-            ),
-          );
-
-      return true;
-    } on dynamic catch (ex) {
-      throw _errorHandler.handleNetworkError(ex);
-    }
-  }
-
-  @override
-  Future<bool> removeLikesOfPost({String postId}) async {
-    try {
-      final databaseReference = FirebaseFirestore.instance;
-
-      await databaseReference
-          .collection(FirestoreKeys.commentsCollectionKey)
-          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
-          .get()
-          .then(
-            (value) => value.docs.forEach(
-              (element) async => await element.reference.delete(),
-            ),
-          );
-
-      return true;
-    } on dynamic catch (ex) {
-      throw _errorHandler.handleNetworkError(ex);
-    }
-  }
-
-  @override
-  Future<List<CommentModel>> getCommentsOfPost({
-    @required String postId,
-    String fromCommentId,
-    int limit,
-  }) async {
-    try {
-      final databaseReference = FirebaseFirestore.instance;
-      DocumentSnapshot lastDownloadedCommentDoc;
-
-      if (fromCommentId != null && fromCommentId.isNotEmpty) {
-        lastDownloadedCommentDoc = await databaseReference
-            .collection(FirestoreKeys.commentsCollectionKey)
-            .doc(fromCommentId)
-            .get();
-      }
-
-      var query = databaseReference
-          .collection(FirestoreKeys.commentsCollectionKey)
-          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
-          .orderBy(FirestoreKeys.createdAtFieldKey, descending: true);
-
-      if (lastDownloadedCommentDoc != null) {
-        query = query.startAfterDocument(lastDownloadedCommentDoc);
-      }
-
-      final result = await query.limit(limit).get();
-
-      final data = result.docs
-          .map((comment) => CommentModel.fromJson(
-                id: comment.id,
-                data: comment.data(),
-              ))
-          .toList();
-      return data;
-    } on dynamic catch (ex) {
-      return null;
-    }
-  }
-
-  @override
-  Future<List<LikeModel>> getLikesOfPost({
-    @required String postId,
-  }) async {
-    try {
-      final databaseReference = FirebaseFirestore.instance;
-
-      final result = await databaseReference
-          .collection(FirestoreKeys.likesCollectionKey)
-          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
-          .get();
-
-      return result.docs
-          .map((likeData) => LikeModel.fromJson(
-                id: likeData.id,
-                data: likeData.data(),
-              ))
-          .toList();
-    } on dynamic catch (ex) {
-      return null;
     }
   }
 }

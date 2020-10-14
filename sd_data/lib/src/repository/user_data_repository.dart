@@ -6,15 +6,22 @@ import 'package:sddomain/export/domain.dart';
 
 class UserDataRepository implements UserRepository {
   final ErrorHandler _errorHandler;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
-  UserDataRepository(this._errorHandler);
+  UserDataRepository({
+    ErrorHandler errorHandler,
+    FirebaseFirestore firestore,
+    FirebaseAuth firebaseAuth,
+  })  : _errorHandler = errorHandler,
+        _firestore = firestore,
+        _firebaseAuth = firebaseAuth;
 
   @override
   Future<UserModel> profile() async {
     try {
-      final databaseReference = FirebaseFirestore.instance;
-      final userUid = FirebaseAuth.instance.currentUser.uid;
-      final user = await databaseReference
+      final userUid = _firebaseAuth.currentUser.uid;
+      final user = await _firestore
           .collection(FirestoreKeys.usersCollectionKey)
           .doc(userUid)
           .get();
@@ -27,8 +34,7 @@ class UserDataRepository implements UserRepository {
   @override
   Future<UserModel> getUserById(String uid) async {
     try {
-      final databaseReference = FirebaseFirestore.instance;
-      final user = await databaseReference
+      final user = await _firestore
           .collection(FirestoreKeys.usersCollectionKey)
           .doc(uid)
           .get();
@@ -40,17 +46,16 @@ class UserDataRepository implements UserRepository {
 
   @override
   Future<void> logout() async {
-    await FirebaseAuth.instance.signOut();
+    await _firebaseAuth.signOut();
     return null;
   }
 
   @override
   Future<void> removeAccount() async {
     try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-      final databaseReference = FirebaseFirestore.instance;
+      final currentUser = _firebaseAuth.currentUser;
 
-      await databaseReference
+      await _firestore
           .collection(FirestoreKeys.usersCollectionKey)
           .doc(currentUser.uid)
           .delete();

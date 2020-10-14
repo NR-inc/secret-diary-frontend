@@ -36,32 +36,4 @@ abstract class PostsRepository {
     String fromPostId,
     int limit,
   });
-
-  Future<List<LikeModel>> getLikesOfPost({
-    @required String postId,
-  });
-
-  Future<List<CommentModel>> getCommentsOfPost({
-    @required String postId,
-    String fromCommentId,
-    int limit,
-  });
-
-  Future<bool> removeLikesOfPost({
-    @required String postId,
-  });
-
-  Future<bool> removeCommentsOfPost({
-    @required String postId,
-  });
-
-  Future<LikeModel> likePost({
-    String userId,
-    String postId,
-  });
-
-  Future<bool> unlikePost({
-    String userId,
-    String postId,
-  });
 }

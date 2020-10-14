@@ -1,6 +1,8 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sd_base/sd_base.dart';
+import 'package:sddomain/bloc/comments_bloc.dart';
+import 'package:sddomain/bloc/likes_bloc.dart';
 import 'package:sddomain/bloc/login_bloc.dart';
 import 'package:sddomain/bloc/posts_bloc.dart';
 import 'package:sddomain/bloc/registration_bloc.dart';
@@ -21,6 +23,16 @@ class BlocModule extends AbstractModule {
 
   @override
   void configure(Injector injector) {
+    injector.map((i) => CommentsBloc(
+          commentsResult: PublishSubject<List<CommentModel>>(),
+          interactor: i.get(),
+        ));
+
+    injector.map((i) => LikesBloc(
+          likesResult: PublishSubject<List<LikeModel>>(),
+          interactor: i.get(),
+        ));
+
     injector.map((i) => SplashBloc(
           i.get(),
         ));

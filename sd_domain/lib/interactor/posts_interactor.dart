@@ -4,11 +4,18 @@ import 'package:sddomain/export/domain.dart';
 class PostsInteractor {
   final PostsRepository _postsRepository;
   final UserRepository _userRepository;
+  final CommentsRepository _commentsRepository;
+  final LikesRepository _likesRepository;
 
-  PostsInteractor(
-    this._postsRepository,
-    this._userRepository,
-  );
+  PostsInteractor({
+    @required PostsRepository postsRepository,
+    @required UserRepository userRepository,
+    @required CommentsRepository commentsRepository,
+    @required LikesRepository likesRepository,
+  })  : _postsRepository = postsRepository,
+        _userRepository = userRepository,
+        _likesRepository = likesRepository,
+        _commentsRepository = commentsRepository;
 
   Future<List<PostModel>> getPostsOfUser({
     @required String userUid,
@@ -51,8 +58,12 @@ class PostsInteractor {
     );
   }
 
-  Future<bool> removePost({@required String id}) =>
-      _postsRepository.removePostById(postId: id);
+  Future<bool> removePost({@required String id}) async {
+    await _postsRepository.removePostById(postId: id);
+    await _commentsRepository.removeComments(postId: id);
+    await _likesRepository.removeLikes(postId: id);
+    return true;
+  }
 
   Future<PostModel> getPost({@required String id}) async {
     final currentUser = await _userRepository.profile();
@@ -66,7 +77,7 @@ class PostsInteractor {
     String postId,
   }) async {
     final currentUser = await _userRepository.profile();
-    return await _postsRepository.likePost(
+    return await _likesRepository.addLike(
       postId: postId,
       userId: currentUser.uid,
     );
@@ -76,7 +87,7 @@ class PostsInteractor {
     String postId,
   }) async {
     final currentUser = await _userRepository.profile();
-    return await _postsRepository.unlikePost(
+    return await _likesRepository.removeLike(
       postId: postId,
       userId: currentUser.uid,
     );

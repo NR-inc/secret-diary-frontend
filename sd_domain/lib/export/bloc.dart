@@ -6,3 +6,5 @@ export 'package:sddomain/bloc/settings_bloc.dart';
 export 'package:sddomain/bloc/splash_bloc.dart';
 export 'package:sddomain/bloc/user_bloc.dart';
 export 'package:sddomain/bloc/remind_password_bloc.dart';
+export 'package:sddomain/bloc/comments_bloc.dart';
+export 'package:sddomain/bloc/likes_bloc.dart';

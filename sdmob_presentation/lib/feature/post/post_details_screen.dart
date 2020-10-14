@@ -19,6 +19,9 @@ class PostDetailsScreen extends StatefulWidget {
 
 class _PostDetailsState extends BaseState<PostDetailsScreen> {
   final PostsBloc _postsBloc = Injector.getInjector().get<PostsBloc>();
+  final CommentsBloc _commentsBloc = Injector.getInjector().get<CommentsBloc>();
+  final LikesBloc _likesBloc = Injector.getInjector().get<LikesBloc>();
+
   final _likeValueNotifier = ValueNotifier<bool>(false);
   final _addCommentTextController = TextEditingController();
 
@@ -26,6 +29,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
   void initState() {
     _postsBloc.errorStream.handleError(handleError);
     _postsBloc.getPost(postId: widget.postId);
+    _likesBloc.getLikes(postId: widget.postId);
     super.initState();
   }
 
@@ -73,9 +77,9 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
                         onTap: () {
                           final isLike = !value;
                           if (isLike) {
-                            _postsBloc.likePost(postModel.id);
+                            _likesBloc.addLike(postId: postModel.id);
                           } else if (!isLike && postModel.isLiked) {
-                            _postsBloc.unlikePost(postModel.id);
+                            _likesBloc.removeLike(postId: postModel.id);
                           }
                           _likeValueNotifier.value = isLike;
                         },
@@ -90,7 +94,17 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
                             width: Dimens.unit2,
                           ),
                           SizedBox(width: Dimens.unit),
-                          Text('${postModel.likes}')
+                          StreamBuilder(
+                            initialData: <LikeModel>[],
+                            stream: _likesBloc.likesStream,
+                            builder: (
+                              context,
+                              AsyncSnapshot<List<LikeModel>> snapshot,
+                            ) {
+                              final likes = snapshot.data;
+                              return Text('${likes.length}');
+                            },
+                          ),
                         ]),
                       ),
                     ),
@@ -156,11 +170,13 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
     );
   }
 
-  Widget _comments(List<CommentModel> comments) => Container(
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return Container();
-          },
+  Widget _comments() => StreamBuilder(
+        builder: (context, snapshot) => Container(
+          child: ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return Container();
+            },
+          ),
         ),
       );
 

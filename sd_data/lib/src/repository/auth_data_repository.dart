@@ -6,8 +6,16 @@ import 'package:sddomain/export/domain.dart';
 
 class AuthDataRepository extends AuthRepository {
   final ErrorHandler _errorHandler;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _firebaseAuth;
 
-  AuthDataRepository(this._errorHandler);
+  AuthDataRepository({
+    ErrorHandler errorHandler,
+    FirebaseFirestore firestore,
+    FirebaseAuth firebaseAuth,
+  })  : _errorHandler = errorHandler,
+        _firestore = firestore,
+        _firebaseAuth = firebaseAuth;
 
   @override
   Future<String> login(
@@ -16,7 +24,7 @@ class AuthDataRepository extends AuthRepository {
   ) async {
     try {
       final userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -34,14 +42,12 @@ class AuthDataRepository extends AuthRepository {
     String password,
   ) async {
     try {
-      final databaseReference = FirebaseFirestore.instance;
-
       final userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      databaseReference
+      _firestore
           .collection(FirestoreKeys.usersCollectionKey)
           .doc(userCredential.user.uid)
           .set({
@@ -58,7 +64,7 @@ class AuthDataRepository extends AuthRepository {
   @override
   Future<void> remindPassword(String email) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
