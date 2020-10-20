@@ -24,4 +24,15 @@ class CommentModel {
         postId = '',
         message = '',
         createdAt = null;
+
+  @override
+  String toString() {
+    return 'CommentModel('
+        'id: $id, '
+        'authorId: $authorId, '
+        'postId: $postId'
+        'message: $message'
+        'createdAt: $createdAt'
+        ')';
+  }
 }

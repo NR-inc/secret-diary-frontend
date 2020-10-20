@@ -1,18 +1,21 @@
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/export/domain.dart';
 
 class CommentsBloc extends BaseBloc {
-  final PublishSubject<List<CommentModel>> _commentsResult;
+  final BehaviorSubject<List<CommentModel>> _commentsResult;
   final CommentsInteractor _interactor;
   bool _isCommentsLoaded = false;
 
   CommentsBloc({
-    @required PublishSubject<List<CommentModel>> commentsResult,
+    @required Logger logger,
+    @required BehaviorSubject<List<CommentModel>> commentsResult,
     @required CommentsInteractor interactor,
   })  : _commentsResult = commentsResult,
-        _interactor = interactor;
+        _interactor = interactor,
+        super(logger: logger);
 
   Stream<List<CommentModel>> get commentsStream => _commentsResult.stream;
 
@@ -40,6 +43,8 @@ class CommentsBloc extends BaseBloc {
     )
         .then(
       (List<CommentModel> comments) async {
+        logger.i('comments length: ${comments.length}');
+        logger.i('comments: $comments');
         _isCommentsLoaded = comments.length < limit;
         List<CommentModel> loadedPosts = await _commentsResult.first;
         _commentsResult.add(loadedPosts..addAll(comments));
@@ -50,7 +55,12 @@ class CommentsBloc extends BaseBloc {
   }
 
   void removeComment({String commentId}) async {
-    await _interactor.removeComment(commentId: commentId);
+    _interactor.removeComment(commentId: commentId).then(
+      (isCommentRemoved) {
+        logger.i('comment $commentId: removed');
+      },
+      onError: handleError,
+    );
   }
 
   void updateComment({CommentModel commentModel}) async {
@@ -58,11 +68,19 @@ class CommentsBloc extends BaseBloc {
   }
 
   void addComment({String message, String postId}) async {
-    final newComment = await _interactor.addComment(
+    _interactor
+        .addComment(
       message: message,
       postId: postId,
+    )
+        .then(
+      (CommentModel newComment) async {
+        logger.i('comment ${newComment.id}: added');
+        logger.i('comment info: $newComment');
+        List<CommentModel> loadedPosts = await _commentsResult.first;
+        _commentsResult.add(loadedPosts..add(newComment));
+      },
+      onError: handleError,
     );
-    List<CommentModel> loadedPosts = await _commentsResult.first;
-    _commentsResult.add(loadedPosts..add(newComment));
   }
 }

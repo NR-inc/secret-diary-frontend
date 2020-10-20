@@ -19,4 +19,9 @@ abstract class LikesRepository {
   Future<bool> removeLikes({
     @required String postId,
   });
+
+  Future<bool> isPostLiked({
+    @required String postId,
+    @required String userId,
+  });
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/interactor/auth_interactor.dart';
@@ -9,7 +10,13 @@ class RegistrationBloc extends BaseBloc {
   final PublishSubject<DefaultResponse> registrationResult;
   StreamSubscription registrationSubscription;
 
-  RegistrationBloc(this._authInteractor, this.registrationResult);
+  RegistrationBloc({
+    Logger logger,
+    AuthInteractor authInteractor,
+    PublishSubject<DefaultResponse> registrationResult,
+  })  : _authInteractor = authInteractor,
+        this.registrationResult = registrationResult,
+        super(logger: logger);
 
   void registration(
       String firstName, String lastName, String email, String password) async {

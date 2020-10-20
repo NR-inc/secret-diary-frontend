@@ -68,7 +68,9 @@ class LikesDataRepository extends LikesRepository {
           .where(FirestoreKeys.authorIdFieldKey, isEqualTo: userId)
           .get();
 
-      await result.docs.first.reference.delete();
+      for (QueryDocumentSnapshot snapshot in result.docs) {
+        await snapshot.reference.delete();
+      }
 
       return true;
     } on dynamic catch (ex) {
@@ -90,6 +92,24 @@ class LikesDataRepository extends LikesRepository {
           );
 
       return true;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<bool> isPostLiked({
+    String postId,
+    String userId,
+  }) async {
+    try {
+      final result = await _firestore
+          .collection(FirestoreKeys.likesCollectionKey)
+          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
+          .where(FirestoreKeys.authorIdFieldKey, isEqualTo: userId)
+          .get();
+
+      return (result.docs?.length ?? 0) > 0;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }

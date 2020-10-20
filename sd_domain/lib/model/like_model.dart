@@ -24,4 +24,13 @@ class LikeModel {
       : id = '',
         authorId = '',
         postId = '';
+
+  @override
+  String toString() {
+    return 'LikeModel('
+        'id: $id, '
+        'authorId: $authorId, '
+        'postId: $postId'
+        ')';
+  }
 }

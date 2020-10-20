@@ -24,41 +24,57 @@ class BlocModule extends AbstractModule {
   @override
   void configure(Injector injector) {
     injector.map((i) => CommentsBloc(
-          commentsResult: PublishSubject<List<CommentModel>>(),
+          logger: i.get(),
+          commentsResult: BehaviorSubject<List<CommentModel>>.seeded(List())
           interactor: i.get(),
         ));
 
     injector.map((i) => LikesBloc(
           likesResult: PublishSubject<List<LikeModel>>(),
+          isPostLikedResult: PublishSubject<bool>(),
+          logger: i.get(),
           interactor: i.get(),
         ));
 
     injector.map((i) => SplashBloc(
-          i.get(),
+          logger: i.get(),
+          authInteractor: i.get(),
         ));
+
     injector.map((i) => RegistrationBloc(
-          i.get(),
-          PublishSubject<DefaultResponse>(),
+          logger: i.get(),
+          authInteractor: i.get(),
+          registrationResult: PublishSubject<DefaultResponse>(),
         ));
+
     injector.map((i) => LoginBloc(
-          i.get(),
-          PublishSubject<DefaultResponse>(),
+          logger: i.get(),
+          authInteractor: i.get(),
+          loginSubject: PublishSubject<DefaultResponse>(),
         ));
-    injector.map((i) => SettingsBloc(i.get()));
-    injector.map((i) => UserBloc(i.get()));
+
+    injector.map((i) => SettingsBloc(
+          logger: i.get(),
+          authInteractor: i.get(),
+        ));
+
+    injector.map((i) => UserBloc(
+          logger: i.get(),
+          userInteractor: i.get(),
+        ));
 
     injector.map((i) => PostsBloc(
-          i.get(),
-          BehaviorSubject<List<PostModel>>.seeded(List()),
-          PublishSubject<bool>(),
-          PublishSubject<PostModel>(),
+          logger: i.get(),
+          postsInteractor: i.get(),
+          postsResult: BehaviorSubject<List<PostModel>>.seeded(List()),
+          postCreationResult: PublishSubject<bool>(),
+          postDetailsResult: PublishSubject<PostModel>(),
         ));
 
-    injector.map(
-      (i) => RemindPasswordBloc(
-        i.get(),
-        PublishSubject<DefaultResponse>(),
-      ),
-    );
+    injector.map((i) => RemindPasswordBloc(
+          logger: i.get(),
+          authInteractor: i.get(),
+          remindPasswordResult: PublishSubject<DefaultResponse>(),
+        ));
   }
 }

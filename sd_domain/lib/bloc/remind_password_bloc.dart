@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/exceptions/validation_exception.dart';
@@ -10,10 +11,13 @@ class RemindPasswordBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
   final PublishSubject<DefaultResponse> remindPasswordResult;
 
-  RemindPasswordBloc(
-    this._authInteractor,
-    this.remindPasswordResult,
-  );
+  RemindPasswordBloc({
+    Logger logger,
+    AuthInteractor authInteractor,
+    PublishSubject<DefaultResponse> remindPasswordResult,
+  })  : _authInteractor = authInteractor,
+        this.remindPasswordResult = remindPasswordResult,
+        super(logger: logger);
 
   void remindPassword(String email) async {
     showLoading(true);

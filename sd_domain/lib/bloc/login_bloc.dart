@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/export/domain.dart';
@@ -9,7 +10,13 @@ class LoginBloc extends BaseBloc {
   final PublishSubject<DefaultResponse> loginSubject;
   StreamSubscription loginSubscription;
 
-  LoginBloc(this._authInteractor, this.loginSubject);
+  LoginBloc({
+    Logger logger,
+    AuthInteractor authInteractor,
+    PublishSubject<DefaultResponse> loginSubject,
+  })  : _authInteractor = authInteractor,
+        this.loginSubject = loginSubject,
+        super(logger: logger);
 
   void login(String email, String password) async {
     showLoading(true);
@@ -20,7 +27,7 @@ class LoginBloc extends BaseBloc {
             loginSubject.addError(error);
             showLoading(false);
           },
-          onDone: () =>     showLoading(false),
+          onDone: () => showLoading(false),
         );
   }
 

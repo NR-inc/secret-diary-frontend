@@ -29,4 +29,12 @@ class LikesInteractor {
       postId: postId,
     );
   }
+
+  Future<bool> isPostLiked({String postId}) async {
+    final profile = await _userRepository.profile();
+    return await _likesRepository.isPostLiked(
+      userId: profile.uid,
+      postId: postId,
+    );
+  }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/interactor/user_interactor.dart';
@@ -7,7 +9,11 @@ class UserBloc extends BaseBloc {
   final UserInteractor _userInteractor;
   final currentUserSubject = BehaviorSubject<UserModel>();
 
-  UserBloc(this._userInteractor);
+  UserBloc({
+    @required Logger logger,
+    @required UserInteractor userInteractor,
+  })  : _userInteractor = userInteractor,
+        super(logger: null);
 
   void profile() async {
     final currentUser = await _userInteractor.profile();

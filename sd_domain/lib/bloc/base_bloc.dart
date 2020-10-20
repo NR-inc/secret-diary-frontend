@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class BaseBloc {
@@ -6,9 +7,14 @@ abstract class BaseBloc {
   var isLoading = false;
   @protected
   final _loadingProgressResult = BehaviorSubject<bool>.seeded(false);
-
   @protected
   final _errorResult = PublishSubject<bool>();
+  @protected
+  final Logger logger;
+
+  BaseBloc({
+   @required Logger logger,
+  }) : this.logger = logger;
 
   Stream<bool> get loadingProgressStream => _loadingProgressResult.stream;
 
@@ -22,6 +28,7 @@ abstract class BaseBloc {
 
   @protected
   void handleError(error) {
+    logger.e('Error', error);
     _errorResult.addError(error);
     showLoading(false);
   }

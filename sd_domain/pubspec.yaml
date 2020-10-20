@@ -13,6 +13,7 @@ dependencies:
   dio: ^3.0.9
   rxdart: ^0.24.0
   async: ^2.4.0
+  logger: ^0.9.4
 
   # firebase
   firebase_auth: ^0.18.0+1

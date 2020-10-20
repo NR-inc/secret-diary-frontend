@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/export/domain.dart';
@@ -12,12 +13,17 @@ class PostsBloc extends BaseBloc {
   final PublishSubject<PostModel> _postDetailsResult;
   var _postsIsLoaded = false;
 
-  PostsBloc(
-    this._postsInteractor,
-    this._postsResult,
-    this._postCreationResult,
-    this._postDetailsResult,
-  );
+  PostsBloc({
+    Logger logger,
+    PostsInteractor postsInteractor,
+    BehaviorSubject<List<PostModel>> postsResult,
+    PublishSubject<bool> postCreationResult,
+    PublishSubject<PostModel> postDetailsResult,
+  })  : _postsInteractor = postsInteractor,
+        _postsResult = postsResult,
+        _postDetailsResult = postDetailsResult,
+        _postCreationResult = postCreationResult,
+        super(logger: logger);
 
   Stream<List<PostModel>> get postsStream => _postsResult.stream;
 

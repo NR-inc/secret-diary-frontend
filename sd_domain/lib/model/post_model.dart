@@ -10,9 +10,7 @@ class PostModel {
   final String title;
   final String description;
   final DateTime createdAt;
-  final int likes;
-  final int comments;
-  final bool isLiked;
+
   final List<PostCategoryModel> postCategoryModels;
 
   PostModel({
@@ -21,9 +19,6 @@ class PostModel {
     @required this.title,
     @required this.description,
     @required this.createdAt,
-    @required this.likes,
-    @required this.isLiked,
-    @required this.comments,
     @required this.postCategoryModels,
   });
 
@@ -32,9 +27,6 @@ class PostModel {
         authorId = '',
         title = '',
         description = '',
-        likes = 0,
-        isLiked = false,
-        comments = 0,
         createdAt = DateTime.now(),
         postCategoryModels = [PostCategoryModel.empty()];
 
@@ -51,8 +43,17 @@ class PostModel {
                     .millisecondsSinceEpoch,
               )
             : null,
-        likes = data[FirestoreKeys.likesFieldKey] ?? 0,
-        comments = data[FirestoreKeys.commentsFieldKey] ?? 0,
-        isLiked = data[FirestoreKeys.isLikedFieldKey] ?? false,
         postCategoryModels = List();
+
+  @override
+  String toString() {
+    return 'PostModel('
+        'id: $id, '
+        'authorId: $authorId, '
+        'title: $title,'
+        'description: $description,'
+        'createdAt: $createdAt,'
+        'postCategoryModels: $postCategoryModels,'
+        ')';
+  }
 }

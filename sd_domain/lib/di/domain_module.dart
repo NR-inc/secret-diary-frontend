@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/export/domain.dart';
@@ -13,6 +14,7 @@ class DomainModule extends AbstractModule {
 
   @override
   void configure(Injector injector) {
+    injector.map((i) => Logger(), isSingleton: true);
     BlocModule().configure(injector);
     InteractorModule().configure(injector);
     ValidationModule().configure(injector);
