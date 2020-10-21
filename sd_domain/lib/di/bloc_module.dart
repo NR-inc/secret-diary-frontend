@@ -25,13 +25,13 @@ class BlocModule extends AbstractModule {
   void configure(Injector injector) {
     injector.map((i) => CommentsBloc(
           logger: i.get(),
-          commentsResult: BehaviorSubject<List<CommentModel>>.seeded(List())
+          commentsResult: BehaviorSubject<List<CommentModel>>.seeded(List()),
           interactor: i.get(),
         ));
 
     injector.map((i) => LikesBloc(
-          likesResult: PublishSubject<List<LikeModel>>(),
-          isPostLikedResult: PublishSubject<bool>(),
+          likesResult: BehaviorSubject<List<LikeModel>>.seeded(List()),
+          isPostLikedResult: BehaviorSubject<bool>.seeded(false),
           logger: i.get(),
           interactor: i.get(),
         ));

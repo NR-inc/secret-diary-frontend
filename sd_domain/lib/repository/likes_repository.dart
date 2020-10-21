@@ -7,7 +7,7 @@ abstract class LikesRepository {
     @required String postId,
   });
 
-  Future<bool> removeLike({
+  Future<String> removeLike({
     @required String userId,
     @required String postId,
   });

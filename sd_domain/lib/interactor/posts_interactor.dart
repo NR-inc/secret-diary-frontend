@@ -72,24 +72,4 @@ class PostsInteractor {
       userId: currentUser.uid,
     );
   }
-
-  Future<LikeModel> likePost({
-    String postId,
-  }) async {
-    final currentUser = await _userRepository.profile();
-    return await _likesRepository.addLike(
-      postId: postId,
-      userId: currentUser.uid,
-    );
-  }
-
-  Future<bool> unlikePost({
-    String postId,
-  }) async {
-    final currentUser = await _userRepository.profile();
-    return await _likesRepository.removeLike(
-      postId: postId,
-      userId: currentUser.uid,
-    );
-  }
 }

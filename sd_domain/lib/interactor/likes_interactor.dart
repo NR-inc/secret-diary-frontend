@@ -13,13 +13,12 @@ class LikesInteractor {
   Future<List<LikeModel>> getLikes({String postId}) =>
       _likesRepository.getLikes(postId: postId);
 
-  Future<bool> removeLike({String postId}) async {
+  Future<String> removeLike({String postId}) async {
     final profile = await _userRepository.profile();
-    _likesRepository.removeLike(
+    return _likesRepository.removeLike(
       userId: profile.uid,
       postId: postId,
     );
-    return true;
   }
 
   Future<LikeModel> addLike({String postId}) async {

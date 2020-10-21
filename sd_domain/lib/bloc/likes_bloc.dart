@@ -5,13 +5,13 @@ import 'package:sddomain/export/domain.dart';
 import 'package:sddomain/interactor/likes_interactor.dart';
 
 class LikesBloc extends BaseBloc {
-  final PublishSubject<List<LikeModel>> _likesResult;
-  final PublishSubject<bool> _isPostLikedResult;
+  final BehaviorSubject<List<LikeModel>> _likesResult;
+  final BehaviorSubject<bool> _isPostLikedResult;
   final LikesInteractor _interactor;
 
   LikesBloc({
-    PublishSubject<List<LikeModel>> likesResult,
-    PublishSubject<bool> isPostLikedResult,
+    BehaviorSubject<List<LikeModel>> likesResult,
+    BehaviorSubject<bool> isPostLikedResult,
     LikesInteractor interactor,
     Logger logger,
   })  : _likesResult = likesResult,
@@ -40,9 +40,13 @@ class LikesBloc extends BaseBloc {
 
   void removeLike({String postId}) {
     _interactor.removeLike(postId: postId).then(
-      (isLikeRemoved) {
+      (removedLikeId) async {
         logger.i('postId = $postId, success');
         _isPostLikedResult.add(false);
+        final likes = await _likesResult.first;
+        _likesResult.add(
+          likes..removeWhere((like) => like.id == removedLikeId),
+        );
       },
       onError: handleError,
     );
@@ -50,9 +54,11 @@ class LikesBloc extends BaseBloc {
 
   void addLike({String postId}) async {
     _interactor.addLike(postId: postId).then(
-      (isLikeAdded) {
+      (likeModel) async {
         logger.i('postId = $postId, success');
         _isPostLikedResult.add(true);
+        final likes = await _likesResult.first;
+        _likesResult.add(likes..add(likeModel));
       },
       onError: handleError,
     );

@@ -57,7 +57,7 @@ class LikesDataRepository extends LikesRepository {
   }
 
   @override
-  Future<bool> removeLike({
+  Future<String> removeLike({
     String userId,
     String postId,
   }) async {
@@ -68,11 +68,13 @@ class LikesDataRepository extends LikesRepository {
           .where(FirestoreKeys.authorIdFieldKey, isEqualTo: userId)
           .get();
 
+      var likeId;
       for (QueryDocumentSnapshot snapshot in result.docs) {
+        likeId = snapshot.id;
         await snapshot.reference.delete();
       }
 
-      return true;
+      return likeId;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }

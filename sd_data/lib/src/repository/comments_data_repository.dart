@@ -73,8 +73,8 @@ class CommentsDataRepository implements CommentsRepository {
               ))
           .toList();
       return data;
-    } on dynamic {
-      return null;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
     }
   }
 

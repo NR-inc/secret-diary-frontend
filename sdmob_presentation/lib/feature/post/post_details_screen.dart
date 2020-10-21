@@ -81,7 +81,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
                     divider(),
                     SizedBox(height: Dimens.unit5),
                     _addCommentWidget(),
-                    //_comments(),
+                    _commentsListWidget(),
                   ],
                 );
               } else {
@@ -129,34 +129,29 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
       stream: _likesBloc.isPostLikedStream,
       builder: (context, AsyncSnapshot<bool> result) {
         final isUserLiked = result?.data ?? false;
-        _likeValueNotifier.value = isUserLiked;
-        return ValueListenableBuilder(
-            valueListenable: _likeValueNotifier,
-            builder: (context, value, child) {
-              return GestureDetector(
-                  onTap: () => _likeAction(value, isUserLiked),
-                  child: Row(children: [
-                    SvgPicture.asset(
-                      SdAssets.likeIcon,
-                      color: value ? SdColors.primaryColor : SdColors.greyColor,
-                      package: commonUiPackage,
-                      height: Dimens.unit2,
-                      width: Dimens.unit2,
-                    ),
-                    SizedBox(width: Dimens.unit),
-                    StreamBuilder(
-                      initialData: <LikeModel>[],
-                      stream: _likesBloc.likesStream,
-                      builder: (
-                        context,
-                        AsyncSnapshot<List<LikeModel>> snapshot,
-                      ) {
-                        final likes = snapshot.data;
-                        return Text('${likes?.length ?? 0}');
-                      },
-                    )
-                  ]));
-            });
+        return GestureDetector(
+            onTap: () => _likeAction(!isUserLiked),
+            child: Row(children: [
+              SvgPicture.asset(
+                SdAssets.likeIcon,
+                color: isUserLiked ? SdColors.primaryColor : SdColors.greyColor,
+                package: commonUiPackage,
+                height: Dimens.unit2,
+                width: Dimens.unit2,
+              ),
+              SizedBox(width: Dimens.unit),
+              StreamBuilder(
+                initialData: <LikeModel>[],
+                stream: _likesBloc.likesStream,
+                builder: (
+                  context,
+                  AsyncSnapshot<List<LikeModel>> snapshot,
+                ) {
+                  final likes = snapshot.data;
+                  return Text('${likes?.length ?? 0}');
+                },
+              )
+            ]));
       });
 
   Widget _commentsCounterWidget() => StreamBuilder(
@@ -176,27 +171,45 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
         ]);
       });
 
-  Widget _commentsListWidget() => StreamBuilder(
-        builder: (context, snapshot) => Container(
-          child: ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              return Container();
-            },
-          ),
-        ),
-      );
+  Widget _commentsListWidget() => Expanded(
+          child: StreamBuilder(
+        stream: _commentsBloc.commentsStream,
+        builder: (context, AsyncSnapshot<List<CommentModel>> snapshot) {
+          final comments = snapshot.data ?? [];
+          return Container(
+            child: ListView.builder(
+              itemCount: comments.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  child: Column(
+                    children: [
+                      Card(
+                        child: Padding(
+                            padding: EdgeInsets.all(Dimens.unit),
+                            child: Text(comments[index].message)),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ));
 
   void _addCommentAction(String message) {
     _addCommentTextController.clear();
+    _commentsBloc.addComment(
+      message: message,
+      postId: widget.postId,
+    );
   }
 
-  void _likeAction(bool like, bool isUserLiked) {
-    final isLike = !like;
-    if (isLike) {
+  void _likeAction(bool isUserLiked) {
+    if (isUserLiked) {
       _likesBloc.addLike(postId: widget.postId);
-    } else if (!isLike && isUserLiked) {
+    } else {
       _likesBloc.removeLike(postId: widget.postId);
     }
-    _likeValueNotifier.value = isLike;
   }
 }

@@ -43,9 +43,9 @@ class CommentsBloc extends BaseBloc {
     )
         .then(
       (List<CommentModel> comments) async {
-        logger.i('comments length: ${comments.length}');
+        logger.i('comments length: ${comments?.length ?? 0}');
         logger.i('comments: $comments');
-        _isCommentsLoaded = comments.length < limit;
+        _isCommentsLoaded = (comments?.length ?? 0) < limit;
         List<CommentModel> loadedPosts = await _commentsResult.first;
         _commentsResult.add(loadedPosts..addAll(comments));
         showLoading(false);
@@ -77,8 +77,8 @@ class CommentsBloc extends BaseBloc {
       (CommentModel newComment) async {
         logger.i('comment ${newComment.id}: added');
         logger.i('comment info: $newComment');
-        List<CommentModel> loadedPosts = await _commentsResult.first;
-        _commentsResult.add(loadedPosts..add(newComment));
+        List<CommentModel> loadedComments = await _commentsResult.first;
+        _commentsResult.add(loadedComments..insert(0, newComment));
       },
       onError: handleError,
     );
