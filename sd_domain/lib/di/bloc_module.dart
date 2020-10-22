@@ -10,7 +10,6 @@ import 'package:sddomain/bloc/settings_bloc.dart';
 import 'package:sddomain/bloc/splash_bloc.dart';
 import 'package:sddomain/bloc/user_bloc.dart';
 import 'package:sddomain/export/domain.dart';
-import 'package:sddomain/model/default_response.dart';
 
 class BlocModule extends AbstractModule {
   static final BlocModule _blocModule = BlocModule._internal();
@@ -25,13 +24,14 @@ class BlocModule extends AbstractModule {
   void configure(Injector injector) {
     injector.map((i) => CommentsBloc(
           logger: i.get(),
-          commentsResult: BehaviorSubject<List<CommentModel>>.seeded(List()),
+          commentsResult: BehaviorSubject.seeded(List()),
+          commentsCounter: BehaviorSubject.seeded(0),
           interactor: i.get(),
         ));
 
     injector.map((i) => LikesBloc(
-          likesResult: BehaviorSubject<List<LikeModel>>.seeded(List()),
-          isPostLikedResult: BehaviorSubject<bool>.seeded(false),
+          likesResult: BehaviorSubject.seeded(List()),
+          isPostLikedResult: BehaviorSubject.seeded(false),
           logger: i.get(),
           interactor: i.get(),
         ));
@@ -44,13 +44,13 @@ class BlocModule extends AbstractModule {
     injector.map((i) => RegistrationBloc(
           logger: i.get(),
           authInteractor: i.get(),
-          registrationResult: PublishSubject<DefaultResponse>(),
+          registrationResult: PublishSubject(),
         ));
 
     injector.map((i) => LoginBloc(
           logger: i.get(),
           authInteractor: i.get(),
-          loginSubject: PublishSubject<DefaultResponse>(),
+          loginSubject: PublishSubject(),
         ));
 
     injector.map((i) => SettingsBloc(
@@ -66,15 +66,15 @@ class BlocModule extends AbstractModule {
     injector.map((i) => PostsBloc(
           logger: i.get(),
           postsInteractor: i.get(),
-          postsResult: BehaviorSubject<List<PostModel>>.seeded(List()),
-          postCreationResult: PublishSubject<bool>(),
-          postDetailsResult: PublishSubject<PostModel>(),
+          postsResult: BehaviorSubject.seeded(List()),
+          postCreationResult: PublishSubject(),
+          postDetailsResult: PublishSubject(),
         ));
 
     injector.map((i) => RemindPasswordBloc(
           logger: i.get(),
           authInteractor: i.get(),
-          remindPasswordResult: PublishSubject<DefaultResponse>(),
+          remindPasswordResult: PublishSubject(),
         ));
   }
 }

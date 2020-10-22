@@ -43,4 +43,7 @@ class CommentsInteractor {
       authorId: profile.uid,
     );
   }
+
+  Future<int> getCountOfComments({String postId}) =>
+      _commentsRepository.getCountOfComments(postId: postId);
 }

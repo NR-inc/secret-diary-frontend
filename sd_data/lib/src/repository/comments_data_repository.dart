@@ -124,4 +124,18 @@ class CommentsDataRepository implements CommentsRepository {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
+
+  @override
+  Future<int> getCountOfComments({String postId}) async {
+    try {
+      final result = await _firestore
+          .collection(FirestoreKeys.commentsCollectionKey)
+          .where(FirestoreKeys.postIdFieldKey, isEqualTo: postId)
+          .get();
+
+      return result.docs.length;
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
 }

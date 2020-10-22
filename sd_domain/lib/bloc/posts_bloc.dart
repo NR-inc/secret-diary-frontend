@@ -145,6 +145,8 @@ class PostsBloc extends BaseBloc {
   @override
   void dispose() {
     _postsResult.close();
+    _postCreationResult.close();
+    _postDetailsResult.close();
     super.dispose();
   }
 }

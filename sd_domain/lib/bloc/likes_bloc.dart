@@ -75,4 +75,11 @@ class LikesBloc extends BaseBloc {
       onError: handleError,
     );
   }
+
+  @override
+  void dispose() {
+    _likesResult.close();
+    _isPostLikedResult.close();
+    super.dispose();
+  }
 }

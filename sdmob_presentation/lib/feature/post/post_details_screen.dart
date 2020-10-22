@@ -22,7 +22,6 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
   final CommentsBloc _commentsBloc = Injector.getInjector().get<CommentsBloc>();
   final LikesBloc _likesBloc = Injector.getInjector().get<LikesBloc>();
 
-  final _likeValueNotifier = ValueNotifier<bool>(false);
   final _addCommentTextController = TextEditingController();
 
   @override
@@ -32,7 +31,16 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
     _likesBloc.getLikes(postId: widget.postId);
     _likesBloc.isPostLiked(postId: widget.postId);
     _commentsBloc.loadComments(postId: widget.postId);
+    _commentsBloc.getCountOfComments(postId: widget.postId);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _postsBloc.dispose();
+    _commentsBloc.dispose();
+    _likesBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,12 +55,14 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
               BuildContext context,
               AsyncSnapshot<bool> loadingProgress,
             ) {
-              return Stack(children: <Widget>[
+              return SingleChildScrollView(
+                  physics: ScrollPhysics(),
+              child: Stack(children: <Widget>[
                 _content,
                 showLoader(
                   show: loadingProgress.hasData && loadingProgress.data,
                 )
-              ]);
+              ]));
             },
           ),
         ));
@@ -66,6 +76,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
               final postModel = result.data;
               if (postModel != null) {
                 return Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: Dimens.unit),
                     Text(postModel.title),
@@ -155,8 +166,8 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
       });
 
   Widget _commentsCounterWidget() => StreamBuilder(
-      stream: _commentsBloc.commentsStream,
-      builder: (context, AsyncSnapshot<List<CommentModel>> result) {
+      stream: _commentsBloc.countOfCommentsStream,
+      builder: (context, AsyncSnapshot<int> result) {
         return Row(children: [
           SvgPicture.asset(
             SdAssets.commentIcon,
@@ -167,35 +178,48 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
           SizedBox(
             width: Dimens.unit,
           ),
-          Text('${result.data?.length}')
+          Text('${result.data ?? 0}')
         ]);
       });
 
-  Widget _commentsListWidget() => Expanded(
-          child: StreamBuilder(
+  Widget _commentsListWidget() => StreamBuilder(
         stream: _commentsBloc.commentsStream,
         builder: (context, AsyncSnapshot<List<CommentModel>> snapshot) {
           final comments = snapshot.data ?? [];
           return Container(
-            child: ListView.builder(
-              itemCount: comments.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: Column(
-                    children: [
-                      Card(
-                        child: Padding(
-                            padding: EdgeInsets.all(Dimens.unit),
-                            child: Text(comments[index].message)),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+            child: NotificationListener(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                    _commentsBloc.loadComments(postId: widget.postId);
+                  }
+                  return false;
+                },
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: comments.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _commentItem(comments[index]);
+                  },
+                )),
           );
         },
-      ));
+      );
+
+  Widget _commentItem(CommentModel commentModel) {
+    return Container(
+      child: Column(
+        children: [
+          Card(
+            child: Padding(
+                padding: EdgeInsets.all(Dimens.unit),
+                child: Text(commentModel.message)),
+          ),
+        ],
+      ),
+    );
+  }
 
   void _addCommentAction(String message) {
     _addCommentTextController.clear();

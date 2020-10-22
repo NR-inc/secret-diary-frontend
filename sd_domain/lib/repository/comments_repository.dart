@@ -25,4 +25,6 @@ abstract class CommentsRepository {
   Future<CommentModel> updateComment({
     @required CommentModel commentModel,
   });
+
+  Future<int> getCountOfComments({String postId});
 }
