@@ -21,5 +21,6 @@ class FirestoreKeys{
   static const postIdFieldKey = 'post_id';
   static const messageFieldKey = 'message';
   static const isLikedFieldKey = 'is_liked';
+  static const isOwnerFieldKey = 'is_owner';
 
 }

@@ -10,6 +10,7 @@ class PostModel {
   final String title;
   final String description;
   final DateTime createdAt;
+  final bool isOwner;
 
   final List<PostCategoryModel> postCategoryModels;
 
@@ -20,6 +21,7 @@ class PostModel {
     @required this.description,
     @required this.createdAt,
     @required this.postCategoryModels,
+    @required this.isOwner,
   });
 
   PostModel.empty()
@@ -28,7 +30,8 @@ class PostModel {
         title = '',
         description = '',
         createdAt = DateTime.now(),
-        postCategoryModels = [PostCategoryModel.empty()];
+        postCategoryModels = [PostCategoryModel.empty()],
+        isOwner = false;
 
   PostModel.fromJson({
     @required String id,
@@ -43,17 +46,20 @@ class PostModel {
                     .millisecondsSinceEpoch,
               )
             : null,
-        postCategoryModels = List();
+        postCategoryModels = List(),
+        isOwner = data[FirestoreKeys.isOwnerFieldKey] ?? false
+  ;
 
   @override
   String toString() {
     return 'PostModel('
         'id: $id, '
         'authorId: $authorId, '
-        'title: $title,'
-        'description: $description,'
-        'createdAt: $createdAt,'
-        'postCategoryModels: $postCategoryModels,'
+        'title: $title, '
+        'description: $description, '
+        'createdAt: $createdAt, '
+        'postCategoryModels: $postCategoryModels, '
+        'isOwner: $isOwner, '
         ')';
   }
 }

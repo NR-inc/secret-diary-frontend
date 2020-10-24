@@ -55,14 +55,12 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
               BuildContext context,
               AsyncSnapshot<bool> loadingProgress,
             ) {
-              return SingleChildScrollView(
-                  physics: ScrollPhysics(),
-              child: Stack(children: <Widget>[
+              return Stack(children: <Widget>[
                 _content,
                 showLoader(
                   show: loadingProgress.hasData && loadingProgress.data,
                 )
-              ]));
+              ]);
             },
           ),
         ));
@@ -76,7 +74,6 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
               final postModel = result.data;
               if (postModel != null) {
                 return Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: Dimens.unit),
                     Text(postModel.title),
@@ -182,7 +179,8 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
         ]);
       });
 
-  Widget _commentsListWidget() => StreamBuilder(
+  Widget _commentsListWidget() => Expanded(
+          child: StreamBuilder(
         stream: _commentsBloc.commentsStream,
         builder: (context, AsyncSnapshot<List<CommentModel>> snapshot) {
           final comments = snapshot.data ?? [];
@@ -196,8 +194,6 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
                   return false;
                 },
                 child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
                   itemCount: comments.length,
                   itemBuilder: (BuildContext context, int index) {
                     return _commentItem(comments[index]);
@@ -205,7 +201,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
                 )),
           );
         },
-      );
+      ));
 
   Widget _commentItem(CommentModel commentModel) {
     return Container(

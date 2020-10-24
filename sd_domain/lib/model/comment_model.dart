@@ -9,6 +9,7 @@ class CommentModel {
   final String postId;
   final String message;
   final DateTime createdAt;
+  final bool isOwner;
 
   CommentModel.fromJson({
     @required String id,
@@ -19,17 +20,19 @@ class CommentModel {
         message = data[FirestoreKeys.messageFieldKey] ?? '',
         createdAt = data[FirestoreKeys.createdAtFieldKey] != null
             ? DateTime.fromMillisecondsSinceEpoch(
-          (data[FirestoreKeys.createdAtFieldKey] as Timestamp)
-              .millisecondsSinceEpoch,
-        )
-            : null;
+                (data[FirestoreKeys.createdAtFieldKey] as Timestamp)
+                    .millisecondsSinceEpoch,
+              )
+            : null,
+        isOwner = data[FirestoreKeys.isOwnerFieldKey] ?? false;
 
   CommentModel.empty()
       : id = '',
         authorId = '',
         postId = '',
         message = '',
-        createdAt = null;
+        createdAt = null,
+        isOwner = false;
 
   @override
   String toString() {
@@ -39,6 +42,7 @@ class CommentModel {
         'postId: $postId, '
         'message: $message, '
         'createdAt: $createdAt, '
+        'isOwner: $isOwner, '
         ')';
   }
 }
