@@ -86,6 +86,10 @@ class CommentsBloc extends BaseBloc {
     @required String message,
     @required String postId,
   }) async {
+    if (message.trim().isEmpty) {
+      return;
+    }
+
     _interactor
         .addComment(
       message: message,

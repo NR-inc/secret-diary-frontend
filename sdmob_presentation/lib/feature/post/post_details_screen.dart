@@ -204,16 +204,31 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
       ));
 
   Widget _commentItem(CommentModel commentModel) {
-    return Container(
-      child: Column(
-        children: [
-          Card(
-            child: Padding(
-                padding: EdgeInsets.all(Dimens.unit),
-                child: Text(commentModel.message)),
-          ),
-        ],
+    return GestureDetector(
+      child: Container(
+        child: Column(
+          children: [
+            Card(
+              child: Padding(
+                  padding: EdgeInsets.all(Dimens.unit),
+                  child: Text(commentModel.message)),
+            ),
+          ],
+        ),
       ),
+      onLongPress: () {
+        show2OptionsDialog(
+          context: context,
+          title: 'Delete comment',
+          description: 'Are you sure you want to delete your comment?',
+          option1ButtonName: 'Delete',
+          option1ButtonCallback: () {
+            _commentsBloc.removeComment(commentId: commentModel.id);
+            Navigator.of(context).pop();
+          },
+          option2ButtonName: 'Cancel',
+        );
+      },
     );
   }
 
