@@ -6,13 +6,14 @@ import 'package:sddomain/bloc/user_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/model/user_model.dart';
 import 'package:ssecretdiary/feature/posts_list/posts_list_widget.dart';
+import 'package:ssecretdiary/feature/widgets/base_state.dart';
 
 class DiaryScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _DiaryState();
 }
 
-class _DiaryState extends State<DiaryScreen> {
+class _DiaryState extends BaseState<DiaryScreen> {
   final _userBloc = Injector.getInjector().get<UserBloc>();
 
   @override
@@ -36,8 +37,10 @@ class _DiaryState extends State<DiaryScreen> {
             centerTitle: true,
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.add, color: Colors.white),
-                onPressed: () => Navigator.pushNamed(context, AppRoutes.post),
+                icon: Icon(Icons.edit, color: Colors.white),
+                onPressed: () {
+                  showToast(message: 'Move to edit profile screen');
+                },
               )
             ]),
         body: StreamBuilder<UserModel>(
