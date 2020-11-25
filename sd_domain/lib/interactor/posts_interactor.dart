@@ -34,13 +34,16 @@ class PostsInteractor {
     List<PostCategoryModel> postCategories,
     String fromPostId,
     int limit,
-  }) =>
-      _postsRepository.getFeedPostsBy(
-        feedSortType: feedSortType,
-        postCategories: postCategories,
-        fromPostId: fromPostId,
-        limit: limit,
-      );
+  }) async {
+    final user = await _userRepository.profile();
+    return _postsRepository.getFeedPostsBy(
+      userId: user.uid,
+      feedSortType: feedSortType,
+      postCategories: postCategories,
+      fromPostId: fromPostId,
+      limit: limit,
+    );
+  }
 
   Future<bool> createPost(
     String title,

@@ -30,6 +30,7 @@ abstract class PostsRepository {
   });
 
   Future<List<PostModel>> getFeedPostsBy({
+    @required String userId,
     @required FeedSortType feedSortType,
     String searchQuery,
     List<PostCategoryModel> postCategories,

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/export/domain.dart';
 
@@ -14,12 +13,14 @@ class PostsDataRepository implements PostsRepository {
         _firestore = firestore;
 
   @override
-  Future<List<PostModel>> getFeedPostsBy(
-      {String searchQuery,
-      FeedSortType feedSortType,
-      List<PostCategoryModel> postCategories,
-      String fromPostId,
-      int limit}) async {
+  Future<List<PostModel>> getFeedPostsBy({
+    String userId,
+    String searchQuery,
+    FeedSortType feedSortType,
+    List<PostCategoryModel> postCategories,
+    String fromPostId,
+    int limit,
+  }) async {
     try {
       DocumentSnapshot lastDownloadedPostDoc;
       var orderByField;
@@ -58,7 +59,14 @@ class PostsDataRepository implements PostsRepository {
       final data = result.docs
           .map((postData) => PostModel.fromJson(
                 id: postData.id,
-                data: postData.data(),
+                data: postData.data()
+                  ..putIfAbsent(
+                    FirestoreKeys.isOwnerFieldKey,
+                    () =>
+                        postData.data()[FirestoreKeys.authorIdFieldKey] ==
+                            userId ??
+                        false,
+                  ),
               ))
           .toList();
 
@@ -81,7 +89,11 @@ class PostsDataRepository implements PostsRepository {
 
       return PostModel.fromJson(
         id: doc.id,
-        data: doc.data(),
+        data: doc.data()
+          ..putIfAbsent(
+            FirestoreKeys.isOwnerFieldKey,
+            () => doc.data()[FirestoreKeys.authorIdFieldKey] == userId ?? false,
+          ),
       );
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
@@ -118,7 +130,11 @@ class PostsDataRepository implements PostsRepository {
       final data = result.docs
           .map((postData) => PostModel.fromJson(
                 id: postData.id,
-                data: postData.data(),
+                data: postData.data()
+                  ..putIfAbsent(
+                    FirestoreKeys.isOwnerFieldKey,
+                    () => true,
+                  ),
               ))
           .toList();
       return data;

@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:rxdart/subjects.dart';
@@ -7,6 +7,7 @@ import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/export/domain.dart';
 
 class PostsBloc extends BaseBloc {
+  static const _tag = 'PostsBloc';
   final PostsInteractor _postsInteractor;
   final BehaviorSubject<List<PostModel>> _postsResult;
   final PublishSubject<bool> _postCreationResult;
@@ -54,12 +55,14 @@ class PostsBloc extends BaseBloc {
     );
   }
 
-  void getPost({String postId}) {
+  Future<PostModel> getPost({String postId}) {
     showLoading(true);
-    _postsInteractor.getPost(id: postId).then(
+    return _postsInteractor.getPost(id: postId).then(
       (PostModel postModel) {
+        logger.i('Post ($postId) loaded: $postModel');
         _postDetailsResult.add(postModel);
         showLoading(false);
+        return postModel;
       },
       onError: handleError,
     );
@@ -139,7 +142,15 @@ class PostsBloc extends BaseBloc {
   }
 
   Future<bool> removePostById(String id) async {
-    return await _postsInteractor.removePost(id: id);
+    showLoading(true);
+    return _postsInteractor.removePost(id: id).then(
+      (bool isRemoved) {
+        logger.i('Post ($id) removed');
+        showLoading(false);
+        return isRemoved;
+      },
+      onError: handleError,
+    );
   }
 
   @override

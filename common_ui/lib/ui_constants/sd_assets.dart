@@ -7,4 +7,6 @@ class SdAssets {
   static const likeIcon = 'assets/like_icon.svg';
   static const commentIcon = 'assets/comment_icon.svg';
   static const sendIcon = 'assets/send_icon.svg';
+  static const moreIcon = 'assets/more_icon.svg';
+  static const deleteIcon = 'assets/delete_icon.svg';
 }

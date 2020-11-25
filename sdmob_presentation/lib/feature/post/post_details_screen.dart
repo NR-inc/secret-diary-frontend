@@ -22,12 +22,17 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
   final CommentsBloc _commentsBloc = Injector.getInjector().get<CommentsBloc>();
   final LikesBloc _likesBloc = Injector.getInjector().get<LikesBloc>();
 
+  final _isOwnerValueNotifier = ValueNotifier(false);
   final _addCommentTextController = TextEditingController();
 
   @override
   void initState() {
     _postsBloc.errorStream.handleError(handleError);
-    _postsBloc.getPost(postId: widget.postId);
+    _postsBloc.getPost(postId: widget.postId).then(
+      (postModel) {
+        _isOwnerValueNotifier.value = postModel.isOwner;
+      },
+    );
     _likesBloc.getLikes(postId: widget.postId);
     _likesBloc.isPostLiked(postId: widget.postId);
     _commentsBloc.loadComments(postId: widget.postId);
@@ -46,7 +51,46 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Post Details')),
+        appBar: AppBar(
+          title: Text('Post Details'),
+          actions: [
+            ValueListenableBuilder(
+              valueListenable: _isOwnerValueNotifier,
+              builder: (context, value, child) {
+                return value
+                    ? IconButton(
+                        icon: SvgPicture.asset(
+                          SdAssets.deleteIcon,
+                          color: SdColors.whiteColor,
+                          package: commonUiPackage,
+                          height: Dimens.unit2,
+                          width: Dimens.unit2,
+                        ),
+                        onPressed: () async {
+                          show2OptionsDialog(
+                              context: context,
+                              title: 'Delete your post',
+                              description: 'Are you sure?',
+                              option1ButtonName: 'Delete',
+                              option2ButtonName: 'Cancel',
+                              option1ButtonCallback: () async {
+                                Navigator.pop(context);
+                                //todo review
+                                await _postsBloc.removePostById(widget.postId);
+                                showToast(message: 'The post has been removed');
+                                Future.delayed(Duration(seconds: 1)).then(
+                                  (value) {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              });
+                        },
+                      )
+                    : Container();
+              },
+            )
+          ],
+        ),
         body: Padding(
           padding: EdgeInsets.all(16),
           child: StreamBuilder(
