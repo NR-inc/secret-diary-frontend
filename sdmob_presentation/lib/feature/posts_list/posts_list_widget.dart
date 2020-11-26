@@ -24,11 +24,14 @@ class PostsListWidget extends StatefulWidget {
 class _PostsListState extends BaseState<PostsListWidget> {
   final PostsBloc _postsBloc = Injector.getInjector().get<PostsBloc>();
 
-  void loadPosts() {
+  void loadPosts({bool initialLoad = false}) {
     if (widget.userUid != null) {
       _postsBloc.loadPostsForUser(userUid: widget.userUid);
     } else {
-      _postsBloc.loadPostsForFeed(searchQuery: widget.searchQuery);
+      _postsBloc.loadPostsForFeed(
+        searchQuery: widget.searchQuery,
+        initialLoad: initialLoad,
+      );
     }
   }
 
@@ -40,7 +43,7 @@ class _PostsListState extends BaseState<PostsListWidget> {
 
   @override
   void didChangeDependencies() {
-    loadPosts();
+    loadPosts(initialLoad: true);
     super.didChangeDependencies();
   }
 

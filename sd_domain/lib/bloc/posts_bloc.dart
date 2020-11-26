@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:rxdart/subjects.dart';
@@ -7,7 +6,6 @@ import 'package:sddomain/bloc/base_bloc.dart';
 import 'package:sddomain/export/domain.dart';
 
 class PostsBloc extends BaseBloc {
-  static const _tag = 'PostsBloc';
   final PostsInteractor _postsInteractor;
   final BehaviorSubject<List<PostModel>> _postsResult;
   final PublishSubject<bool> _postCreationResult;
@@ -106,6 +104,7 @@ class PostsBloc extends BaseBloc {
   }
 
   void loadPostsForFeed({
+    @required bool initialLoad,
     String searchQuery,
     FeedSortType feedSortType = FeedSortType.byDate,
     List<PostCategoryModel> postCategories,
@@ -119,6 +118,11 @@ class PostsBloc extends BaseBloc {
 
     List<PostModel> loadedPosts = await _postsResult.first;
     var lastPostId;
+
+    if (initialLoad && loadedPosts.isNotEmpty) {
+      return;
+    }
+
     if (loadedPosts != null && loadedPosts.isNotEmpty) {
       lastPostId = loadedPosts.last.id;
     }
