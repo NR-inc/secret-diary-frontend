@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sd_data/sd_data.dart';
@@ -22,7 +23,7 @@ class InjectModule extends AbstractModule {
 
   @override
   void configure(Injector injector) {
-    print('Build type: ${_appConfigs?.buildType?.toString()}');
+    Logger().i('Build type: ${_appConfigs?.buildType?.toString()}');
 
     injector.map(
       (i) => _appConfigs,

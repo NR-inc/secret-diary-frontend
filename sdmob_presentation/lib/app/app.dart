@@ -1,8 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ssecretdiary/core/di/inject_module.dart';
 import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:sd_base/sd_base.dart';
 
@@ -39,7 +37,5 @@ class _SecretDiaryState extends State<SecretDiaryApp> {
 
   Future<void> init() async {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    InjectModule(widget.appConfigs);
-    await Firebase.initializeApp();
   }
 }
