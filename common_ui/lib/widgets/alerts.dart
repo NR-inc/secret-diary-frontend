@@ -56,29 +56,29 @@ void show2OptionsDialog({
   TextStyle option2ButtonTextStyle =
       const TextStyle(color: SdColors.secondaryColor),
 }) {
+  final actions = [
+    FlatButton(
+      child: Text(
+        option1ButtonName,
+        style: option1ButtonTextStyle,
+      ),
+      onPressed: option1ButtonCallback != null
+          ? option1ButtonCallback
+          : () => Navigator.of(context).pop(),
+    ),
+    FlatButton(
+      child: Text(
+        option2ButtonName,
+        style: option2ButtonTextStyle,
+      ),
+      onPressed: option2ButtonCallback != null
+          ? () => option2ButtonCallback
+          : () => Navigator.of(context).pop(),
+    ),
+  ];
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      final actions = [
-        FlatButton(
-          child: Text(
-            option1ButtonName,
-            style: option1ButtonTextStyle,
-          ),
-          onPressed: option1ButtonCallback != null
-              ? option1ButtonCallback
-              : () => Navigator.of(context).pop(),
-        ),
-        FlatButton(
-          child: Text(
-            option2ButtonName,
-            style: option2ButtonTextStyle,
-          ),
-          onPressed: option2ButtonCallback != null
-              ? () => option2ButtonCallback
-              : () => Navigator.of(context).pop(),
-        ),
-      ];
       if (Platform.isIOS) {
         return CupertinoAlertDialog(
           title: Text(title),
@@ -92,6 +92,63 @@ void show2OptionsDialog({
           actions: actions,
         );
       }
+    },
+  );
+}
+
+void showPasswordRequiredDialog({
+  @required BuildContext context,
+  @required Function(String) submitCallback,
+  @required TextEditingController passwordController,
+  @required ValueNotifier<String> passwordErrorNotifier,
+  TextStyle cancelButtonTextStyle =
+      const TextStyle(color: SdColors.secondaryColor),
+  TextStyle submitButtonTextStyle =
+      const TextStyle(color: SdColors.secondaryColor),
+}) {
+  final actions = [
+    FlatButton(
+      child: Text(
+        SdStrings.submitButton,
+        style: submitButtonTextStyle,
+      ),
+      onPressed: () {
+        submitCallback(passwordController.text);
+      },
+    ),
+    FlatButton(
+      child: Text(
+        SdStrings.cancelButton,
+        style: cancelButtonTextStyle,
+      ),
+      onPressed: () => Navigator.of(context).pop(),
+    ),
+  ];
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimens.unit),
+          ),
+          child: Container(
+              width: MediaQuery.of(context).size.width - Dimens.unit4,
+              child: Column(
+                children: [
+                  Text(SdStrings.passwordRequiredTitleMsg),
+                  Text(SdStrings.passwordRequiredDescriptionMsg),
+                  ValueListenableBuilder(
+                      valueListenable: passwordErrorNotifier,
+                      builder: (context, passwordError, widget) {
+                        return inputField(
+                          controller: passwordController,
+                          error: passwordError,
+                          hint: SdStrings.passwordHint,
+                        );
+                      }),
+                  Row(children: actions),
+                ],
+              )));
     },
   );
 }

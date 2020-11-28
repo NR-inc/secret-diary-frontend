@@ -30,18 +30,17 @@ class InteractorModule extends AbstractModule {
       isSingleton: true,
     );
 
-    injector.map((i) => AuthInteractor(
-        i.get(),
-        i.get(),
-        i.get(),
-        i.get(key: ValidationModule.loginFormValidator),
-        i.get(key: ValidationModule.registrationFormValidator),
-        i.get(key: ValidationModule.remindPasswordFormValidator)));
-
     injector.map(
-      (i) => UserInteractor(i.get(), i.get()),
-      isSingleton: true,
+      (i) => AuthInteractor(
+          i.get(),
+          i.get(),
+          i.get(),
+          i.get(key: ValidationModule.loginFormValidator),
+          i.get(key: ValidationModule.registrationFormValidator),
+          i.get(key: ValidationModule.remindPasswordFormValidator)),
     );
+
+    injector.map((i) => UserInteractor(i.get()));
 
     injector.map(
       (i) => PostsInteractor(

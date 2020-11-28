@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sd_base/sd_base.dart';
@@ -60,6 +62,60 @@ class UserDataRepository implements UserRepository {
           .doc(currentUser.uid)
           .delete();
       await currentUser.delete();
+    } on dynamic catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<bool> updateProfile({
+    String firstName,
+    String lastName,
+    String email,
+    String password,
+    File avatar,
+  }) async {
+    try {
+      final currentUser = _firebaseAuth.currentUser;
+
+      final userDataMap = <String, String>{};
+      if (firstName != null) {
+        userDataMap.putIfAbsent(
+          FirestoreKeys.firstNameFieldKey,
+          () => firstName,
+        );
+      }
+      if (lastName != null) {
+        userDataMap.putIfAbsent(
+          FirestoreKeys.lastNameFieldKey,
+          () => lastName,
+        );
+      }
+
+      if (email != null) {
+        if (password != null) {
+          await _firebaseAuth.currentUser.reauthenticateWithCredential(
+            EmailAuthProvider.credential(
+              email: currentUser.email,
+              password: password,
+            ),
+          );
+        }
+        await _firebaseAuth.currentUser.updateEmail(email);
+        userDataMap.putIfAbsent(
+          FirestoreKeys.emailFieldKey,
+          () => email,
+        );
+      }
+      if (avatar != null) {
+        //todo
+      }
+
+      await _firestore
+          .collection(FirestoreKeys.usersCollectionKey)
+          .doc(currentUser.uid)
+          .update(userDataMap);
+      return true;
     } on dynamic catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }

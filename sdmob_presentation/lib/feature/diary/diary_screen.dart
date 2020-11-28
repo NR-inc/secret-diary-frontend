@@ -44,7 +44,7 @@ class _DiaryState extends BaseState<DiaryScreen> {
               )
             ]),
         body: StreamBuilder<UserModel>(
-          stream: _userBloc.currentUserSubject.stream,
+          stream: _userBloc.currentUserStream,
           builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
             final currentUser = snapshot.data ?? UserModel.empty();
             return Stack(children: <Widget>[
@@ -68,19 +68,5 @@ class _DiaryState extends BaseState<DiaryScreen> {
             ]);
           },
         ));
-  }
-
-  Widget _buildPostsList() {
-    return Expanded(
-        child: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) {
-              return Card(
-                child: Container(
-                  height: 64.0,
-                  child: Center(child: Text("Post of the user's diary")),
-                ),
-              );
-            }));
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 Widget inputField({
-  @required Key inputFieldKey,
+  Key inputFieldKey,
   Key errorFieldKey,
   @required TextEditingController controller,
   @required String hint,
@@ -20,7 +20,7 @@ Widget inputField({
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         TextFormField(
-          key: inputFieldKey,
+          key: inputFieldKey ?? UniqueKey(),
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
@@ -61,7 +61,7 @@ Widget inputField({
           Visibility(
             child: Text(
               error ?? SdStrings.empty,
-              key: errorFieldKey,
+              key: errorFieldKey ?? UniqueKey(),
               style: TextStyle(
                 color: SdColors.errorColor,
                 fontSize: Dimens.fontSize12,

@@ -1,4 +1,4 @@
-class FirestoreKeys{
+class FirestoreKeys {
   static const usersCollectionKey = 'users';
   static const postsCollectionKey = 'posts';
   static const likesCollectionKey = 'likes';
@@ -23,4 +23,6 @@ class FirestoreKeys{
   static const isLikedFieldKey = 'is_liked';
   static const isOwnerFieldKey = 'is_owner';
 
+  /// FIREBASE ERROR CODES
+  static const requiresResentLoginError = 'requires-recent-login';
 }

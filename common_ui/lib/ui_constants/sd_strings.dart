@@ -11,6 +11,8 @@ class SdStrings {
   static const String createPostButton = 'Create post';
   static const String forgotPasswordButton = 'Forgot password?';
   static const String sendPasswordResetLinkButton = 'Send password reset link';
+  static const String submitButton = 'Submit';
+  static const String cancelButton = 'Cancel';
 
   /// HINTS
   static const String firstNameHint = 'First name';
@@ -23,6 +25,9 @@ class SdStrings {
 
   /// MESSAGES
   static const String resetPasswordSuccessMessage = 'We have e-mailed your password reset link!';
+  static const String userPostUpdateSuccessMsg = 'Your profile has been updated';
+  static const String passwordRequiredTitleMsg = 'Password required';
+  static const String passwordRequiredDescriptionMsg = 'Please enter your password';
 
   /// ERRORS
   static const String fieldErrorMaxLength =
