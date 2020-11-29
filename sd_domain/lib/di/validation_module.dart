@@ -8,11 +8,14 @@ class ValidationModule extends AbstractModule {
   static const loginFormValidator = 'loginFormValidator';
   static const registrationFormValidator = 'registrationFormValidator';
   static const remindPasswordFormValidator = 'remindPasswordFormValidator';
+  static const editProfileFormValidator = 'editProfileFormValidator';
 
-  static const firstNameFieldValidator = 'firstNameFieldValidator';
-  static const lastNameFieldValidator = 'lastNameFieldValidator';
-  static const emailFieldValidator = 'emailFieldValidator';
-  static const passwordFieldValidator = 'passwordFieldValidator';
+  static const _firstNameFieldValidator = 'firstNameFieldValidator';
+  static const _lastNameFieldValidator = 'lastNameFieldValidator';
+  static const _emailFieldValidator = 'emailFieldValidator';
+  static const _passwordFieldValidator = 'passwordFieldValidator';
+  static const _passwordRequiredFieldValidator =
+      'passwordRequiredFieldValidator';
 
   static final ValidationModule _validationModule =
       ValidationModule._internal();
@@ -29,30 +32,41 @@ class ValidationModule extends AbstractModule {
     _injectLastNameFieldValidator(injector);
     _injectEmailFieldValidator(injector);
     _injectPasswordFieldValidator(injector);
+    _injectPasswordRequiredFieldValidator(injector);
 
     injector.map(
       (i) => FormValidator({
-        InputFieldType.email: i.get(key: emailFieldValidator),
-        InputFieldType.password: i.get(key: passwordFieldValidator),
+        InputFieldType.email: i.get(key: _emailFieldValidator),
+        InputFieldType.password: i.get(key: _passwordFieldValidator),
       }),
       key: loginFormValidator,
     );
 
     injector.map(
       (i) => FormValidator({
-        InputFieldType.firstName: i.get(key: firstNameFieldValidator),
-        InputFieldType.lastName: i.get(key: lastNameFieldValidator),
-        InputFieldType.email: i.get(key: emailFieldValidator),
-        InputFieldType.password: i.get(key: passwordFieldValidator),
+        InputFieldType.firstName: i.get(key: _firstNameFieldValidator),
+        InputFieldType.lastName: i.get(key: _lastNameFieldValidator),
+        InputFieldType.email: i.get(key: _emailFieldValidator),
+        InputFieldType.password: i.get(key: _passwordFieldValidator),
       }),
       key: registrationFormValidator,
     );
 
     injector.map(
       (i) => FormValidator({
-        InputFieldType.email: i.get(key: emailFieldValidator),
+        InputFieldType.email: i.get(key: _emailFieldValidator),
       }),
       key: remindPasswordFormValidator,
+    );
+
+    injector.map(
+      (i) => FormValidator({
+        InputFieldType.firstName: i.get(key: _firstNameFieldValidator),
+        InputFieldType.lastName: i.get(key: _lastNameFieldValidator),
+        InputFieldType.email: i.get(key: _emailFieldValidator),
+        InputFieldType.password: i.get(key: _passwordRequiredFieldValidator),
+      }),
+      key: editProfileFormValidator,
     );
   }
 
@@ -64,7 +78,7 @@ class ValidationModule extends AbstractModule {
         ),
         LengthValidationRule(),
       ]),
-      key: firstNameFieldValidator,
+      key: _firstNameFieldValidator,
     );
   }
 
@@ -76,7 +90,7 @@ class ValidationModule extends AbstractModule {
         ),
         LengthValidationRule(),
       ]),
-      key: lastNameFieldValidator,
+      key: _lastNameFieldValidator,
     );
   }
 
@@ -92,7 +106,7 @@ class ValidationModule extends AbstractModule {
         ),
         LengthValidationRule(),
       ]),
-      key: emailFieldValidator,
+      key: _emailFieldValidator,
     );
   }
 
@@ -109,7 +123,24 @@ class ValidationModule extends AbstractModule {
           max: ValidationConstants.passwordMaxLength,
         ),
       ]),
-      key: passwordFieldValidator,
+      key: _passwordFieldValidator,
+    );
+  }
+
+  void _injectPasswordRequiredFieldValidator(Injector injector) {
+    injector.map(
+      (i) => FieldValidator(InputFieldType.password, [
+        EmptyValidationRule(
+          error: SdStrings.fieldErrorWrongPassword,
+        ),
+        LengthValidationRule(
+          minError: SdStrings.fieldErrorMinLengthPassword,
+          maxError: SdStrings.fieldErrorMaxLengthPassword,
+          min: ValidationConstants.passwordRequiredMinLength,
+          max: ValidationConstants.passwordMaxLength,
+        ),
+      ]),
+      key: editProfileFormValidator,
     );
   }
 }

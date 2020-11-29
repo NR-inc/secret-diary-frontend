@@ -28,6 +28,7 @@ class SdStrings {
   static const String userPostUpdateSuccessMsg = 'Your profile has been updated';
   static const String passwordRequiredTitleMsg = 'Password required';
   static const String passwordRequiredDescriptionMsg = 'Please enter your password';
+  static const String resetMyPasswordMsg = 'Reset my password';
 
   /// ERRORS
   static const String fieldErrorMaxLength =
@@ -50,5 +51,6 @@ class SdStrings {
   static const String fieldErrorMaxLengthPassword =
       "Password should not contain more than ${ValidationConstants.passwordMaxLength} characters";
   static const String fieldErrorPatternPassword = "Invalid password";
+  static const String fieldErrorWrongPassword = "Wrong password";
 
 }

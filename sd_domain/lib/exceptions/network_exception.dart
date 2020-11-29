@@ -26,6 +26,15 @@ class NetworkException implements Exception {
     }
     return ResponseStatusType.NONE;
   }
+
+  @override
+  String toString() {
+    return '${this.runtimeType}:\n'
+        'message: $message,\n'
+        'description: $description,\n'
+        'responseStatusType: $responseStatusType,\n'
+        '';
+  }
 }
 
 enum ResponseStatusType {

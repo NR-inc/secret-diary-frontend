@@ -40,7 +40,10 @@ class InteractorModule extends AbstractModule {
           i.get(key: ValidationModule.remindPasswordFormValidator)),
     );
 
-    injector.map((i) => UserInteractor(i.get()));
+    injector.map((i) => UserInteractor(
+          i.get(),
+          i.get(key: ValidationModule.editProfileFormValidator),
+        ));
 
     injector.map(
       (i) => PostsInteractor(

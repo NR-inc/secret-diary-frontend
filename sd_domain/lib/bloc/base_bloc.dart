@@ -28,7 +28,7 @@ abstract class BaseBloc {
 
   @protected
   void handleError(error) {
-    logger.e('Error', error);
+    logger.e(error.toString());
     _errorResult.addError(error);
     showLoading(false);
   }

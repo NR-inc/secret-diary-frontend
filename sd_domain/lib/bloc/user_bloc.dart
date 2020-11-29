@@ -26,7 +26,7 @@ class UserBloc extends BaseBloc {
   })  : _userInteractor = userInteractor,
         _currentUserResult = currentUserResult,
         _passwordRequiredResult = passwordRequiredResult,
-        super(logger: null);
+        super(logger: logger);
 
   void profile() async {
     showLoading(true);

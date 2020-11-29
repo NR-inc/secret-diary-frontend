@@ -25,4 +25,6 @@ class FirestoreKeys {
 
   /// FIREBASE ERROR CODES
   static const requiresResentLoginError = 'requires-recent-login';
+  static const wrongPasswordError = 'wrong-password';
+  static const toManyRequestsError = 'too-many-requests';
 }

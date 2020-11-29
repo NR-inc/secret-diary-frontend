@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:common_ui/common_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/bloc/user_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
+import 'package:sddomain/exceptions/network_exception.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -20,6 +22,8 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordErrorNotifier = ValueNotifier<String>(null);
+  final _passwordRequiredLoadingProgress = ValueNotifier<bool>(false);
+  var _isPasswordRequired = false;
   File _avatarFile;
 
   @override
@@ -30,19 +34,31 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
       _lastNameController.text = currentUser.lastName;
       _emailController.text = currentUser.email;
     });
+    _userBloc.loadingProgressStream.listen(
+      (value) => _passwordRequiredLoadingProgress.value = value,
+    );
     _userBloc.passwordRequiredResult.listen((isPasswordRequired) {
+      _isPasswordRequired = isPasswordRequired;
       showPasswordRequiredDialog(
           context: context,
           passwordController: _passwordController,
           passwordErrorNotifier: _passwordErrorNotifier,
+          loadingProgress: _passwordRequiredLoadingProgress,
           submitCallback: (password) {
-            Navigator.pop(context);
             _updateProfileAction(
               password: password,
             );
           });
     });
-    _userBloc.errorStream.handleError(handleError);
+    _userBloc.errorStream.listen((_) {}, onError: (ex) {
+      _passwordRequiredLoadingProgress.value = false;
+      if (ex is NetworkException &&
+          ex.description == FirestoreKeys.wrongPasswordError) {
+        _passwordErrorNotifier.value = SdStrings.fieldErrorWrongPassword;
+      } else {
+        handleError(ex);
+      }
+    });
     super.initState();
   }
 
@@ -89,12 +105,30 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
                   controller: _emailController,
                   hint: SdStrings.firstNameHint,
                 ),
+                SizedBox(height: Dimens.unit2),
+                FlatButton(
+                  onPressed: () {
+                    _resetPasswordAction();
+                  },
+                  child: Text(
+                    SdStrings.resetMyPasswordMsg,
+                    style: TextStyle(
+                      fontSize: Dimens.fontSize16,
+                      fontWeight: FontWeight.bold,
+                      color: SdColors.secondaryColor,
+                    ),
+                  ),
+                ),
                 SizedBox(height: 24)
               ])),
               showLoader(show: snapshot.data),
             ]);
           },
         ));
+  }
+
+  void _resetPasswordAction(){
+
   }
 
   Future<void> _updateProfileAction({String password}) async {
@@ -109,6 +143,9 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
       showToast(message: SdStrings.userPostUpdateSuccessMsg);
       Future.delayed(Duration(seconds: 1)).then(
         (value) {
+          if (_isPasswordRequired) {
+            Navigator.pop(context);
+          }
           Navigator.pop(context);
         },
       );
