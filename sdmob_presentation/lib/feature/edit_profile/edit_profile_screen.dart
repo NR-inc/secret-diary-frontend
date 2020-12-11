@@ -7,6 +7,7 @@ import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/bloc/user_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/exceptions/network_exception.dart';
+import 'package:sddomain/export/domain.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -55,6 +56,8 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
       if (ex is NetworkException &&
           ex.description == FirestoreKeys.wrongPasswordError) {
         _passwordErrorNotifier.value = SdStrings.fieldErrorWrongPassword;
+      } else if (ex is ValidationException && ex.validationErrors.containsKey(InputFieldType.password)) {
+        _passwordErrorNotifier.value = ex.validationErrors[InputFieldType.password];
       } else {
         handleError(ex);
       }
@@ -86,50 +89,65 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
           initialData: true,
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return Stack(children: <Widget>[
-              Center(
-                  child: Column(children: <Widget>[
-                SizedBox(height: 24),
-                Icon(Icons.account_circle, color: Colors.grey, size: 80),
-                SizedBox(height: 24),
-                inputField(
-                  controller: _firstNameController,
-                  hint: SdStrings.firstNameHint,
-                ),
-                SizedBox(height: 8),
-                inputField(
-                  controller: _lastNameController,
-                  hint: SdStrings.firstNameHint,
-                ),
-                SizedBox(height: 8),
-                inputField(
-                  controller: _emailController,
-                  hint: SdStrings.firstNameHint,
-                ),
-                SizedBox(height: Dimens.unit2),
-                FlatButton(
-                  onPressed: () {
-                    _resetPasswordAction();
-                  },
-                  child: Text(
-                    SdStrings.resetMyPasswordMsg,
-                    style: TextStyle(
-                      fontSize: Dimens.fontSize16,
-                      fontWeight: FontWeight.bold,
-                      color: SdColors.secondaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24)
-              ])),
+              _content,
               showLoader(show: snapshot.data),
             ]);
           },
         ));
   }
 
-  void _resetPasswordAction(){
+  Widget get _content => StreamBuilder<bool>(
+      stream: _userBloc.editProfileResultStream,
+      initialData: true,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        Map<InputFieldType, String> validationErrors = snapshot.hasError &&
+                snapshot.error?.runtimeType == ValidationException
+            ? (snapshot.error as ValidationException).validationErrors
+            : {};
+        return Center(
+            child: Column(children: <Widget>[
+          SizedBox(height: 24),
+          Icon(Icons.account_circle, color: Colors.grey, size: 80),
+          SizedBox(height: 24),
+          inputField(
+            errorFieldKey: Key(Locators.firstNameErrorLocator),
+            controller: _firstNameController,
+            hint: SdStrings.firstNameHint,
+            error: validationErrors[InputFieldType.firstName],
+          ),
+          SizedBox(height: 8),
+          inputField(
+            errorFieldKey: Key(Locators.lastNameErrorLocator),
+            controller: _lastNameController,
+            hint: SdStrings.firstNameHint,
+            error: validationErrors[InputFieldType.lastName],
+          ),
+          SizedBox(height: 8),
+          inputField(
+            errorFieldKey: Key(Locators.emailErrorLocator),
+            controller: _emailController,
+            hint: SdStrings.firstNameHint,
+            error: validationErrors[InputFieldType.email],
+          ),
+          SizedBox(height: Dimens.unit2),
+          FlatButton(
+            onPressed: () {
+              _resetPasswordAction();
+            },
+            child: Text(
+              SdStrings.resetMyPasswordMsg,
+              style: TextStyle(
+                fontSize: Dimens.fontSize16,
+                fontWeight: FontWeight.bold,
+                color: SdColors.secondaryColor,
+              ),
+            ),
+          ),
+          SizedBox(height: 24)
+        ]));
+      });
 
-  }
+  void _resetPasswordAction() {}
 
   Future<void> _updateProfileAction({String password}) async {
     final result = await _userBloc.updateProfile(

@@ -63,6 +63,7 @@ class BlocModule extends AbstractModule {
           userInteractor: i.get(),
           currentUserResult: PublishSubject(),
           passwordRequiredResult: PublishSubject(),
+          editProfileResult: PublishSubject(),
         ));
 
     injector.map((i) => PostsBloc(

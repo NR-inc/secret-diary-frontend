@@ -12,9 +12,12 @@ import 'package:sddomain/model/user_model.dart';
 class UserBloc extends BaseBloc {
   final UserInteractor _userInteractor;
   final PublishSubject<UserModel> _currentUserResult;
+  final PublishSubject<bool> _editProfileResult;
   final PublishSubject<bool> _passwordRequiredResult;
 
   Stream<UserModel> get currentUserStream => _currentUserResult.stream;
+
+  Stream<bool> get editProfileResultStream => _editProfileResult.stream;
 
   Stream<bool> get passwordRequiredResult => _passwordRequiredResult.stream;
 
@@ -23,9 +26,11 @@ class UserBloc extends BaseBloc {
     @required UserInteractor userInteractor,
     @required PublishSubject<UserModel> currentUserResult,
     @required PublishSubject<bool> passwordRequiredResult,
+    @required PublishSubject<bool> editProfileResult,
   })  : _userInteractor = userInteractor,
         _currentUserResult = currentUserResult,
         _passwordRequiredResult = passwordRequiredResult,
+        _editProfileResult = editProfileResult,
         super(logger: logger);
 
   void profile() async {
@@ -53,11 +58,13 @@ class UserBloc extends BaseBloc {
       lastName: lastName,
       email: email,
       password: password,
+      validatePassword: password != null,
       avatar: avatar,
     )
         .then(
       (isProfileUpdated) {
         showLoading(false);
+        _editProfileResult.add(isProfileUpdated);
         return isProfileUpdated;
       },
       onError: (e) {
@@ -66,6 +73,7 @@ class UserBloc extends BaseBloc {
           _passwordRequiredResult.add(true);
           showLoading(false);
         } else {
+          _editProfileResult.addError(e);
           handleError(e);
         }
       },

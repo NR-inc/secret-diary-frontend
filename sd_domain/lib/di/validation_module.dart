@@ -140,7 +140,7 @@ class ValidationModule extends AbstractModule {
           max: ValidationConstants.passwordMaxLength,
         ),
       ]),
-      key: editProfileFormValidator,
+      key: _passwordRequiredFieldValidator,
     );
   }
 }

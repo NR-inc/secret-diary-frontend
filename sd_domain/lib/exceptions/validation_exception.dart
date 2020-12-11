@@ -6,4 +6,12 @@ class ValidationException implements Exception {
 
   ValidationException(
       {this.validationErrors = const {}, this.message = 'Validation error'});
+
+  @override
+  String toString() {
+    return ''
+        'message: $message, \n'
+        'validationErrors: $validationErrors, \n'
+        '';
+  }
 }

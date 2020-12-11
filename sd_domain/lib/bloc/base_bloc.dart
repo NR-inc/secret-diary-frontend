@@ -8,7 +8,7 @@ abstract class BaseBloc {
   @protected
   final _loadingProgressResult = BehaviorSubject<bool>.seeded(false);
   @protected
-  final _errorResult = PublishSubject<bool>();
+  final _errorResult = BehaviorSubject<bool>.seeded(false);
   @protected
   final Logger logger;
 

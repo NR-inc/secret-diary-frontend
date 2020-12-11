@@ -19,16 +19,26 @@ class UserInteractor {
     String lastName,
     String email,
     String password,
+    bool validatePassword,
     File avatar,
-  }) =>
-  _editProfileFormValidator.validateForm({});
-      _userRepository.updateProfile(
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-        avatar: avatar,
-      );
+  }) async {
+    final fieldsMap = {
+      InputFieldType.firstName: firstName,
+      InputFieldType.lastName: lastName,
+      InputFieldType.email: email,
+    };
+    if (validatePassword) {
+      fieldsMap.putIfAbsent(InputFieldType.password, () => password);
+    }
+    await _editProfileFormValidator.validateForm(fieldsMap);
+    return _userRepository.updateProfile(
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      avatar: avatar,
+    );
+  }
 
   Future<UserModel> getUserById(String uid) async =>
       _userRepository.getUserById(uid);
