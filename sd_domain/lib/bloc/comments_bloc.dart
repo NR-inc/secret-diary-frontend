@@ -14,7 +14,7 @@ class CommentsBloc extends BaseBloc {
     required BehaviorSubject<List<CommentModel>> commentsResult,
     required BehaviorSubject<int> commentsCounter,
     required CommentsInteractor interactor,
-  })  : _commentsResult = commentsResult,
+  })   : _commentsResult = commentsResult,
         _interactor = interactor,
         _commentsCounter = commentsCounter,
         super(logger: logger);
@@ -50,7 +50,10 @@ class CommentsBloc extends BaseBloc {
         logger.i('comments length: ${comments.length}');
         logger.i('comments: $comments');
         _isCommentsLoaded = (comments.length) < limit;
-        List<CommentModel> loadedPosts = await _commentsResult.first;
+        List<CommentModel> loadedPosts = List.from(
+          await _commentsResult.first,
+          growable: true,
+        );
         _commentsResult.add(loadedPosts..addAll(comments));
         showLoading(false);
       },

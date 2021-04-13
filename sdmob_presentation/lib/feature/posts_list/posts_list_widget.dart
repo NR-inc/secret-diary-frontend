@@ -51,6 +51,7 @@ class _PostsListState extends BaseState<PostsListWidget> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _postsBloc.postsStream,
+      initialData: List<PostModel>.empty(),
       builder: (
         BuildContext context,
         AsyncSnapshot<List<PostModel>> snapshot,

@@ -48,11 +48,11 @@ void show2OptionsDialog({
   required String title,
   required String description,
   required String option1ButtonName,
-  Function? option1ButtonCallback,
+  VoidCallback? option1ButtonCallback,
   TextStyle option1ButtonTextStyle =
       const TextStyle(color: SdColors.secondaryColor),
   required String option2ButtonName,
-  Function? option2ButtonCallback,
+  VoidCallback? option2ButtonCallback,
   TextStyle option2ButtonTextStyle =
       const TextStyle(color: SdColors.secondaryColor),
 }) {
@@ -63,7 +63,7 @@ void show2OptionsDialog({
         style: option1ButtonTextStyle,
       ),
       onPressed: option1ButtonCallback != null
-          ? () => option1ButtonCallback
+          ? option1ButtonCallback
           : () => Navigator.of(context).pop(),
     ),
     TextButton(
@@ -72,7 +72,7 @@ void show2OptionsDialog({
         style: option2ButtonTextStyle,
       ),
       onPressed: option2ButtonCallback != null
-          ? () => option2ButtonCallback
+          ? option2ButtonCallback
           : () => Navigator.of(context).pop(),
     ),
   ];

@@ -17,7 +17,7 @@ class PostsBloc extends BaseBloc {
     required BehaviorSubject<List<PostModel>> postsResult,
     required PublishSubject<bool> postCreationResult,
     required PublishSubject<PostModel> postDetailsResult,
-  })  : _postsInteractor = postsInteractor,
+  })   : _postsInteractor = postsInteractor,
         _postsResult = postsResult,
         _postDetailsResult = postDetailsResult,
         _postCreationResult = postCreationResult,
@@ -94,8 +94,13 @@ class PostsBloc extends BaseBloc {
         .then(
       (List<PostModel> posts) async {
         _postsIsLoaded = posts.length < limit;
-        List<PostModel> loadedPosts = await _postsResult.first;
-        _postsResult.add(loadedPosts..addAll(posts));
+        List<PostModel> loadedPosts = List.from(
+          await _postsResult.first,
+          growable: true,
+        );
+        _postsResult.add(
+          loadedPosts..addAll(posts),
+        );
         showLoading(false);
       },
       onError: handleError,
@@ -136,7 +141,10 @@ class PostsBloc extends BaseBloc {
         .then(
       (List<PostModel> posts) async {
         _postsIsLoaded = (posts.length) < limit;
-        List<PostModel> loadedPosts = await _postsResult.first;
+        List<PostModel> loadedPosts = List.from(
+          await _postsResult.first,
+          growable: true,
+        );
         _postsResult.add(loadedPosts..addAll(posts));
         showLoading(false);
       },
