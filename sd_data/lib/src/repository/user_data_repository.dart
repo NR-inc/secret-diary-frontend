@@ -4,19 +4,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/core/error_handler.dart';
 import 'package:sddomain/export/domain.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UserDataRepository implements UserRepository {
   final ErrorHandler _errorHandler;
   final FirebaseFirestore _firestore;
   final FirebaseAuth _firebaseAuth;
+  final FirebaseStorage _firebaseStorage;
 
   UserDataRepository({
     required ErrorHandler errorHandler,
     required FirebaseFirestore firestore,
     required FirebaseAuth firebaseAuth,
-  })  : _errorHandler = errorHandler,
+    required FirebaseStorage firebaseStorage,
+  })   : _errorHandler = errorHandler,
         _firestore = firestore,
-        _firebaseAuth = firebaseAuth;
+        _firebaseAuth = firebaseAuth,
+        _firebaseStorage = firebaseStorage;
 
   @override
   Future<UserModel> profile() async {
@@ -60,6 +64,11 @@ class UserDataRepository implements UserRepository {
           .collection(FirestoreKeys.usersCollectionKey)
           .doc(currentUser!.uid)
           .delete();
+
+      await _firebaseStorage
+          .ref(FirestoreKeys.generateAvatarPath(currentUser.uid))
+          .delete();
+
       await currentUser.delete();
     } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
@@ -73,11 +82,12 @@ class UserDataRepository implements UserRepository {
     String? email,
     String? password,
     File? avatar,
+    required bool cleanAvatar,
   }) async {
     try {
       final currentUser = _firebaseAuth.currentUser;
 
-      final userDataMap = <String, String>{};
+      final userDataMap = <String, String?>{};
       if (firstName != null) {
         userDataMap.putIfAbsent(
           FirestoreKeys.firstNameFieldKey,
@@ -106,8 +116,25 @@ class UserDataRepository implements UserRepository {
           () => email,
         );
       }
-      if (avatar != null) {
-        //todo
+
+      if (cleanAvatar) {
+        await _firebaseStorage
+            .ref(FirestoreKeys.generateAvatarPath(currentUser!.uid))
+            .delete();
+        userDataMap.putIfAbsent(
+          FirestoreKeys.avatarFieldKey,
+          () => null,
+        );
+      } else if (avatar != null) {
+        final avatarResult = await _firebaseStorage
+            .ref(FirestoreKeys.generateAvatarPath(currentUser!.uid))
+            .putFile(avatar);
+
+        final avatarUrl = await avatarResult.ref.getDownloadURL();
+        userDataMap.putIfAbsent(
+          FirestoreKeys.avatarFieldKey,
+          () => avatarUrl,
+        );
       }
 
       await _firestore

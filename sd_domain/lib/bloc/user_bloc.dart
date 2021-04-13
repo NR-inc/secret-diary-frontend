@@ -48,6 +48,7 @@ class UserBloc extends BaseBloc {
     required String email,
     String? password,
     File? avatar,
+    required bool cleanAvatar,
   }) async {
     showLoading(true);
     return _userInteractor
@@ -58,6 +59,7 @@ class UserBloc extends BaseBloc {
       password: password,
       validatePassword: password != null,
       avatar: avatar,
+      cleanAvatar: cleanAvatar,
     )
         .then(
       (isProfileUpdated) {

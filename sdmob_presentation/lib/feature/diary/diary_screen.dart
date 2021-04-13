@@ -51,7 +51,7 @@ class _DiaryState extends BaseState<DiaryScreen> {
               Center(
                   child: Column(children: <Widget>[
                 SizedBox(height: 24),
-                Icon(Icons.account_circle, color: Colors.grey, size: 80),
+                avatarWidget(currentUser.avatar),
                 SizedBox(height: 24),
                 Text(currentUser.firstName),
                 SizedBox(height: 8),
@@ -68,5 +68,18 @@ class _DiaryState extends BaseState<DiaryScreen> {
             ]);
           },
         ));
+  }
+
+  Widget avatarWidget(String url) {
+    return url.isNotEmpty
+        ? CircleAvatar(
+            radius: Dimens.avatarRadius,
+            backgroundImage: NetworkImage(url),
+          )
+        : Icon(
+            Icons.account_circle,
+            color: Colors.grey,
+            size: Dimens.avatarRadius * 2,
+          );
   }
 }

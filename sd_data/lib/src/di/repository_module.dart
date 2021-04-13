@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sd_data/sd_data.dart';
@@ -60,6 +61,7 @@ class RepositoryModule extends AbstractModule {
         errorHandler: i.get(),
         firebaseAuth: FirebaseAuth.instance,
         firestore: FirebaseFirestore.instance,
+        firebaseStorage: FirebaseStorage.instance,
       ),
       isSingleton: true,
     );

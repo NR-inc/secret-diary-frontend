@@ -19,6 +19,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileState extends BaseState<EditProfileScreen> {
   final _userBloc = Injector().get<UserBloc>();
 
+  UserModel _currentUser = UserModel.empty();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -26,6 +27,7 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
   final _passwordErrorNotifier = ValueNotifier<String?>(null);
   final _passwordRequiredLoadingProgress = ValueNotifier<bool>(false);
   final _avatarNotifier = ValueNotifier<File?>(null);
+  bool _cleanAvatar = false;
   final _imagePicker = ImagePicker();
   bool _isPasswordRequired = false;
 
@@ -33,6 +35,7 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
   void initState() {
     _userBloc.profile();
     _userBloc.currentUserStream.listen((currentUser) {
+      _currentUser = currentUser;
       _firstNameController.text = currentUser.firstName;
       _lastNameController.text = currentUser.lastName;
       _emailController.text = currentUser.email;
@@ -112,27 +115,20 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
             child: Column(children: <Widget>[
           SizedBox(height: 24),
           GestureDetector(
-            child: ValueListenableBuilder(
-                valueListenable: _avatarNotifier,
-                builder: (context, File? avatarFile, widget) {
-                  return avatarFile == null
-                      ? Icon(
-                          Icons.account_circle,
-                          color: Colors.grey,
-                          size: Dimens.avatarRadius * 2,
-                        )
-                      : CircleAvatar(
-                          radius: Dimens.avatarRadius,
-                          backgroundImage: FileImage(avatarFile),
-                        );
-                }),
+            child: _avatarWidget(),
             onTap: () async {
               final pickedFile =
                   await _imagePicker.getImage(source: ImageSource.camera);
               _avatarNotifier.value = File(pickedFile!.path);
+              _cleanAvatar = false;
             },
             onLongPress: () {
-              _avatarNotifier.value = null;
+              _cleanAvatar = true;
+              if (_avatarNotifier.value == null) {
+                setState(() {});
+              } else {
+                _avatarNotifier.value = null;
+              }
             },
           ),
           SizedBox(height: 24),
@@ -157,7 +153,7 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
             error: validationErrors[InputFieldType.email],
           ),
           SizedBox(height: Dimens.unit2),
-          FlatButton(
+          TextButton(
             onPressed: () {
               _resetPasswordAction();
             },
@@ -174,6 +170,36 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
         ]));
       });
 
+  Widget _avatarWidget() {
+    return ValueListenableBuilder(
+        valueListenable: _avatarNotifier,
+        builder: (context, File? avatarFile, widget) {
+          if (_cleanAvatar) {
+            return Icon(
+              Icons.account_circle,
+              color: Colors.grey,
+              size: Dimens.avatarRadius * 2,
+            );
+          } else if (avatarFile != null) {
+            return CircleAvatar(
+              radius: Dimens.avatarRadius,
+              backgroundImage: FileImage(avatarFile),
+            );
+          } else if (_currentUser.avatar.isNotEmpty) {
+            return CircleAvatar(
+              radius: Dimens.avatarRadius,
+              backgroundImage: NetworkImage(_currentUser.avatar),
+            );
+          } else {
+            return Icon(
+              Icons.account_circle,
+              color: Colors.grey,
+              size: Dimens.avatarRadius * 2,
+            );
+          }
+        });
+  }
+
   void _resetPasswordAction() {}
 
   Future<void> _updateProfileAction({
@@ -185,6 +211,7 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
       email: _emailController.text,
       password: password,
       avatar: _avatarNotifier.value,
+      cleanAvatar: _cleanAvatar,
     );
     if (result == true) {
       showToast(message: SdStrings.userPostUpdateSuccessMsg);

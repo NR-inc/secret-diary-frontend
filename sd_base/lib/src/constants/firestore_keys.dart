@@ -27,4 +27,9 @@ class FirestoreKeys {
   static const requiresResentLoginError = 'requires-recent-login';
   static const wrongPasswordError = 'wrong-password';
   static const toManyRequestsError = 'too-many-requests';
+
+  /// STORAGE
+  static String generateAvatarPath(String uid) {
+    return 'avatar/avatar_$uid.png';
+  }
 }

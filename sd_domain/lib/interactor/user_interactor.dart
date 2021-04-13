@@ -21,6 +21,7 @@ class UserInteractor {
     String? password,
     required bool validatePassword,
     File? avatar,
+    required bool cleanAvatar,
   }) async {
     final fieldsMap = <InputFieldType, String?>{
       InputFieldType.firstName: firstName,
@@ -37,6 +38,7 @@ class UserInteractor {
       email: email,
       password: password,
       avatar: avatar,
+      cleanAvatar: cleanAvatar,
     );
   }
 

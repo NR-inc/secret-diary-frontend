@@ -17,5 +17,6 @@ abstract class UserRepository {
     String email,
     String? password,
     File? avatar,
+    required bool cleanAvatar,
   });
 }
