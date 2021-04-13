@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:common_ui/common_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sd_base/sd_base.dart';
 import 'package:sddomain/bloc/user_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
@@ -16,16 +17,17 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileState extends BaseState<EditProfileScreen> {
-  final _userBloc = Injector.getInjector().get<UserBloc>();
+  final _userBloc = Injector().get<UserBloc>();
 
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _passwordErrorNotifier = ValueNotifier<String>(null);
+  final _passwordErrorNotifier = ValueNotifier<String?>(null);
   final _passwordRequiredLoadingProgress = ValueNotifier<bool>(false);
-  var _isPasswordRequired = false;
-  File _avatarFile;
+  final _avatarNotifier = ValueNotifier<File?>(null);
+  final _imagePicker = ImagePicker();
+  bool _isPasswordRequired = false;
 
   @override
   void initState() {
@@ -56,8 +58,10 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
       if (ex is NetworkException &&
           ex.description == FirestoreKeys.wrongPasswordError) {
         _passwordErrorNotifier.value = SdStrings.fieldErrorWrongPassword;
-      } else if (ex is ValidationException && ex.validationErrors.containsKey(InputFieldType.password)) {
-        _passwordErrorNotifier.value = ex.validationErrors[InputFieldType.password];
+      } else if (ex is ValidationException &&
+          ex.validationErrors.containsKey(InputFieldType.password)) {
+        _passwordErrorNotifier.value =
+            ex.validationErrors[InputFieldType.password];
       } else {
         handleError(ex);
       }
@@ -90,7 +94,7 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return Stack(children: <Widget>[
               _content,
-              showLoader(show: snapshot.data),
+              showLoader(show: (snapshot.data)!),
             ]);
           },
         ));
@@ -107,7 +111,30 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
         return Center(
             child: Column(children: <Widget>[
           SizedBox(height: 24),
-          Icon(Icons.account_circle, color: Colors.grey, size: 80),
+          GestureDetector(
+            child: ValueListenableBuilder(
+                valueListenable: _avatarNotifier,
+                builder: (context, File? avatarFile, widget) {
+                  return avatarFile == null
+                      ? Icon(
+                          Icons.account_circle,
+                          color: Colors.grey,
+                          size: Dimens.avatarRadius * 2,
+                        )
+                      : CircleAvatar(
+                          radius: Dimens.avatarRadius,
+                          backgroundImage: FileImage(avatarFile),
+                        );
+                }),
+            onTap: () async {
+              final pickedFile =
+                  await _imagePicker.getImage(source: ImageSource.camera);
+              _avatarNotifier.value = File(pickedFile!.path);
+            },
+            onLongPress: () {
+              _avatarNotifier.value = null;
+            },
+          ),
           SizedBox(height: 24),
           inputField(
             errorFieldKey: Key(Locators.firstNameErrorLocator),
@@ -149,13 +176,15 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
 
   void _resetPasswordAction() {}
 
-  Future<void> _updateProfileAction({String password}) async {
+  Future<void> _updateProfileAction({
+    String? password,
+  }) async {
     final result = await _userBloc.updateProfile(
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
       email: _emailController.text,
       password: password,
-      avatar: _avatarFile,
+      avatar: _avatarNotifier.value,
     );
     if (result == true) {
       showToast(message: SdStrings.userPostUpdateSuccessMsg);

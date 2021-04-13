@@ -7,12 +7,12 @@ class FormValidator {
 
   FormValidator(this._fieldValidators);
 
-  Future<void> validateForm(Map<InputFieldType, String> formFields) async {
+  Future<void> validateForm(Map<InputFieldType, String?> formFields) async {
     Map<InputFieldType, String> validationErrors = {};
 
     for (InputFieldType key in formFields.keys) {
-      String value = formFields[key];
-      final invalidField = await _fieldValidators[key].validate(value);
+      String? value = formFields[key];
+      final invalidField = await _fieldValidators[key]?.validate(value);
 
       if (invalidField != null) {
         validationErrors.putIfAbsent(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
@@ -13,11 +12,11 @@ class PostsBloc extends BaseBloc {
   var _postsIsLoaded = false;
 
   PostsBloc({
-    Logger logger,
-    PostsInteractor postsInteractor,
-    BehaviorSubject<List<PostModel>> postsResult,
-    PublishSubject<bool> postCreationResult,
-    PublishSubject<PostModel> postDetailsResult,
+    required Logger logger,
+    required PostsInteractor postsInteractor,
+    required BehaviorSubject<List<PostModel>> postsResult,
+    required PublishSubject<bool> postCreationResult,
+    required PublishSubject<PostModel> postDetailsResult,
   })  : _postsInteractor = postsInteractor,
         _postsResult = postsResult,
         _postDetailsResult = postDetailsResult,
@@ -34,7 +33,7 @@ class PostsBloc extends BaseBloc {
     String title,
     String description,
     bool visibilityFlag, [
-    List<String> categoriesIds,
+    List<String>? categoriesIds,
   ]) {
     showLoading(true);
     _postsInteractor
@@ -53,7 +52,7 @@ class PostsBloc extends BaseBloc {
     );
   }
 
-  Future<PostModel> getPost({String postId}) {
+  Future<PostModel> getPost({required String postId}) {
     showLoading(true);
     return _postsInteractor.getPost(id: postId).then(
       (PostModel postModel) {
@@ -67,14 +66,14 @@ class PostsBloc extends BaseBloc {
   }
 
   void loadPostsForUser({
-    @required String userUid,
+    required String userUid,
     int limit = DomainConstants.limit,
   }) async {
     if (isLoading || _postsIsLoaded) {
       return;
     }
 
-    if (userUid == null || userUid.isEmpty) {
+    if (userUid.isEmpty) {
       return;
     }
 
@@ -82,7 +81,7 @@ class PostsBloc extends BaseBloc {
 
     List<PostModel> loadedPosts = await _postsResult.first;
     var lastPostId;
-    if (loadedPosts != null && loadedPosts.isNotEmpty) {
+    if (loadedPosts.isNotEmpty) {
       lastPostId = loadedPosts.last.id;
     }
 
@@ -104,10 +103,10 @@ class PostsBloc extends BaseBloc {
   }
 
   void loadPostsForFeed({
-    @required bool initialLoad,
-    String searchQuery,
+    required bool initialLoad,
+    String? searchQuery,
     FeedSortType feedSortType = FeedSortType.byDate,
-    List<PostCategoryModel> postCategories,
+    List<PostCategoryModel>? postCategories,
     int limit = DomainConstants.limit,
   }) async {
     if (isLoading || _postsIsLoaded) {
@@ -123,7 +122,7 @@ class PostsBloc extends BaseBloc {
       return;
     }
 
-    if (loadedPosts != null && loadedPosts.isNotEmpty) {
+    if (loadedPosts.isNotEmpty) {
       lastPostId = loadedPosts.last.id;
     }
 
@@ -136,7 +135,7 @@ class PostsBloc extends BaseBloc {
     )
         .then(
       (List<PostModel> posts) async {
-        _postsIsLoaded = (posts?.length ?? 0) < limit;
+        _postsIsLoaded = (posts.length) < limit;
         List<PostModel> loadedPosts = await _postsResult.first;
         _postsResult.add(loadedPosts..addAll(posts));
         showLoading(false);

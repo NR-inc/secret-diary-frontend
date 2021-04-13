@@ -10,9 +10,9 @@ class AuthDataRepository extends AuthRepository {
   final FirebaseAuth _firebaseAuth;
 
   AuthDataRepository({
-    ErrorHandler errorHandler,
-    FirebaseFirestore firestore,
-    FirebaseAuth firebaseAuth,
+    required ErrorHandler errorHandler,
+    required FirebaseFirestore firestore,
+    required FirebaseAuth firebaseAuth,
   })  : _errorHandler = errorHandler,
         _firestore = firestore,
         _firebaseAuth = firebaseAuth;
@@ -28,8 +28,8 @@ class AuthDataRepository extends AuthRepository {
         email: email,
         password: password,
       );
-      return userCredential.user.uid;
-    } on dynamic catch (ex) {
+      return userCredential.user!.uid;
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
@@ -49,14 +49,14 @@ class AuthDataRepository extends AuthRepository {
       );
       _firestore
           .collection(FirestoreKeys.usersCollectionKey)
-          .doc(userCredential.user.uid)
+          .doc(userCredential.user!.uid)
           .set({
         FirestoreKeys.emailFieldKey: email,
         FirestoreKeys.firstNameFieldKey: firstName,
         FirestoreKeys.lastNameFieldKey: lastName,
       });
-      return userCredential.user.uid;
-    } on dynamic catch (ex) {
+      return userCredential.user!.uid;
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
@@ -65,7 +65,7 @@ class AuthDataRepository extends AuthRepository {
   Future<void> remindPassword(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }

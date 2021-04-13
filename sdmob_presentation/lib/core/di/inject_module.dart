@@ -5,25 +5,24 @@ import 'package:sd_data/sd_data.dart';
 import 'package:sddomain/di/domain_module.dart';
 
 class InjectModule extends AbstractModule {
-  static InjectModule _injectModule;
+  static InjectModule? _injectModule;
   AppConfigs _appConfigs;
 
   factory InjectModule(AppConfigs appConfigs) {
     if (_injectModule == null) {
       _injectModule = InjectModule._internal(appConfigs);
-      return _injectModule;
+      return _injectModule!;
     }
-    return _injectModule;
+    return _injectModule!;
   }
 
-  InjectModule._internal(AppConfigs appConfigs) {
-    _appConfigs = appConfigs;
-    this.configure(Injector.getInjector());
+  InjectModule._internal(AppConfigs appConfigs) : _appConfigs = appConfigs {
+    this.configure(Injector());
   }
 
   @override
   void configure(Injector injector) {
-    Logger().i('Build type: ${_appConfigs?.buildType?.toString()}');
+    Logger().i('Build type: ${_appConfigs.buildType.toString()}');
 
     injector.map(
       (i) => _appConfigs,

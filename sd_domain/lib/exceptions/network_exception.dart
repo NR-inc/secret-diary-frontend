@@ -1,19 +1,20 @@
 class NetworkException implements Exception {
-  String message;
-  String description;
-  ResponseStatusType responseStatusType;
+  String? message;
+  String? description;
+  ResponseStatusType? responseStatusType;
 
-  NetworkException(
-      {this.message,
-      int statusCode,
-      this.description,
-      ResponseStatusType responseStatusType}) {
+  NetworkException({
+    this.message,
+    int? statusCode,
+    this.description,
+    ResponseStatusType? responseStatusType,
+  }) {
     this.responseStatusType = responseStatusType == null
         ? mapStatusCode(statusCode)
         : responseStatusType;
   }
 
-  ResponseStatusType mapStatusCode(int statusCode) {
+  ResponseStatusType mapStatusCode(int? statusCode) {
     switch (statusCode) {
       case 400:
         return ResponseStatusType.BAD_REQUEST;

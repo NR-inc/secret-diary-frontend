@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
@@ -11,10 +10,10 @@ class CommentsBloc extends BaseBloc {
   bool _isCommentsLoaded = false;
 
   CommentsBloc({
-    @required Logger logger,
-    @required BehaviorSubject<List<CommentModel>> commentsResult,
-    @required BehaviorSubject<int> commentsCounter,
-    @required CommentsInteractor interactor,
+    required Logger logger,
+    required BehaviorSubject<List<CommentModel>> commentsResult,
+    required BehaviorSubject<int> commentsCounter,
+    required CommentsInteractor interactor,
   })  : _commentsResult = commentsResult,
         _interactor = interactor,
         _commentsCounter = commentsCounter,
@@ -25,7 +24,7 @@ class CommentsBloc extends BaseBloc {
   Stream<int> get countOfCommentsStream => _commentsCounter.stream;
 
   void loadComments({
-    @required String postId,
+    required String postId,
     int limit = DomainConstants.limit,
   }) async {
     if (isLoading || _isCommentsLoaded) {
@@ -36,7 +35,7 @@ class CommentsBloc extends BaseBloc {
 
     List<CommentModel> loadedComments = await _commentsResult.first;
     var lastCommentId;
-    if (loadedComments != null && loadedComments.isNotEmpty) {
+    if (loadedComments.isNotEmpty) {
       lastCommentId = loadedComments.last.id;
     }
 
@@ -48,9 +47,9 @@ class CommentsBloc extends BaseBloc {
     )
         .then(
       (List<CommentModel> comments) async {
-        logger.i('comments length: ${comments?.length ?? 0}');
+        logger.i('comments length: ${comments.length}');
         logger.i('comments: $comments');
-        _isCommentsLoaded = (comments?.length ?? 0) < limit;
+        _isCommentsLoaded = (comments.length) < limit;
         List<CommentModel> loadedPosts = await _commentsResult.first;
         _commentsResult.add(loadedPosts..addAll(comments));
         showLoading(false);
@@ -60,7 +59,7 @@ class CommentsBloc extends BaseBloc {
   }
 
   void removeComment({
-    @required String commentId,
+    required String commentId,
   }) async {
     _interactor.removeComment(commentId: commentId).then(
       (isCommentRemoved) async {
@@ -78,13 +77,13 @@ class CommentsBloc extends BaseBloc {
   }
 
   void updateComment({
-    @required CommentModel commentModel,
+    required CommentModel commentModel,
   }) =>
       _interactor.updateComment(commentModel: commentModel);
 
   void addComment({
-    @required String message,
-    @required String postId,
+    required String message,
+    required String postId,
   }) async {
     if (message.trim().isEmpty) {
       return;
@@ -111,7 +110,7 @@ class CommentsBloc extends BaseBloc {
   }
 
   void getCountOfComments({
-    @required String postId,
+    required String postId,
   }) {
     _interactor.getCountOfComments(postId: postId).then(
       (count) {

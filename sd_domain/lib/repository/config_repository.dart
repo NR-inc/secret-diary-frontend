@@ -5,5 +5,5 @@ abstract class ConfigRepository {
 
   Future<void> clearUserUid();
 
-  Future<String> getUserUid();
+  Future<String?> getUserUid();
 }

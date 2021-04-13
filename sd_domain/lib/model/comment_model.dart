@@ -8,12 +8,12 @@ class CommentModel {
   final String authorId;
   final String postId;
   final String message;
-  final DateTime createdAt;
+  final DateTime? createdAt;
   final bool isOwner;
 
   CommentModel.fromJson({
-    @required String id,
-    Map<String, dynamic> data,
+    required String id,
+    required Map<String, dynamic> data,
   })  : this.id = id,
         authorId = data[FirestoreKeys.authorIdFieldKey] ?? '',
         postId = data[FirestoreKeys.postIdFieldKey] ?? '',

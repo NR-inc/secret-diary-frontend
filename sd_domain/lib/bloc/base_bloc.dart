@@ -13,7 +13,7 @@ abstract class BaseBloc {
   final Logger logger;
 
   BaseBloc({
-   @required Logger logger,
+   required Logger logger,
   }) : this.logger = logger;
 
   Stream<bool> get loadingProgressStream => _loadingProgressResult.stream;

@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 Widget inputField({
-  Key inputFieldKey,
-  Key errorFieldKey,
-  @required TextEditingController controller,
-  @required String hint,
+  Key? inputFieldKey,
+  Key? errorFieldKey,
+  required TextEditingController controller,
+  required String hint,
   TextInputType keyboardType = TextInputType.text,
   textInputAction: TextInputAction.done,
   bool obscureText = false,
   bool showClearButton = false,
-  String error,
-  String prefixIconAsset,
+  String? error,
+  String? prefixIconAsset,
 }) {
   return Container(
     child: Column(
@@ -61,7 +61,7 @@ Widget inputField({
           Visibility(
             child: Text(
               error ?? SdStrings.empty,
-              key: errorFieldKey ?? UniqueKey(),
+              key: errorFieldKey,
               style: TextStyle(
                 color: SdColors.errorColor,
                 fontSize: Dimens.fontSize12,
@@ -77,7 +77,7 @@ Widget inputField({
   );
 }
 
-Widget _getPrefixIcon(String prefixIconAsset) {
+Widget? _getPrefixIcon(String? prefixIconAsset) {
   if (prefixIconAsset == null) {
     return null;
   }
@@ -91,10 +91,10 @@ Widget _getPrefixIcon(String prefixIconAsset) {
 }
 
 Widget searchField({
-  @required String key,
-  @required TextEditingController controller,
-  String hint,
-  Function(String) onFieldSubmitted,
+  required String key,
+  required TextEditingController controller,
+  String? hint,
+  Function(String)? onFieldSubmitted,
 }) {
   return TextFormField(
     key: Key(key),

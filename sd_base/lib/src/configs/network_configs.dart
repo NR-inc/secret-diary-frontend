@@ -2,11 +2,11 @@ import 'package:sd_base/src/configs/build_type.dart';
 
 class NetworkConfigs {
   final String baseUrl;
-  final int port;
+  final int? port;
   final int connectionTimeout;
 
   NetworkConfigs.init({
-    this.baseUrl,
+    required this.baseUrl,
     this.port,
     this.connectionTimeout = 30000,
   });

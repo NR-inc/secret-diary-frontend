@@ -8,12 +8,12 @@ import 'package:sddomain/model/default_response.dart';
 class RegistrationBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
   final PublishSubject<DefaultResponse> registrationResult;
-  StreamSubscription registrationSubscription;
+  StreamSubscription? registrationSubscription;
 
   RegistrationBloc({
-    Logger logger,
-    AuthInteractor authInteractor,
-    PublishSubject<DefaultResponse> registrationResult,
+    required Logger logger,
+    required AuthInteractor authInteractor,
+    required PublishSubject<DefaultResponse> registrationResult,
   })  : _authInteractor = authInteractor,
         this.registrationResult = registrationResult,
         super(logger: logger);

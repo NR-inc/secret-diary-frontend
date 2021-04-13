@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 Widget showLoader({
-  @required bool show,
-  Color background,
+  required bool show,
+  Color? background,
 }) =>
     Visibility(
         visible: show,

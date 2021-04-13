@@ -10,10 +10,10 @@ class FieldValidator {
     this._validationRules,
   );
 
-  Future<InvalidField> validate(String value) async {
-    InvalidField invalidField;
+  Future<InvalidField?> validate(String? value) async {
+    InvalidField? invalidField;
     for (ValidationRule validationRule in _validationRules) {
-      String result = validationRule.isValid(value);
+      String? result = validationRule.isValid(value);
       if (result != null) {
         invalidField = InvalidField(_inputFieldType, result);
         break;

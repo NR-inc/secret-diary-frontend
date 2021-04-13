@@ -24,13 +24,13 @@ class BlocModule extends AbstractModule {
   void configure(Injector injector) {
     injector.map((i) => CommentsBloc(
           logger: i.get(),
-          commentsResult: BehaviorSubject.seeded(List()),
+          commentsResult: BehaviorSubject.seeded(List.empty()),
           commentsCounter: BehaviorSubject.seeded(0),
           interactor: i.get(),
         ));
 
     injector.map((i) => LikesBloc(
-          likesResult: BehaviorSubject.seeded(List()),
+          likesResult: BehaviorSubject.seeded(List.empty()),
           isPostLikedResult: BehaviorSubject.seeded(false),
           logger: i.get(),
           interactor: i.get(),
@@ -69,7 +69,7 @@ class BlocModule extends AbstractModule {
     injector.map((i) => PostsBloc(
           logger: i.get(),
           postsInteractor: i.get(),
-          postsResult: BehaviorSubject.seeded(List()),
+          postsResult: BehaviorSubject.seeded(List.empty()),
           postCreationResult: PublishSubject(),
           postDetailsResult: PublishSubject(),
         ));

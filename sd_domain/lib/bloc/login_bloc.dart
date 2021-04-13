@@ -8,12 +8,12 @@ import 'package:sddomain/interactor/auth_interactor.dart';
 class LoginBloc extends BaseBloc {
   final AuthInteractor _authInteractor;
   final PublishSubject<DefaultResponse> loginSubject;
-  StreamSubscription loginSubscription;
+  StreamSubscription? loginSubscription;
 
   LoginBloc({
-    Logger logger,
-    AuthInteractor authInteractor,
-    PublishSubject<DefaultResponse> loginSubject,
+    required Logger logger,
+    required AuthInteractor authInteractor,
+    required PublishSubject<DefaultResponse> loginSubject,
   })  : _authInteractor = authInteractor,
         this.loginSubject = loginSubject,
         super(logger: logger);

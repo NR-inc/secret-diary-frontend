@@ -12,8 +12,8 @@ import 'package:ssecretdiary/feature/splash/splash_screen.dart';
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class ApplicationRouter {
-  Route call(RouteSettings settings) {
-    Route route;
+  Route? call(RouteSettings settings) {
+    Route? route;
     switch (settings.name) {
       case AppRoutes.splash:
         route = MaterialPageRoute(builder: (context) => SplashScreen());
@@ -51,7 +51,7 @@ class ApplicationRouter {
       case AppRoutes.postDetails:
         route = MaterialPageRoute(
           builder: (context) => PostDetailsScreen(
-            postId: settings.arguments,
+            postId: settings.arguments as String,
           ),
         );
         break;

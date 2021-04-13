@@ -1,14 +1,14 @@
 import 'dart:io';
-
 import 'package:common_ui/common_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void showSimpleErrorDialog(
-    {BuildContext context,
-    String title = 'Error has occurred',
-    String description = 'Something went wrong.',
-    String buttonName = 'OK'}) {
+void showSimpleErrorDialog({
+  required BuildContext context,
+  String title = 'Error has occurred',
+  String description = 'Something went wrong.',
+  String buttonName = 'OK',
+}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -17,7 +17,7 @@ void showSimpleErrorDialog(
           title: Text(title),
           content: Text(description),
           actions: <Widget>[
-            new FlatButton(
+            new TextButton(
               child: Text(buttonName, style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -30,7 +30,7 @@ void showSimpleErrorDialog(
           title: Text(title),
           content: Text(description),
           actions: <Widget>[
-            new FlatButton(
+            new TextButton(
               child: Text(buttonName),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -44,29 +44,29 @@ void showSimpleErrorDialog(
 }
 
 void show2OptionsDialog({
-  @required BuildContext context,
-  @required String title,
-  @required String description,
-  @required String option1ButtonName,
-  Function option1ButtonCallback,
+  required BuildContext context,
+  required String title,
+  required String description,
+  required String option1ButtonName,
+  Function? option1ButtonCallback,
   TextStyle option1ButtonTextStyle =
       const TextStyle(color: SdColors.secondaryColor),
-  @required String option2ButtonName,
-  Function option2ButtonCallback,
+  required String option2ButtonName,
+  Function? option2ButtonCallback,
   TextStyle option2ButtonTextStyle =
       const TextStyle(color: SdColors.secondaryColor),
 }) {
   final actions = [
-    FlatButton(
+    TextButton(
       child: Text(
         option1ButtonName,
         style: option1ButtonTextStyle,
       ),
       onPressed: option1ButtonCallback != null
-          ? option1ButtonCallback
+          ? () => option1ButtonCallback
           : () => Navigator.of(context).pop(),
     ),
-    FlatButton(
+    TextButton(
       child: Text(
         option2ButtonName,
         style: option2ButtonTextStyle,
@@ -97,18 +97,18 @@ void show2OptionsDialog({
 }
 
 void showPasswordRequiredDialog({
-  @required BuildContext context,
-  @required Function(String) submitCallback,
-  @required TextEditingController passwordController,
-  @required ValueNotifier<String> passwordErrorNotifier,
-  @required ValueNotifier<bool> loadingProgress,
+  required BuildContext context,
+  required Function(String) submitCallback,
+  required TextEditingController passwordController,
+  required ValueNotifier<String?> passwordErrorNotifier,
+  required ValueNotifier<bool> loadingProgress,
   TextStyle cancelButtonTextStyle =
       const TextStyle(color: SdColors.secondaryColor),
   TextStyle submitButtonTextStyle =
       const TextStyle(color: SdColors.secondaryColor),
 }) {
   final actions = [
-    FlatButton(
+    TextButton(
       child: Text(
         SdStrings.submitButton,
         style: submitButtonTextStyle,
@@ -117,13 +117,13 @@ void showPasswordRequiredDialog({
         submitCallback(passwordController.text);
       },
     ),
-    FlatButton(
+    TextButton(
       child: Text(
         SdStrings.cancelButton,
         style: cancelButtonTextStyle,
       ),
       onPressed: () {
-        passwordErrorNotifier.value = null;
+        passwordErrorNotifier.value = SdStrings.empty;
         passwordController.text = SdStrings.empty;
         Navigator.of(context).pop();
       },
@@ -132,7 +132,7 @@ void showPasswordRequiredDialog({
 
   final content = ValueListenableBuilder(
     valueListenable: loadingProgress,
-    builder: (context, value, child) {
+    builder: (context, bool value, child) {
       return Stack(children: [
         Container(
             width: MediaQuery.of(context).size.width - Dimens.unit4,
@@ -156,7 +156,11 @@ void showPasswordRequiredDialog({
                     SizedBox(height: Dimens.unit2),
                     ValueListenableBuilder(
                         valueListenable: passwordErrorNotifier,
-                        builder: (context, passwordError, widget) {
+                        builder: (
+                          BuildContext context,
+                          String? passwordError,
+                          widget,
+                        ) {
                           return inputField(
                             inputFieldKey: Key(Locators.passwordFieldLocator),
                             errorFieldKey: Key(Locators.passwordErrorLocator),

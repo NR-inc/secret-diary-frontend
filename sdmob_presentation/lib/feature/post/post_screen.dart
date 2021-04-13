@@ -11,7 +11,7 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostState extends BaseState<PostScreen> {
-  final PostsBloc _postsBloc = Injector.getInjector().get<PostsBloc>();
+  final PostsBloc _postsBloc = Injector().get<PostsBloc>();
 
   final _titleTextController = TextEditingController();
   final _descriptionTextController = TextEditingController();
@@ -41,7 +41,7 @@ class _PostState extends BaseState<PostScreen> {
               return Stack(children: <Widget>[
                 _content,
                 showLoader(
-                  show: loadingProgress.hasData && loadingProgress.data,
+                  show: loadingProgress.hasData && (loadingProgress.data)!,
                 )
               ]);
             },
@@ -67,10 +67,12 @@ class _PostState extends BaseState<PostScreen> {
           Text(SdStrings.postVisibilityFlagHint),
           ValueListenableBuilder(
             valueListenable: _checkValueNotifier,
-            builder: (context, value, child) => Checkbox(
+            builder: (context, bool value, child) => Checkbox(
               value: value,
               tristate: false,
-              onChanged: (bool value) => _checkValueNotifier.value = value,
+              onChanged: (bool? value) {
+                _checkValueNotifier.value = value ?? false;
+              },
             ),
           ),
         ]),

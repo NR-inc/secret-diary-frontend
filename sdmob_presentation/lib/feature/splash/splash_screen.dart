@@ -15,8 +15,8 @@ class SplashScreen extends StatefulWidget {
 
 class SplashState extends State<SplashScreen> {
   static const _splashScreenDelayInSec = 5;
-  final _splashBloc = Injector.getInjector().get<SplashBloc>();
-  final _appConfigs = Injector.getInjector().get<AppConfigs>();
+  final _splashBloc = Injector().get<SplashBloc>();
+  final _appConfigs = Injector().get<AppConfigs>();
 
   @override
   void didChangeDependencies() {
@@ -63,5 +63,11 @@ class SplashState extends State<SplashScreen> {
                   ),
                   child: getLoader())
             ])));
+  }
+
+  @override
+  void dispose() {
+    _splashBloc.dispose();
+    super.dispose();
   }
 }

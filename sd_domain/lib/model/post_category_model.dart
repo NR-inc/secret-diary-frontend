@@ -3,8 +3,8 @@ class PostCategoryModel {
   final String name;
 
   PostCategoryModel({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 
   PostCategoryModel.empty()

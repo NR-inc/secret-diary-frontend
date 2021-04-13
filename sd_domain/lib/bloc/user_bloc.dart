@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sd_base/sd_base.dart';
@@ -22,12 +20,12 @@ class UserBloc extends BaseBloc {
   Stream<bool> get passwordRequiredResult => _passwordRequiredResult.stream;
 
   UserBloc({
-    @required Logger logger,
-    @required UserInteractor userInteractor,
-    @required PublishSubject<UserModel> currentUserResult,
-    @required PublishSubject<bool> passwordRequiredResult,
-    @required PublishSubject<bool> editProfileResult,
-  })  : _userInteractor = userInteractor,
+    required Logger logger,
+    required UserInteractor userInteractor,
+    required PublishSubject<UserModel> currentUserResult,
+    required PublishSubject<bool> passwordRequiredResult,
+    required PublishSubject<bool> editProfileResult,
+  })   : _userInteractor = userInteractor,
         _currentUserResult = currentUserResult,
         _passwordRequiredResult = passwordRequiredResult,
         _editProfileResult = editProfileResult,
@@ -45,11 +43,11 @@ class UserBloc extends BaseBloc {
   }
 
   Future<bool> updateProfile({
-    String firstName,
-    String lastName,
-    String email,
-    String password,
-    File avatar,
+    required String firstName,
+    required String lastName,
+    required String email,
+    String? password,
+    File? avatar,
   }) async {
     showLoading(true);
     return _userInteractor

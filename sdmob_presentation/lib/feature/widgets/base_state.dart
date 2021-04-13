@@ -8,7 +8,7 @@ abstract class BaseState<W extends StatefulWidget> extends State<W>
     with RouteAware {
   @override
   void didChangeDependencies() {
-    routeObserver.subscribe(this, ModalRoute.of(context));
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
     super.didChangeDependencies();
   }
 
@@ -23,17 +23,17 @@ abstract class BaseState<W extends StatefulWidget> extends State<W>
       case NetworkException:
         final exception = error as NetworkException;
         showSimpleErrorDialog(
-            context: context,
-            title: 'Network error',
-            description:
-                exception.responseStatusType == ResponseStatusType.NO_NETWORK
-                    ? 'No network connection'
-                    : exception.message);
+          context: context,
+          title: 'Network error',
+          description:
+              exception.responseStatusType == ResponseStatusType.NO_NETWORK
+                  ? 'No network connection'
+                  : exception.message!,
+        );
         break;
       case ValidationException:
         final exception = error as ValidationException;
-        if (exception.validationErrors == null ||
-            exception.validationErrors.isEmpty) {
+        if (exception.validationErrors.isEmpty) {
           showSimpleErrorDialog(
               context: context,
               title: 'Validation error',
@@ -47,7 +47,7 @@ abstract class BaseState<W extends StatefulWidget> extends State<W>
   }
 
   void showToast({
-    String message,
+    required String message,
     bool isError = false,
   }) {
     Fluttertoast.showToast(

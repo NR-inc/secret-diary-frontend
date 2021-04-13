@@ -10,10 +10,10 @@ class LikesBloc extends BaseBloc {
   final LikesInteractor _interactor;
 
   LikesBloc({
-    BehaviorSubject<List<LikeModel>> likesResult,
-    BehaviorSubject<bool> isPostLikedResult,
-    LikesInteractor interactor,
-    Logger logger,
+    required BehaviorSubject<List<LikeModel>> likesResult,
+    required BehaviorSubject<bool> isPostLikedResult,
+    required LikesInteractor interactor,
+    required Logger logger,
   })  : _likesResult = likesResult,
         _isPostLikedResult = isPostLikedResult,
         _interactor = interactor,
@@ -23,7 +23,7 @@ class LikesBloc extends BaseBloc {
 
   Stream<bool> get isPostLikedStream => _isPostLikedResult.stream;
 
-  void getLikes({String postId}) {
+  void getLikes({required String postId}) {
     showLoading(true);
     _interactor.getLikes(postId: postId).then(
       (List<LikeModel> likes) {
@@ -38,7 +38,7 @@ class LikesBloc extends BaseBloc {
     );
   }
 
-  void removeLike({String postId}) {
+  void removeLike({required String postId}) {
     _interactor.removeLike(postId: postId).then(
       (removedLikeId) async {
         logger.i('postId = $postId, success');
@@ -52,7 +52,7 @@ class LikesBloc extends BaseBloc {
     );
   }
 
-  void addLike({String postId}) async {
+  void addLike({required String postId}) async {
     _interactor.addLike(postId: postId).then(
       (likeModel) async {
         logger.i('postId = $postId, success');
@@ -64,7 +64,7 @@ class LikesBloc extends BaseBloc {
     );
   }
 
-  void isPostLiked({String postId}) {
+  void isPostLiked({required String postId}) {
     showLoading(true);
     _interactor.isPostLiked(postId: postId).then(
       (isLiked) {

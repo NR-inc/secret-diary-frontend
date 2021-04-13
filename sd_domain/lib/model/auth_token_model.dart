@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class AuthTokenModel {
-  String _token;
+  String? _token;
 
   AuthTokenModel(this._token);
 
@@ -11,7 +11,7 @@ class AuthTokenModel {
     _token = data['token'];
   }
 
-  String getToken() => _token;
+  String? getToken() => _token;
 
   void setToken(String value) {
     _token = value;

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sd_base/sd_base.dart';
@@ -12,9 +11,9 @@ class UserDataRepository implements UserRepository {
   final FirebaseAuth _firebaseAuth;
 
   UserDataRepository({
-    ErrorHandler errorHandler,
-    FirebaseFirestore firestore,
-    FirebaseAuth firebaseAuth,
+    required ErrorHandler errorHandler,
+    required FirebaseFirestore firestore,
+    required FirebaseAuth firebaseAuth,
   })  : _errorHandler = errorHandler,
         _firestore = firestore,
         _firebaseAuth = firebaseAuth;
@@ -22,13 +21,13 @@ class UserDataRepository implements UserRepository {
   @override
   Future<UserModel> profile() async {
     try {
-      final userUid = _firebaseAuth.currentUser.uid;
+      final userUid = _firebaseAuth.currentUser!.uid;
       final user = await _firestore
           .collection(FirestoreKeys.usersCollectionKey)
           .doc(userUid)
           .get();
       return UserModel.fromJson(user.data(), userUid);
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
@@ -41,7 +40,7 @@ class UserDataRepository implements UserRepository {
           .doc(uid)
           .get();
       return UserModel.fromJson(user.data(), uid);
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
@@ -59,21 +58,21 @@ class UserDataRepository implements UserRepository {
 
       await _firestore
           .collection(FirestoreKeys.usersCollectionKey)
-          .doc(currentUser.uid)
+          .doc(currentUser!.uid)
           .delete();
       await currentUser.delete();
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
   Future<bool> updateProfile({
-    String firstName,
-    String lastName,
-    String email,
-    String password,
-    File avatar,
+    String? firstName,
+    String? lastName,
+    String? email,
+    String? password,
+    File? avatar,
   }) async {
     try {
       final currentUser = _firebaseAuth.currentUser;
@@ -94,14 +93,14 @@ class UserDataRepository implements UserRepository {
 
       if (email != null) {
         if (password != null) {
-          await _firebaseAuth.currentUser.reauthenticateWithCredential(
+          await currentUser!.reauthenticateWithCredential(
             EmailAuthProvider.credential(
-              email: currentUser.email,
+              email: (currentUser.email)!,
               password: password,
             ),
           );
         }
-        await _firebaseAuth.currentUser.updateEmail(email);
+        await currentUser!.updateEmail(email);
         userDataMap.putIfAbsent(
           FirestoreKeys.emailFieldKey,
           () => email,
@@ -113,10 +112,10 @@ class UserDataRepository implements UserRepository {
 
       await _firestore
           .collection(FirestoreKeys.usersCollectionKey)
-          .doc(currentUser.uid)
+          .doc(currentUser!.uid)
           .update(userDataMap);
       return true;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }

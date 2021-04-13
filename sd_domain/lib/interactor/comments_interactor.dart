@@ -5,15 +5,15 @@ class CommentsInteractor {
   final UserRepository _userRepository;
 
   CommentsInteractor({
-    CommentsRepository commentsRepository,
-    UserRepository userRepository,
-  })  : _commentsRepository = commentsRepository,
+    required CommentsRepository commentsRepository,
+    required UserRepository userRepository,
+  })   : _commentsRepository = commentsRepository,
         _userRepository = userRepository;
 
   Future<List<CommentModel>> loadComments({
-    String postId,
-    String fromCommentId,
-    int limit,
+    required String postId,
+    required String fromCommentId,
+    required int limit,
   }) =>
       _commentsRepository.loadComments(
         postId: postId,
@@ -22,20 +22,23 @@ class CommentsInteractor {
       );
 
   Future<bool> removeComment({
-    String commentId,
+    required String commentId,
   }) =>
       _commentsRepository.removeComment(
         commentId: commentId,
       );
 
   Future<CommentModel> updateComment({
-    CommentModel commentModel,
+    required CommentModel commentModel,
   }) =>
       _commentsRepository.updateComment(
         commentModel: commentModel,
       );
 
-  Future<CommentModel> addComment({String postId, String message}) async {
+  Future<CommentModel> addComment({
+    required String postId,
+    required String message,
+  }) async {
     final profile = await _userRepository.profile();
     return await _commentsRepository.addComment(
       message: message,
@@ -44,6 +47,8 @@ class CommentsInteractor {
     );
   }
 
-  Future<int> getCountOfComments({String postId}) =>
+  Future<int> getCountOfComments({
+    required String postId,
+  }) =>
       _commentsRepository.getCountOfComments(postId: postId);
 }

@@ -7,5 +7,3 @@ export 'package:sddomain/model/post_model.dart';
 export 'package:sddomain/model/feed_sort_type.dart';
 export 'package:sddomain/model/comment_model.dart';
 export 'package:sddomain/model/like_model.dart';
-
-export 'package:sddomain/model/mapper/mapper.dart';

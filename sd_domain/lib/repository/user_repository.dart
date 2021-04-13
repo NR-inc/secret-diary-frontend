@@ -15,7 +15,7 @@ abstract class UserRepository {
     String firstName,
     String lastName,
     String email,
-    String password,
-    File avatar,
+    String? password,
+    File? avatar,
   });
 }

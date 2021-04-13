@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sddomain/bloc/base_bloc.dart';
@@ -12,9 +10,9 @@ class RemindPasswordBloc extends BaseBloc {
   final PublishSubject<DefaultResponse> remindPasswordResult;
 
   RemindPasswordBloc({
-    Logger logger,
-    AuthInteractor authInteractor,
-    PublishSubject<DefaultResponse> remindPasswordResult,
+    required Logger logger,
+    required AuthInteractor authInteractor,
+    required PublishSubject<DefaultResponse> remindPasswordResult,
   })  : _authInteractor = authInteractor,
         this.remindPasswordResult = remindPasswordResult,
         super(logger: logger);

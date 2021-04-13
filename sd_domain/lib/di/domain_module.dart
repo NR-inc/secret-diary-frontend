@@ -15,6 +15,7 @@ class DomainModule extends AbstractModule {
   @override
   void configure(Injector injector) {
     injector.map((i) => Logger(), isSingleton: true);
+    injector.map((i) => ErrorHandler(), isSingleton: true);
     BlocModule().configure(injector);
     InteractorModule().configure(injector);
     ValidationModule().configure(injector);

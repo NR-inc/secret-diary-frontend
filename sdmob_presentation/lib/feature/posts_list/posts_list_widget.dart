@@ -5,10 +5,10 @@ import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
 
 class PostsListWidget extends StatefulWidget {
-  final String searchQuery;
-  final FeedSortType feedSortType;
-  final List<PostCategoryModel> searchCategories;
-  final String userUid;
+  final String? searchQuery;
+  final FeedSortType? feedSortType;
+  final List<PostCategoryModel>? searchCategories;
+  final String? userUid;
 
   PostsListWidget({
     this.userUid,
@@ -22,11 +22,11 @@ class PostsListWidget extends StatefulWidget {
 }
 
 class _PostsListState extends BaseState<PostsListWidget> {
-  final PostsBloc _postsBloc = Injector.getInjector().get<PostsBloc>();
+  final PostsBloc _postsBloc = Injector().get<PostsBloc>();
 
   void loadPosts({bool initialLoad = false}) {
     if (widget.userUid != null) {
-      _postsBloc.loadPostsForUser(userUid: widget.userUid);
+      _postsBloc.loadPostsForUser(userUid: widget.userUid!);
     } else {
       _postsBloc.loadPostsForFeed(
         searchQuery: widget.searchQuery,
@@ -55,13 +55,13 @@ class _PostsListState extends BaseState<PostsListWidget> {
         BuildContext context,
         AsyncSnapshot<List<PostModel>> snapshot,
       ) {
-        return _buildPostsList(snapshot.data);
+        return _buildPostsList(snapshot.data!);
       },
     );
   }
 
   Widget _buildPostsList(List<PostModel> posts) {
-    if (posts != null && posts.isNotEmpty) {
+    if (posts.isNotEmpty) {
       return Expanded(
           child: NotificationListener(
         onNotification: (ScrollNotification scrollInfo) {
@@ -93,7 +93,7 @@ class _PostsListState extends BaseState<PostsListWidget> {
           )),
       onDismissed: (DismissDirection direction) async {
         await _postsBloc.removePostById(postModel.id);
-        _postsBloc.loadPostsForUser(userUid: widget.userUid);
+        _postsBloc.loadPostsForUser(userUid: widget.userUid!);
       },
       child: GestureDetector(
           onTap: () => Navigator.pushNamed(

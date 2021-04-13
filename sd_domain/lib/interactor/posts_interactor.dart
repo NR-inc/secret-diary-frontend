@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:sddomain/export/domain.dart';
 
 class PostsInteractor {
@@ -8,19 +7,19 @@ class PostsInteractor {
   final LikesRepository _likesRepository;
 
   PostsInteractor({
-    @required PostsRepository postsRepository,
-    @required UserRepository userRepository,
-    @required CommentsRepository commentsRepository,
-    @required LikesRepository likesRepository,
-  })  : _postsRepository = postsRepository,
+    required PostsRepository postsRepository,
+    required UserRepository userRepository,
+    required CommentsRepository commentsRepository,
+    required LikesRepository likesRepository,
+  })   : _postsRepository = postsRepository,
         _userRepository = userRepository,
         _likesRepository = likesRepository,
         _commentsRepository = commentsRepository;
 
   Future<List<PostModel>> getPostsOfUser({
-    @required String userUid,
-    String fromPostId,
-    int limit,
+    required String userUid,
+    required String fromPostId,
+    required int limit,
   }) =>
       _postsRepository.getPostsOfUser(
         userUid: userUid,
@@ -29,11 +28,11 @@ class PostsInteractor {
       );
 
   Future<List<PostModel>> getFeedPostsBy({
-    @required FeedSortType feedSortType,
-    String searchQuery,
-    List<PostCategoryModel> postCategories,
-    String fromPostId,
-    int limit,
+    required FeedSortType feedSortType,
+    String? searchQuery,
+    List<PostCategoryModel>? postCategories,
+    required String fromPostId,
+    required int limit,
   }) async {
     final user = await _userRepository.profile();
     return _postsRepository.getFeedPostsBy(
@@ -49,7 +48,7 @@ class PostsInteractor {
     String title,
     String description,
     bool visibilityFlag, [
-    List<String> categoriesIds,
+    List<String>? categoriesIds,
   ]) async {
     final currentUser = await _userRepository.profile();
     return await _postsRepository.createPost(
@@ -61,14 +60,14 @@ class PostsInteractor {
     );
   }
 
-  Future<bool> removePost({@required String id}) async {
+  Future<bool> removePost({required String id}) async {
     await _postsRepository.removePostById(postId: id);
     await _commentsRepository.removeComments(postId: id);
     await _likesRepository.removeLikes(postId: id);
     return true;
   }
 
-  Future<PostModel> getPost({@required String id}) async {
+  Future<PostModel> getPost({required String id}) async {
     final currentUser = await _userRepository.profile();
     return _postsRepository.getPostById(
       postId: id,

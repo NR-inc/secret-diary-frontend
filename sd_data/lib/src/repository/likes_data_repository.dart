@@ -7,15 +7,15 @@ class LikesDataRepository extends LikesRepository {
   final FirebaseFirestore _firestore;
 
   LikesDataRepository({
-    ErrorHandler errorHandler,
-    FirebaseFirestore firestore,
-  })  : _errorHandler = errorHandler,
+    required ErrorHandler errorHandler,
+    required FirebaseFirestore firestore,
+  })   : _errorHandler = errorHandler,
         _firestore = firestore;
 
   @override
   Future<LikeModel> addLike({
-    String userId,
-    String postId,
+    required String userId,
+    required String postId,
   }) async {
     try {
       final result = await _firestore
@@ -32,13 +32,15 @@ class LikesDataRepository extends LikesRepository {
         postId: postId,
         authorId: userId,
       );
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
-  Future<List<LikeModel>> getLikes({String postId}) async {
+  Future<List<LikeModel>> getLikes({
+    required String postId,
+  }) async {
     try {
       final result = await _firestore
           .collection(FirestoreKeys.likesCollectionKey)
@@ -51,15 +53,15 @@ class LikesDataRepository extends LikesRepository {
                 data: likeData.data(),
               ))
           .toList();
-    } on dynamic {
-      return null;
+    } on Exception {
+      return List.empty();
     }
   }
 
   @override
   Future<String> removeLike({
-    String userId,
-    String postId,
+    required String userId,
+    required String postId,
   }) async {
     try {
       final result = await _firestore
@@ -75,13 +77,15 @@ class LikesDataRepository extends LikesRepository {
       }
 
       return likeId;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
-  Future<bool> removeLikes({String postId}) async {
+  Future<bool> removeLikes({
+    required String postId,
+  }) async {
     try {
       await _firestore
           .collection(FirestoreKeys.likesCollectionKey)
@@ -94,15 +98,15 @@ class LikesDataRepository extends LikesRepository {
           );
 
       return true;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
   Future<bool> isPostLiked({
-    String postId,
-    String userId,
+    required String postId,
+    required String userId,
   }) async {
     try {
       final result = await _firestore
@@ -111,8 +115,8 @@ class LikesDataRepository extends LikesRepository {
           .where(FirestoreKeys.authorIdFieldKey, isEqualTo: userId)
           .get();
 
-      return (result.docs?.length ?? 0) > 0;
-    } on dynamic catch (ex) {
+      return result.docs.length > 0;
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }

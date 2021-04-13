@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 Widget simpleButton({
-  @required Key key,
-  @required String text,
-  TextStyle style,
-  Function onPressed,
+  required Key key,
+  required String text,
+  TextStyle? style,
+  required VoidCallback onPressed,
 }) {
   if (Platform.isAndroid) {
     return MaterialButton(
@@ -25,7 +25,7 @@ Widget simpleButton({
         text,
         style: style,
       ),
-      onPressed: onPressed,
+      onPressed: () => onPressed,
     );
   }
 }

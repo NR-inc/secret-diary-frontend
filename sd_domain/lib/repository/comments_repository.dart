@@ -1,30 +1,31 @@
-import 'package:flutter/cupertino.dart';
 import 'package:sddomain/export/domain.dart';
 
 abstract class CommentsRepository {
   Future<List<CommentModel>> loadComments({
-    @required String postId,
-    String fromCommentId,
-    int limit,
+    required String postId,
+    String? fromCommentId,
+    required int limit,
   });
 
   Future<bool> removeComment({
-    @required String commentId,
+    required String commentId,
   });
 
   Future<bool> removeComments({
-    @required String postId,
+    required String postId,
   });
 
   Future<CommentModel> addComment({
-    @required String message,
-    @required String postId,
-    @required String authorId,
+    required String message,
+    required String postId,
+    required String authorId,
   });
 
   Future<CommentModel> updateComment({
-    @required CommentModel commentModel,
+    required CommentModel commentModel,
   });
 
-  Future<int> getCountOfComments({String postId});
+  Future<int> getCountOfComments({
+    required String postId,
+  });
 }

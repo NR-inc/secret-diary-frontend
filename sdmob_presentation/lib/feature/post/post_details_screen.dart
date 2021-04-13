@@ -10,7 +10,7 @@ class PostDetailsScreen extends StatefulWidget {
   final String postId;
 
   PostDetailsScreen({
-    @required this.postId,
+    required this.postId,
   });
 
   @override
@@ -18,9 +18,9 @@ class PostDetailsScreen extends StatefulWidget {
 }
 
 class _PostDetailsState extends BaseState<PostDetailsScreen> {
-  final PostsBloc _postsBloc = Injector.getInjector().get<PostsBloc>();
-  final CommentsBloc _commentsBloc = Injector.getInjector().get<CommentsBloc>();
-  final LikesBloc _likesBloc = Injector.getInjector().get<LikesBloc>();
+  final PostsBloc _postsBloc = Injector().get<PostsBloc>();
+  final CommentsBloc _commentsBloc = Injector().get<CommentsBloc>();
+  final LikesBloc _likesBloc = Injector().get<LikesBloc>();
 
   final _isOwnerValueNotifier = ValueNotifier(false);
   final _addCommentTextController = TextEditingController();
@@ -56,7 +56,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
           actions: [
             ValueListenableBuilder(
               valueListenable: _isOwnerValueNotifier,
-              builder: (context, value, child) {
+              builder: (BuildContext context, bool value, child) {
                 return value
                     ? IconButton(
                         icon: SvgPicture.asset(
@@ -102,7 +102,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
               return Stack(children: <Widget>[
                 _content,
                 showLoader(
-                  show: loadingProgress.hasData && loadingProgress.data,
+                  show: loadingProgress.hasData && (loadingProgress.data)!,
                 )
               ]);
             },
@@ -180,7 +180,7 @@ class _PostDetailsState extends BaseState<PostDetailsScreen> {
   Widget _likesCounterWidget() => StreamBuilder(
       stream: _likesBloc.isPostLikedStream,
       builder: (context, AsyncSnapshot<bool> result) {
-        final isUserLiked = result?.data ?? false;
+        final isUserLiked = result.data ?? false;
         return GestureDetector(
             onTap: () => _likeAction(!isUserLiked),
             child: Row(children: [

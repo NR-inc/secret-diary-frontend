@@ -9,8 +9,8 @@ class SplashBloc extends BaseBloc {
   final sessionAvailabilitySubject = BehaviorSubject<bool>();
 
   SplashBloc({
-    @required Logger logger,
-    @required AuthInteractor authInteractor,
+    required Logger logger,
+    required AuthInteractor authInteractor,
   })  : _authInteractor = authInteractor,
         super(logger: logger);
 

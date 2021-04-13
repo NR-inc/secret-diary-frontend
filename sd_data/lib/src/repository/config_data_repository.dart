@@ -22,11 +22,11 @@ class ConfigDataRepository implements ConfigRepository {
   @override
   Future<void> clearUserUid() async {
     final sharedPrefs = await SharedPreferences.getInstance();
-    sharedPrefs.setString(_userUidKey, null);
+    sharedPrefs.remove(_userUidKey);
   }
 
   @override
-  Future<String> getUserUid() async {
+  Future<String?> getUserUid() async {
     final sharedPrefs = await SharedPreferences.getInstance();
     return sharedPrefs.getString(_userUidKey);
   }

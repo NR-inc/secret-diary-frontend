@@ -15,7 +15,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class RegistrationState extends BaseState<RegistrationScreen> {
   final RegistrationBloc _registrationBloc =
-      Injector.getInjector().get<RegistrationBloc>();
+      Injector().get<RegistrationBloc>();
   final firstNameTextController = TextEditingController();
   final lastNameTextController = TextEditingController();
   final emailTextController = TextEditingController();
@@ -58,7 +58,7 @@ class RegistrationState extends BaseState<RegistrationScreen> {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) =>
               Stack(children: <Widget>[
                 _registrationForm(),
-                showLoader(show: snapshot.hasData && snapshot.data)
+                showLoader(show: snapshot.hasData && (snapshot.data)!)
               ])));
 
   Widget _registrationForm() => StreamBuilder(

@@ -7,22 +7,22 @@ class PostsDataRepository implements PostsRepository {
   final FirebaseFirestore _firestore;
 
   PostsDataRepository({
-    ErrorHandler errorHandler,
-    FirebaseFirestore firestore,
+    required ErrorHandler errorHandler,
+    required FirebaseFirestore firestore,
   })  : _errorHandler = errorHandler,
         _firestore = firestore;
 
   @override
   Future<List<PostModel>> getFeedPostsBy({
-    String userId,
-    String searchQuery,
-    FeedSortType feedSortType,
-    List<PostCategoryModel> postCategories,
-    String fromPostId,
-    int limit,
+    String? userId,
+    String? searchQuery,
+    FeedSortType? feedSortType,
+    List<PostCategoryModel>? postCategories,
+    String? fromPostId,
+    required int limit,
   }) async {
     try {
-      DocumentSnapshot lastDownloadedPostDoc;
+      DocumentSnapshot? lastDownloadedPostDoc;
       var orderByField;
       switch (feedSortType) {
         case FeedSortType.byDate:
@@ -37,6 +37,8 @@ class PostsDataRepository implements PostsRepository {
         case FeedSortType.byLikes:
           orderByField = FirestoreKeys.likesFieldKey;
           break;
+        default:
+          throw Exception('Unexpected feedSortType: $feedSortType');
       }
 
       if (fromPostId != null && fromPostId.isNotEmpty) {
@@ -64,22 +66,21 @@ class PostsDataRepository implements PostsRepository {
                     FirestoreKeys.isOwnerFieldKey,
                     () =>
                         postData.data()[FirestoreKeys.authorIdFieldKey] ==
-                            userId ??
-                        false,
+                            userId,
                   ),
               ))
           .toList();
 
       return data;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
   Future<PostModel> getPostById({
-    String postId,
-    String userId,
+    required String postId,
+    required String userId,
   }) async {
     try {
       final doc = await _firestore
@@ -89,25 +90,25 @@ class PostsDataRepository implements PostsRepository {
 
       return PostModel.fromJson(
         id: doc.id,
-        data: doc.data()
+        data: doc.data()!
           ..putIfAbsent(
             FirestoreKeys.isOwnerFieldKey,
-            () => doc.data()[FirestoreKeys.authorIdFieldKey] == userId ?? false,
+            () => doc.data()![FirestoreKeys.authorIdFieldKey] == userId,
           ),
       );
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
   Future<List<PostModel>> getPostsOfUser({
-    String userUid,
-    String fromPostId,
-    int limit,
+    required String userUid,
+    String? fromPostId,
+    required int limit,
   }) async {
     try {
-      DocumentSnapshot lastDownloadedPostDoc;
+      DocumentSnapshot? lastDownloadedPostDoc;
 
       if (fromPostId != null && fromPostId.isNotEmpty) {
         lastDownloadedPostDoc = await _firestore
@@ -138,14 +139,14 @@ class PostsDataRepository implements PostsRepository {
               ))
           .toList();
       return data;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
   Future<bool> removePostById({
-    String postId,
+    required String postId,
   }) async {
     try {
       await _firestore
@@ -154,7 +155,7 @@ class PostsDataRepository implements PostsRepository {
           .delete();
 
       return true;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
@@ -167,11 +168,11 @@ class PostsDataRepository implements PostsRepository {
 
   @override
   Future<bool> createPost({
-    String userUid,
-    String title,
-    String description,
-    bool visibilityFlag,
-    List<String> categoriesIds,
+    required String userUid,
+    required String title,
+    required String description,
+    required bool visibilityFlag,
+    List<String>? categoriesIds,
   }) async {
     try {
       await _firestore
@@ -187,7 +188,7 @@ class PostsDataRepository implements PostsRepository {
       });
 
       return true;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }

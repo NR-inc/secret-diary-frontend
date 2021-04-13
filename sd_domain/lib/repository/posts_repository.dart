@@ -1,40 +1,38 @@
-import 'package:flutter/foundation.dart';
 import 'package:sddomain/export/models.dart';
 import 'package:sddomain/model/feed_sort_type.dart';
-import 'package:sddomain/model/like_model.dart';
 
 abstract class PostsRepository {
   Future<PostModel> getPostById({
-    String postId,
-    String userId,
+    required String postId,
+    required String userId,
   });
 
   Future<PostModel> updatePost(PostModel postModel);
 
   Future<bool> removePostById({
-    String postId,
+    required String postId,
   });
 
   Future<bool> createPost({
-    String userUid,
-    String title,
-    String description,
-    bool visibilityFlag,
-    List<String> categoriesIds,
+    required String userUid,
+    required String title,
+    required String description,
+    required bool visibilityFlag,
+    List<String>? categoriesIds,
   });
 
   Future<List<PostModel>> getPostsOfUser({
-    @required String userUid,
-    String fromPostId,
-    int limit,
+    required String userUid,
+    String? fromPostId,
+    required int limit,
   });
 
   Future<List<PostModel>> getFeedPostsBy({
-    @required String userId,
-    @required FeedSortType feedSortType,
-    String searchQuery,
-    List<PostCategoryModel> postCategories,
-    String fromPostId,
-    int limit,
+    String? userId,
+    FeedSortType? feedSortType,
+    String? searchQuery,
+    List<PostCategoryModel>? postCategories,
+    String? fromPostId,
+    required int limit,
   });
 }

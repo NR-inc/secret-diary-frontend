@@ -9,19 +9,19 @@ class PostModel {
   final String authorId;
   final String title;
   final String description;
-  final DateTime createdAt;
+  final DateTime? createdAt;
   final bool isOwner;
 
   final List<PostCategoryModel> postCategoryModels;
 
   PostModel({
-    @required this.id,
-    @required this.authorId,
-    @required this.title,
-    @required this.description,
-    @required this.createdAt,
-    @required this.postCategoryModels,
-    @required this.isOwner,
+    required this.id,
+    required this.authorId,
+    required this.title,
+    required this.description,
+    required this.createdAt,
+    required this.postCategoryModels,
+    required this.isOwner,
   });
 
   PostModel.empty()
@@ -34,8 +34,8 @@ class PostModel {
         isOwner = false;
 
   PostModel.fromJson({
-    @required String id,
-    Map<String, dynamic> data,
+    required String id,
+    required Map<String, dynamic> data,
   })  : this.id = id,
         authorId = data[FirestoreKeys.authorIdFieldKey] ?? '',
         title = data[FirestoreKeys.titleFieldKey] ?? '',
@@ -46,7 +46,7 @@ class PostModel {
                     .millisecondsSinceEpoch,
               )
             : null,
-        postCategoryModels = List(),
+        postCategoryModels = List.empty(),
         isOwner = data[FirestoreKeys.isOwnerFieldKey] ?? false
   ;
 

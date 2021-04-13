@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sddomain/exceptions/common_exception.dart';
 import 'package:sddomain/exceptions/network_exception.dart';
@@ -21,7 +20,7 @@ class ErrorHandler {
       case FirebaseAuthException:
         final firebaseError = (error as FirebaseAuthException);
         return NetworkException(
-          statusCode: int.tryParse(firebaseError?.code),
+          statusCode: int.tryParse(firebaseError.code),
           message: firebaseError.message,
           description: firebaseError.code,
         );

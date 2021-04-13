@@ -15,7 +15,7 @@ class LengthValidationRule extends ValidationRule<String> {
   }) : super(RuleType.isCorrectLength, minError); // todo FIX_ME
 
   @override
-  String isValid(String value, {dynamic args}) {
+  String? isValid(String? value, {dynamic args}) {
     if (value == null) {
       return minError;
     } else if (value.length < min) {

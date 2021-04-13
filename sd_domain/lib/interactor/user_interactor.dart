@@ -15,14 +15,14 @@ class UserInteractor {
   Future<UserModel> profile() async => _userRepository.profile();
 
   Future<bool> updateProfile({
-    String firstName,
-    String lastName,
-    String email,
-    String password,
-    bool validatePassword,
-    File avatar,
+    required String firstName,
+    required String lastName,
+    required String email,
+    String? password,
+    required bool validatePassword,
+    File? avatar,
   }) async {
-    final fieldsMap = {
+    final fieldsMap = <InputFieldType, String?>{
       InputFieldType.firstName: firstName,
       InputFieldType.lastName: lastName,
       InputFieldType.email: email,

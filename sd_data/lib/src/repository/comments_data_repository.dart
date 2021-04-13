@@ -7,16 +7,16 @@ class CommentsDataRepository implements CommentsRepository {
   final FirebaseFirestore _firestore;
 
   CommentsDataRepository({
-    ErrorHandler errorHandler,
-    FirebaseFirestore firestore,
-  })  : _errorHandler = errorHandler,
+    required ErrorHandler errorHandler,
+    required FirebaseFirestore firestore,
+  })   : _errorHandler = errorHandler,
         _firestore = firestore;
 
   @override
   Future<CommentModel> addComment({
-    String message,
-    String postId,
-    String authorId,
+    required String message,
+    required String postId,
+    required String authorId,
   }) async {
     try {
       final result = await _firestore
@@ -32,21 +32,21 @@ class CommentsDataRepository implements CommentsRepository {
       final comment = await result.get();
       return CommentModel.fromJson(
         id: comment.id,
-        data: comment.data(),
+        data: comment.data()!,
       );
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
   Future<List<CommentModel>> loadComments({
-    String postId,
-    String fromCommentId,
-    int limit,
+    required String postId,
+    String? fromCommentId,
+    required int limit,
   }) async {
     try {
-      DocumentSnapshot lastDownloadedCommentDoc;
+      DocumentSnapshot? lastDownloadedCommentDoc;
 
       if (fromCommentId != null && fromCommentId.isNotEmpty) {
         lastDownloadedCommentDoc = await _firestore
@@ -73,26 +73,30 @@ class CommentsDataRepository implements CommentsRepository {
               ))
           .toList();
       return data;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
-  Future<bool> removeComment({String commentId}) async {
+  Future<bool> removeComment({
+    required String commentId,
+  }) async {
     try {
       await _firestore
           .collection(FirestoreKeys.commentsFieldKey)
           .doc(commentId)
           .delete();
       return true;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
-  Future<CommentModel> updateComment({CommentModel commentModel}) async {
+  Future<CommentModel> updateComment({
+    required CommentModel commentModel,
+  }) async {
     try {
       await _firestore
           .collection(FirestoreKeys.commentsCollectionKey)
@@ -101,13 +105,15 @@ class CommentsDataRepository implements CommentsRepository {
         FirestoreKeys.messageFieldKey: commentModel.message,
       });
       return commentModel;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
-  Future<bool> removeComments({String postId}) async {
+  Future<bool> removeComments({
+    required String postId,
+  }) async {
     try {
       await _firestore
           .collection(FirestoreKeys.commentsCollectionKey)
@@ -120,13 +126,15 @@ class CommentsDataRepository implements CommentsRepository {
           );
 
       return true;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }
 
   @override
-  Future<int> getCountOfComments({String postId}) async {
+  Future<int> getCountOfComments({
+    required String postId,
+  }) async {
     try {
       final result = await _firestore
           .collection(FirestoreKeys.commentsCollectionKey)
@@ -134,7 +142,7 @@ class CommentsDataRepository implements CommentsRepository {
           .get();
 
       return result.docs.length;
-    } on dynamic catch (ex) {
+    } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }
   }

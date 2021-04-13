@@ -7,8 +7,8 @@ class SettingsBloc extends BaseBloc {
   AuthInteractor _authInteractor;
 
   SettingsBloc({
-    @required Logger logger,
-    @required AuthInteractor authInteractor,
+    required Logger logger,
+    required AuthInteractor authInteractor,
   })  : _authInteractor = authInteractor,
         super(logger: logger);
 

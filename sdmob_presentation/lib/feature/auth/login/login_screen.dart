@@ -16,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginState extends BaseState<LoginScreen> {
-  final LoginBloc _loginBloc = Injector.getInjector().get<LoginBloc>();
+  final LoginBloc _loginBloc = Injector().get<LoginBloc>();
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
 
@@ -62,7 +62,7 @@ class LoginState extends BaseState<LoginScreen> {
                     ),
                     loginForm(),
                   ]),
-                  showLoader(show: snapshot.hasData && snapshot.data)
+                  showLoader(show: snapshot.hasData && (snapshot.data)!)
                 ]),
               );
             }),

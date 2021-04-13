@@ -20,7 +20,7 @@ class RemindPasswordScreen extends StatefulWidget {
 
 class RemindPasswordState extends BaseState<RemindPasswordScreen> {
   final RemindPasswordBloc _remindPasswordBloc =
-      Injector.getInjector().get<RemindPasswordBloc>();
+      Injector().get<RemindPasswordBloc>();
   final emailTextController = TextEditingController();
 
   @override
@@ -59,7 +59,7 @@ class RemindPasswordState extends BaseState<RemindPasswordScreen> {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             return Stack(children: <Widget>[
               _remindPasswordForm(),
-              showLoader(show: snapshot.hasData && snapshot.data)
+              showLoader(show: snapshot.hasData && (snapshot.data)!)
             ]);
           }),
     );

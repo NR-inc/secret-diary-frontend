@@ -5,15 +5,15 @@ class LikesInteractor {
   final UserRepository _userRepository;
 
   LikesInteractor({
-    LikesRepository likesRepository,
-    UserRepository userRepository,
+    required LikesRepository likesRepository,
+    required UserRepository userRepository,
   })  : _likesRepository = likesRepository,
         _userRepository = userRepository;
 
-  Future<List<LikeModel>> getLikes({String postId}) =>
+  Future<List<LikeModel>> getLikes({required String postId}) =>
       _likesRepository.getLikes(postId: postId);
 
-  Future<String> removeLike({String postId}) async {
+  Future<String> removeLike({required String postId}) async {
     final profile = await _userRepository.profile();
     return _likesRepository.removeLike(
       userId: profile.uid,
@@ -21,7 +21,7 @@ class LikesInteractor {
     );
   }
 
-  Future<LikeModel> addLike({String postId}) async {
+  Future<LikeModel> addLike({required String postId}) async {
     final profile = await _userRepository.profile();
     return await _likesRepository.addLike(
       userId: profile.uid,
@@ -29,7 +29,7 @@ class LikesInteractor {
     );
   }
 
-  Future<bool> isPostLiked({String postId}) async {
+  Future<bool> isPostLiked({required String postId}) async {
     final profile = await _userRepository.profile();
     return await _likesRepository.isPostLiked(
       userId: profile.uid,

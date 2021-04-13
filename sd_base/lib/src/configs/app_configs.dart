@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:sd_base/src/configs/build_type.dart';
 import 'package:sd_base/src/configs/network_configs.dart';
 
@@ -8,9 +7,9 @@ class AppConfigs {
   final bool _skipAuth;
 
   AppConfigs({
-    @required BuildType buildType,
-    NetworkConfigs networkConfigs,
-    bool skipAuth,
+    required BuildType buildType,
+    NetworkConfigs? networkConfigs,
+    bool? skipAuth,
   })  : _networkConfigs = networkConfigs ?? NetworkConfigs(buildType),
         _buildType = buildType,
         _skipAuth = skipAuth ?? false;

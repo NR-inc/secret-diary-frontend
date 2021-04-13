@@ -7,20 +7,20 @@ class LikeModel {
   final String id;
   final String authorId;
   final String postId;
-  final bool isOwner;
-  final DateTime createdAt;
+  final bool? isOwner;
+  final DateTime? createdAt;
 
   LikeModel({
-    @required this.id,
-    @required this.postId,
-    @required this.authorId,
-    @required this.isOwner,
-    @required this.createdAt,
+    required this.id,
+    required this.postId,
+    required this.authorId,
+    this.isOwner,
+    this.createdAt,
   });
 
   LikeModel.fromJson({
-    @required String id,
-    Map<String, dynamic> data,
+    required String id,
+    required Map<String, dynamic> data,
   })  : this.id = id,
         authorId = data[FirestoreKeys.authorIdFieldKey] ?? '',
         postId = data[FirestoreKeys.postIdFieldKey] ?? '',
