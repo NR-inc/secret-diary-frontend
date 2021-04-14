@@ -15,7 +15,7 @@ dependencies:
   logger: ^1.0.0
 
   # firebase
-  firebase_auth: ^1.0.3
+  firebase_auth: ^1.1.0
   firebase_core: ^1.0.3
   cloud_firestore: ^1.0.4
 

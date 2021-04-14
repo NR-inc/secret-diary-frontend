@@ -100,10 +100,7 @@ class LoginState extends BaseState<LoginScreen> {
                       prefixIconAsset: SdAssets.passwordIcon),
                   GestureDetector(
                     child: Text(SdStrings.forgotPasswordButton),
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      AppRoutes.remindPassword,
-                    ),
+                    onTap: _forgotPasswordPressed,
                   ),
                   simpleButton(
                     key: Key(Locators.loginButtonLocator),
@@ -122,9 +119,18 @@ class LoginState extends BaseState<LoginScreen> {
         },
       );
 
-  void _loginPressed() =>
-      _loginBloc.login(emailTextController.text, passwordTextController.text);
+  void _loginPressed() => _loginBloc.login(
+        emailTextController.text,
+        passwordTextController.text,
+      );
 
-  void _registrationPressed() =>
-      Navigator.pushNamed(context, AppRoutes.registration);
+  void _registrationPressed() => Navigator.pushNamed(
+        context,
+        AppRoutes.registration,
+      );
+
+  void _forgotPasswordPressed() => Navigator.pushNamed(
+        context,
+        AppRoutes.remindPassword,
+      );
 }

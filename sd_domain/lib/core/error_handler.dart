@@ -15,7 +15,6 @@ class ErrorHandler {
   }
 
   Exception handleNetworkError(dynamic error) {
-    print(error); // todo remove
     switch (error.runtimeType) {
       case FirebaseAuthException:
         final firebaseError = (error as FirebaseAuthException);
@@ -24,10 +23,8 @@ class ErrorHandler {
           message: firebaseError.message,
           description: firebaseError.code,
         );
-        break;
       default:
         throw error;
-        break;
     }
   }
 }

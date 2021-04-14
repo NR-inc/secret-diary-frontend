@@ -13,7 +13,7 @@ class AuthDataRepository extends AuthRepository {
     required ErrorHandler errorHandler,
     required FirebaseFirestore firestore,
     required FirebaseAuth firebaseAuth,
-  })  : _errorHandler = errorHandler,
+  })   : _errorHandler = errorHandler,
         _firestore = firestore,
         _firebaseAuth = firebaseAuth;
 
@@ -23,8 +23,7 @@ class AuthDataRepository extends AuthRepository {
     String password,
   ) async {
     try {
-      final userCredential =
-          await _firebaseAuth.signInWithEmailAndPassword(
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -42,8 +41,7 @@ class AuthDataRepository extends AuthRepository {
     String password,
   ) async {
     try {
-      final userCredential =
-          await _firebaseAuth.createUserWithEmailAndPassword(
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -65,6 +63,27 @@ class AuthDataRepository extends AuthRepository {
   Future<void> remindPassword(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on Exception catch (ex) {
+      throw _errorHandler.handleNetworkError(ex);
+    }
+  }
+
+  @override
+  Future<void> updatePassword({
+    required String newPassword,
+    String? oldPassword,
+  }) async {
+    final currentUser = _firebaseAuth.currentUser!;
+    try {
+      if (oldPassword != null && oldPassword.isNotEmpty) {
+        await currentUser.reauthenticateWithCredential(
+          EmailAuthProvider.credential(
+            email: (currentUser.email)!,
+            password: oldPassword,
+          ),
+        );
+      }
+      await currentUser.updatePassword(newPassword);
     } on Exception catch (ex) {
       throw _errorHandler.handleNetworkError(ex);
     }

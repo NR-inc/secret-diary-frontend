@@ -82,4 +82,12 @@ class AuthInteractor {
   }
 
   Future<bool> hasSession() async => _configRepository.hasSession();
+
+  Future<void> updatePassword({
+    required String newPassword,
+    required String confirmPassword,
+    String? oldPassword,
+  }) async {
+
+  }
 }

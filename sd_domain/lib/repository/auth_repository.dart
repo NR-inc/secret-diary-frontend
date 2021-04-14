@@ -12,4 +12,9 @@ abstract class AuthRepository {
   );
 
   Future<void> remindPassword(String email);
+
+  Future<void> updatePassword({
+    required String newPassword,
+    String? oldPassword,
+  });
 }

@@ -9,6 +9,7 @@ class ValidationModule extends AbstractModule {
   static const registrationFormValidator = 'registrationFormValidator';
   static const remindPasswordFormValidator = 'remindPasswordFormValidator';
   static const editProfileFormValidator = 'editProfileFormValidator';
+  static const changePasswordFormValidator = 'changePasswordFormValidator';
 
   static const _firstNameFieldValidator = 'firstNameFieldValidator';
   static const _lastNameFieldValidator = 'lastNameFieldValidator';
@@ -57,6 +58,13 @@ class ValidationModule extends AbstractModule {
         InputFieldType.email: i.get(key: _emailFieldValidator),
       }),
       key: remindPasswordFormValidator,
+    );
+
+    injector.map(
+      (i) => FormValidator({
+        InputFieldType.password: i.get(key: _passwordFieldValidator),
+      }),
+      key: changePasswordFormValidator,
     );
 
     injector.map(

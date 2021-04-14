@@ -9,6 +9,7 @@ import 'package:sddomain/bloc/user_bloc.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:sddomain/exceptions/network_exception.dart';
 import 'package:sddomain/export/domain.dart';
+import 'package:ssecretdiary/core/navigation/router.dart';
 import 'package:ssecretdiary/feature/widgets/base_state.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -26,6 +27,7 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
   final _passwordController = TextEditingController();
   final _passwordErrorNotifier = ValueNotifier<String?>(null);
   final _passwordRequiredLoadingProgress = ValueNotifier<bool>(false);
+  final _dataUpdatedNotifier = ValueNotifier<bool>(false);
   final _avatarNotifier = ValueNotifier<File?>(null);
   bool _cleanAvatar = false;
   final _imagePicker = ImagePicker();
@@ -39,6 +41,11 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
       _firstNameController.text = currentUser.firstName;
       _lastNameController.text = currentUser.lastName;
       _emailController.text = currentUser.email;
+
+      _firstNameController.addListener(_dataChanged);
+      _lastNameController.addListener(_dataChanged);
+      _emailController.addListener(_dataChanged);
+      _passwordController.addListener(_dataChanged);
     });
     _userBloc.loadingProgressStream.listen(
       (value) => _passwordRequiredLoadingProgress.value = value,
@@ -69,6 +76,7 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
         handleError(ex);
       }
     });
+
     super.initState();
   }
 
@@ -86,10 +94,16 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
             title: Text('Edit profile'),
             centerTitle: true,
             actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.check, color: Colors.white),
-                onPressed: () => _updateProfileAction(),
-              )
+              ValueListenableBuilder(
+                  valueListenable: _dataUpdatedNotifier,
+                  builder: (BuildContext context, bool dataChanged, c) {
+                    return IconButton(
+                      disabledColor: Colors.grey,
+                      icon: Icon(Icons.check, color: Colors.white),
+                      onPressed:
+                          dataChanged ? () => _updateProfileAction() : null,
+                    );
+                  }),
             ]),
         body: StreamBuilder<bool>(
           stream: _userBloc.loadingProgressStream,
@@ -123,6 +137,9 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
               _cleanAvatar = false;
             },
             onLongPress: () {
+              if (_cleanAvatar) {
+                return;
+              }
               _cleanAvatar = true;
               if (_avatarNotifier.value == null) {
                 setState(() {});
@@ -200,11 +217,31 @@ class _EditProfileState extends BaseState<EditProfileScreen> {
         });
   }
 
-  void _resetPasswordAction() {}
+  void _resetPasswordAction() {
+    Navigator.pushNamed(
+      context,
+      AppRoutes.remindPassword,
+    );
+  }
+
+  void _dataChanged() {
+    if (_currentUser.firstName != _firstNameController.text ||
+        _currentUser.lastName != _lastNameController.text ||
+        _currentUser.email != _emailController.text ||
+        _cleanAvatar == true ||
+        _avatarNotifier.value != null) {
+      _dataUpdatedNotifier.value = true;
+    } else {
+      _dataUpdatedNotifier.value = false;
+    }
+  }
 
   Future<void> _updateProfileAction({
     String? password,
   }) async {
+    if (!_dataUpdatedNotifier.value) {
+      return;
+    }
     final result = await _userBloc.updateProfile(
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,

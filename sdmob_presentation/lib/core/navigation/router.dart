@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:ssecretdiary/feature/auth/login/login_screen.dart';
 import 'package:ssecretdiary/feature/auth/registration/registration_screen.dart';
 import 'package:ssecretdiary/feature/auth/remind_password/remind_password_screen.dart';
+import 'package:ssecretdiary/feature/edit_profile/change_password_screen.dart';
 import 'package:ssecretdiary/feature/edit_profile/edit_profile_screen.dart';
 import 'package:ssecretdiary/feature/post/post_details_screen.dart';
 import 'package:ssecretdiary/feature/post/post_screen.dart';
@@ -45,8 +46,11 @@ class ApplicationRouter {
       case AppRoutes.post:
         route = MaterialPageRoute(builder: (context) => PostScreen());
         break;
-        case AppRoutes.editProfile:
+      case AppRoutes.editProfile:
         route = MaterialPageRoute(builder: (context) => EditProfileScreen());
+        break;
+      case AppRoutes.changePassword:
+        route = MaterialPageRoute(builder: (context) => ChangePasswordScreen());
         break;
       case AppRoutes.postDetails:
         route = MaterialPageRoute(
@@ -72,4 +76,5 @@ class AppRoutes {
   static const post = '/post';
   static const postDetails = '/postDetails';
   static const editProfile = '/root/diary/editProfile';
+  static const changePassword = '/root/diary/editProfile/changePassword';
 }
